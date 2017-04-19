@@ -61,3 +61,15 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.xml
+.idea/Rattle_CPP.iml
+*.json
+cmake-build-debug/CMakeFiles/3.7.1/CMakeCCompiler.cmake
+cmake-build-debug
+cmake-build-debug/*
+*.cmake
+*.bin
+cmake-build-debug/CMakeFiles/3.7.1/CompilerIdC/a.exe
+*.exe
+cmake-build-debug/CMakeFiles/3.7.1/CompilerIdCXX/CMakeCXXCompilerId.cpp
+makefile
