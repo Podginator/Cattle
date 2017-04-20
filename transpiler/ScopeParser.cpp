@@ -32,6 +32,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
     if (node->typeDeclared) {
         std::string type_name = dynamic_cast<SimpleNode *>(node->jjtGetChild(1))->tokenValue;
         RattleLang::type varType = TypeStorage::get_instance()->get_type(type_name);
+
         if (varType.type_name != NONE) {
             //Declare the variable.
             std::string varName = dynamic_cast<SimpleNode *>(node->jjtGetChild(0))->tokenValue;
@@ -61,8 +62,10 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                 throw ParsingException("Variable Doesn't exist in this scope");
             }
 
-            m_expression_count[exp] = typeFound.typenames.size();
-            for (int k = 0; k < typeFound.typenames.size(); k++, i++) {
+            size_t typenamesSize = typeFound.typenames.size();
+            m_expression_count[exp] = typenamesSize;
+
+            for (int k = 0; k < typeFound.typenames.size() && i < indexOfExpressions; k++, i++) {
                 std::string varName = get_token_of_child(node, i);
                 TypeInformation varInfo = m_context->get_variable(varName);
                 // The variable exists in a scope other than this one.
@@ -74,10 +77,23 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
 
                 // Find the subinformation
                 if (m_context != varInfo.scope) {
-                    TypeInformation declared_info({typeFound.typenames[k]}, m_context);
+                    TypeInformation declared_info;
+                    if (indexOfExpressions == 1 && typenamesSize > 1) {
+                        cOut += "std::tuple<";
+                        for (int l = 0; l < typenamesSize; ++l) {
+                            cOut += typeFound.typenames[l].get_corresponding_type_string() + ",";
+                        }
+                        cOut.pop_back();
+                        cOut += ">";
+                        declared_info = typeFound;
+
+                    } else {
+                        cOut += typeFound.typenames[k].get_corresponding_type_string();
+                        declared_info = TypeInformation({typeFound.typenames[k]}, m_context);
+                    }
+
                     m_context->add_variable(get_token_of_child(node, i), declared_info);
-                    cOut += typeFound.typenames[k].get_corresponding_type_string() + " " + get_token_of_child(node, i) +
-                            ";\n";
+                    cOut +=  " " + varName + ";\n";
                 }
 
             }
@@ -118,7 +134,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTAssignment *node, v
         // Made up of 1 or more expressions.
         ASTExpression *exp = dynamic_cast<ASTExpression *>(node->jjtGetChild(currentExpression));
         size_t count = m_expression_count[exp];
-        for (int k = 0; k < count; ++k, ++i) {
+        for (int k = 0; k < count && i < indexOfExpressions; ++k, ++i) {
             op.parents.push_back(get_token_of_child(node, i));
         }
         implement(exp, &op);

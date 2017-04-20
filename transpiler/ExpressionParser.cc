@@ -101,7 +101,11 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTUna
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTIdentifier *node, void *data) {
-        AppendToResult(node->tokenValue);
+    if (data) {
+        int val = *(static_cast<int *>(data));
+        AppendToResult("std::get<" + std::to_string(val) + ">" + "(");
+    }
+    AppendToResult(node->tokenValue + (data ? ")" : ""));
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTDereference *node, void *data) {
@@ -156,15 +160,19 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTFnInvoke *n
     std::string uniqueName = get_unique_name(name);
     m_fnCallName[node] = uniqueName;
     if (types[0].type_name != VOID) {
-        returnedExpressions.back().append(
-                "std::tuple<"
-        );
+        std::string endtag = "";
+        if (types.size() > 1) {
+            returnedExpressions.back().append(
+                    "std::tuple<"
+            );
+            endtag =">";
+        }
 
         for (const RattleLang::type &i : types) {
             AppendToResult(i.get_corresponding_type_string() + ",");
         }
         returnedExpressions.back().pop_back();
-        AppendToResult("> " + uniqueName + ";\n");
+        AppendToResult(endtag + " " + uniqueName + ";\n");
         fnCall.insert(0, "\n" + uniqueName + "=");
     }
 
@@ -182,7 +190,17 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTFnInvoke *n
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTFnInvoke *node, void *data) {
     std::string name = ((SimpleNode *) (node->jjtGetChild(0)))->tokenValue;
     int startIndex = data ? *((int*)data) : 0;
+
+
+
+
     if (m_context->get_function(name).typenames[0].type_name != VOID) {
+
+        if (!isMultiAssign && !data) {
+            AppendToResult(m_fnCallName[node]);
+            return;
+        }
+
         AppendToResult("std::get<" + std::to_string(startIndex) + ">(" + m_fnCallName[node] + ")");
         if (returnedExpressions.size() - 1 != parent.parents.size()) {
             for (int i = 1; i < parent.parents.size(); i++) {
@@ -207,7 +225,9 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTCha
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTString *node, void *data) {
+    AppendToResult("std::string(");
     PrintNode(node);
+    AppendToResult(")");
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTNumber *node, void *data) {

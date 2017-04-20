@@ -91,7 +91,7 @@ namespace RattleLang {
         // now if we encounter a bool we can do (000000001111 & 001111000000) which would be 0 so we'd fire an error as
 
 
-        RattleLang::type getTypeFromNode(const SimpleNode* node);
+        RattleLang::TypeInformation getTypeFromNode(const SimpleNode* node);
 
         RattleLang::type getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
 

@@ -139,14 +139,15 @@ void Parser::declare(const ASTFnDef *node, void *data) {
         if (information.isEmpty()) {
             throw TypeException();
         }
-        retType = "std::tuple<";
+        int infoSize = information.typenames.size();
+        retType = infoSize > 1 ? "std::tuple<" : "";
 
         size_t types = information.num_return();
         for (int i = 0; i < types; ++i) {
             retType += information.typenames[i].get_corresponding_type_string() + ",";
         }
         retType.pop_back();
-        retType += ">";
+        retType += infoSize > 1 ? ">" : "";
     } else {
         paramIndex = 1;
         information = TypeInformation({type(VOID, 0)}, context);
@@ -195,7 +196,6 @@ void Parser::declare(const ASTFnDef *node, void *data) {
 
 void Parser::declare(const ASTFnBody *node, void *data) {
     if (node && data) {
-
         ScopeParser parser(static_cast<Context *>(data));
         StateMachineParserDecorator<ScopeParser> scopedParser(&parser);
         scopedParser.StartParsing(node);
@@ -235,8 +235,6 @@ void Parser::declare(const ASTParmlist *node, void *data) {
 void Parser::declare(const ASTFnTypeList *node, void *data) {
     if (node && data) {
         TypeInformation* typeInfo = static_cast<TypeInformation*>(data);
-        // Remove the NONE
-        typeInfo->typenames.pop_back();
         size_t childrenSize = node->jjtGetNumChildren();
 
         for (int i = 0; i < childrenSize ; ++i) {
@@ -260,6 +258,7 @@ void Parser::declare(const ASTReturnExpression *node, void *data) {
     std::vector<std::string> names;
     // How many expressions in
     size_t numChildren = node->jjtGetNumChildren();
+
     int i = 0;
     bool done = false;
     for (int j = 0; j < numChildren && !done; ++j) {
@@ -278,10 +277,11 @@ void Parser::declare(const ASTReturnExpression *node, void *data) {
         cOutput += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, fnContext), expNode);
     }
 
-    cOutput += "\nreturn std::make_tuple(";
+    cOutput += "\nreturn ";
+    cOutput += numChildren > 1 ? "std::make_tuple(" : "";
     for (const auto& name : names) {
         cOutput += name + ",";
     }
     cOutput.pop_back();
-    cOutput+=");";
+    cOutput += numChildren > 1 ?");" : ";";
 }

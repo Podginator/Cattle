@@ -1,0 +1,9 @@
+def returnFour : number, number, number, number () {
+    return 1, 2, 3, 4
+}
+
+def returnOne : number () {
+    return 4
+}
+
+z = returnOne()

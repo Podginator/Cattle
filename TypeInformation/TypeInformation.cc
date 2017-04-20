@@ -1,7 +1,6 @@
 #include "TypeInformation.h"
 
 RattleLang::TypeInformation::TypeInformation() {
-    typenames.push_back(type());
     this->scope = nullptr;
 }
 
@@ -15,7 +14,7 @@ RattleLang::TypeInformation::TypeInformation(std::initializer_list<RattleLang::t
 
 }
 
-// Return the number of returned items. 
+// Return the number of returned items.
 size_t RattleLang::TypeInformation::num_return() {
     return typenames.size();
 }
@@ -25,5 +24,5 @@ void RattleLang::TypeInformation::set_scope(RattleLang::Context *context) {
 }
 
 bool RattleLang::TypeInformation::isEmpty() {
-    return num_return() == 1 && typenames[0].type_name == "none";
+    return (num_return() == 1 && typenames[0].type_name == "none") || (num_return() == 0);
 }

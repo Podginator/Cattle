@@ -73,3 +73,7 @@ cmake-build-debug/CMakeFiles/3.7.1/CompilerIdC/a.exe
 *.exe
 cmake-build-debug/CMakeFiles/3.7.1/CompilerIdCXX/CMakeCXXCompilerId.cpp
 makefile
+
+*.iml
+
+.idea/.name
