@@ -24,7 +24,6 @@ namespace RattleLang {
 
     class Context;
 
-
     class TypeInformation {
     public:
         TypeInformation();

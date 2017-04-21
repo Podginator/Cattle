@@ -42,6 +42,7 @@
 #include "ASTArgList.h"
 #include "ASTObjCreate.h"
 #include "ASTOr.h"
+#include "ASTTupleDefine.h"
 #include "ASTCharacter.h"
 #include "ASTNumber.h"
 #include "ASTIdentifier.h"
@@ -53,4 +54,4 @@
 #include "ASTAdd.h"
 #include "ASTTimes.h"
 #endif
-/* JavaCC - OriginalChecksum=3ee20919c66fb1971efe0e397b53b119 (do not edit this line) */
+/* JavaCC - OriginalChecksum=672e36df31a70df21d565aa7b5837678 (do not edit this line) */

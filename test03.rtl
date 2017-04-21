@@ -2,8 +2,27 @@ def returnFour : number, number, number, number () {
     return 1, 2, 3, 4
 }
 
+example_return
+
+def example : number () {
+    return example_return
+}
+
 def returnOne : number () {
     return 4
 }
 
-z = returnOne()
+single_assignment = returnOne()
+multiple_assignment = returnFour()
+a,b,c = returnFour()
+
+d = 'c' + 2
+
+string_name = 'T' + "homa" + 's'
+
+print multiple_assignment[1]
+print multiple_assignment[2]
+print single_assignment
+print string_name
+print a
+print b

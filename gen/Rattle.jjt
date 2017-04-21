@@ -8,7 +8,6 @@ options
   DEBUG_LOOKAHEAD = false;
   DEBUG_TOKEN_MANAGER = false;
   ERROR_REPORTING = true;
-  JAVA_UNICODE_ESCAPE = false;
   UNICODE_INPUT = false;
   IGNORE_CASE = false;
   USER_TOKEN_MANAGER = false;
@@ -572,6 +571,8 @@ void primary_expression() :
           literal()
         | LOOKAHEAD(lambda_define())
           lambda_define()
+        | LOOKAHEAD(tuple_define())
+            tuple_define()
         | LOOKAHEAD(fn_invoke())
           fn_invoke()
         | LOOKAHEAD(method_invoke())
@@ -581,6 +582,14 @@ void primary_expression() :
         | obj_create()
         | "(" expression() ")"
     )
+}
+
+// A tuple is defined as one or more
+// expressions that form values.
+void tuple_define() #TupleDefine :
+{}
+{
+    "[" expression() (","expression())* "]"
 }
 
 void fn_invoke() #FnInvoke :

@@ -118,6 +118,8 @@ set(SOURCE_FILES
         gen/ASTIndexedExpression.cc
         gen/ASTString.cc
         gen/ASTString.h
+        gen/ASTTupleDefine.cc
+        gen/ASTTupleDefine.h
         gen/RattleTreeConstants.h
         gen/RattleVisitor.h
         gen/SimpleNode.cc

@@ -77,3 +77,5 @@ makefile
 *.iml
 
 .idea/.name
+
+*.xml___jb_old___
