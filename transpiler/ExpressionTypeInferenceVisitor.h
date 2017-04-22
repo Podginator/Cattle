@@ -8,6 +8,7 @@
 #include "../gen/RattleVisitor.h"
 #include "../TypeInformation/type.h"
 #include "../TypeInformation/TypeInformation.h"
+#include "../gen/ASTTupleDefine.h"
 
 namespace RattleLang {
     class ExpressionTypeInferenceVisitor : public RattleDefaultVisitor {
@@ -20,64 +21,65 @@ namespace RattleLang {
         RattleLang::TypeInformation StartParsing(const ASTExpression *node);
 
         //Binary Expressions.
-        virtual  void visit(const ASTOr *node, void *data);
+        void visit(const ASTOr *node, void *data) override;
 
-        virtual void visit(const ASTAnd *node, void *data);
+        void visit(const ASTAnd *node, void *data) override;
 
-        virtual void visit(const ASTCompEqual *node, void *data);
+        void visit(const ASTCompEqual *node, void *data) override;
 
-        virtual void visit(const ASTCompNequal *node, void *data);
+        void visit(const ASTCompNequal *node, void *data) override;
 
-        virtual void visit(const ASTCompGTE *node, void *data);
+        void visit(const ASTCompGTE *node, void *data) override;
 
-        virtual void visit(const ASTCompLTE *node, void *data);
+        void visit(const ASTCompLTE *node, void *data) override;
 
-        virtual void visit(const ASTCompGT *node, void *data);
+        void visit(const ASTCompGT *node, void *data) override;
 
-        virtual void visit(const ASTCompLT *node, void *data);
+        void visit(const ASTCompLT *node, void *data) override;
 
         // Number type operands
-        virtual void visit(const ASTAdd *node, void *data);
+        void visit(const ASTAdd *node, void *data) override;
 
-        virtual void visit(const ASTSubtract *node, void *data);
+        void visit(const ASTSubtract *node, void *data) override;
 
 
-        virtual void visit(const ASTString* node, void* data);
+        void visit(const ASTString* node, void* data) override;
 
-        virtual void visit(const ASTTimes *node, void *data);
+        void visit(const ASTTimes *node, void *data) override;
 
-        virtual void visit(const ASTDivide *node, void *data);
+        void visit(const ASTDivide *node, void *data) override;
 
-        virtual void visit(const ASTUnaryNot *node, void *data);
+        void visit(const ASTUnaryNot *node, void *data) override;
 
-        virtual void visit(const ASTUnaryPlus *node, void *data);
+        void visit(const ASTUnaryPlus *node, void *data) override;
 
-        virtual void visit(const ASTUnaryMinus *node, void *data);
+        void visit(const ASTUnaryMinus *node, void *data) override;
 
         //Return types in their own right.
-        virtual void visit(const ASTExpression *node, void *data);
+        void visit(const ASTExpression *node, void *data) override;
 
-        virtual void visit(const ASTFnInvoke *node, void *data);
+        void visit(const ASTFnInvoke *node, void *data) override;
 
-        virtual void visit(const ASTMethodInvoke *node, void *data);
+        void visit(const ASTMethodInvoke *node, void *data) override;
 
-        virtual void visit(const ASTIdentifier *node, void *data);
+        void visit(const ASTIdentifier *node, void *data) override;
 
-        virtual void visit(const ASTDereference *node, void* data);
+        void visit(const ASTDereference *node, void* data) override;
 
-        virtual void visit(const ASTMemIdentifier *node, void *data);
+        void visit(const ASTMemIdentifier *node, void *data) override;
 
         // These return types.
-        virtual void visit(const ASTCharacter *node, void *data);
+        void visit(const ASTCharacter *node, void *data) override;
 
-        virtual void visit(const ASTNumber *node, void *data);
+        void visit(const ASTNumber *node, void *data) override;
 
-        virtual void visit(const ASTTrue *node, void *data);
+        void visit(const ASTTrue *node, void *data) override;
 
-        virtual void visit(const ASTFalse *node, void *data);
+        void visit(const ASTFalse *node, void *data) override;
 
-        virtual void visit(const ASTIndexedExpression* node, void* data);
+        void visit(const ASTIndexedExpression* node, void* data) override;
 
+        void visit(const ASTTupleDefine* node, void* visit) override;
 
     private:
         RattleLang::type retType;
@@ -90,12 +92,9 @@ namespace RattleLang {
         // 000000001111
         // now if we encounter a bool we can do (000000001111 & 001111000000) which would be 0 so we'd fire an error as
 
-
         RattleLang::TypeInformation getTypeFromNode(const SimpleNode* node);
 
         RattleLang::type getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
-
-        // So what if we just get (expression).
 
     };
 

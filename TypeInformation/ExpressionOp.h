@@ -31,7 +31,6 @@ struct ExpressionOp {
 
     ExpressionParent parent;
 
-    std::string getCloseTag();
 };
 
 

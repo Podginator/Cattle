@@ -10,8 +10,6 @@
 
 
 namespace RattleLang {
-
-
     // primitives:
     //  number  1101111111
     //  char    0001110001

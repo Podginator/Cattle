@@ -8,15 +8,3 @@ ExpressionOp::ExpressionOp(ExpressionOp::ExpressionParent parentType, std::vecto
         parent(parentType), parents(parentVec)
 {}
 
-std::string ExpressionOp::getCloseTag() {
-    switch(parent) {
-        case ASSIGNMENT:
-            return ";";
-        case FN_CALL:
-            return ");";
-        case ANONYMOUS:
-            return "";
-    }
-
-    return "";
-}

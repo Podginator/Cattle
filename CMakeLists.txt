@@ -137,6 +137,6 @@ set(SOURCE_FILES
         TypeInformation/TypeStorage.h
         TypeInformation/ExpressionOp.h
         TypeInformation/ExpressionOp.cpp
-        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/ExpressionTypeInferenceVisitor.cpp transpiler/ExpressionTypeInferenceVisitor.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cpp gen/ASTFnTypeList.h exceptions/ContextException.h)
+        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/ExpressionTypeInferenceVisitor.cpp transpiler/ExpressionTypeInferenceVisitor.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cpp gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

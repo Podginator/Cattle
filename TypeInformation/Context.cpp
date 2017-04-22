@@ -4,6 +4,7 @@
 
 #include "Context.h"
 #include "../exceptions/TypeException.h"
+#include "../exceptions/ScopeException.h"
 
 RattleLang::Context RattleLang::Context::global_scope;
 
@@ -20,8 +21,7 @@ void RattleLang::Context::add_variable(const std::string &name, const RattleLang
     if (m_variables.find(name) == m_variables.end()) {
         this->m_variables[name] = info;
     } else {
-        // Todo Throw proper exceptions, not just strings. C++ letting you do it doesn't mean it's good.
-        throw "Variable Already Exists";
+        throw ScopeException("Variable Already Exists");
     }
 
 }
@@ -32,8 +32,7 @@ void RattleLang::Context::add_class(const std::string &name, const RattleLang::T
     if (get_class_definition(name).typenames[0].type_name == NONE) {
         this->m_classInformation[name] = info;
     } else {
-        // Todo Throw proper exceptions, not just strings. C++ letting you do it doesn't mean it's good.
-        throw "Class Already Defined";
+        throw ScopeException("Class Already Exists");
     }
 }
 

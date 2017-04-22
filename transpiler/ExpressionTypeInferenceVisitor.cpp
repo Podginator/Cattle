@@ -206,7 +206,7 @@ RattleLang::type RattleLang::ExpressionTypeInferenceVisitor::getTypeFromOperatio
     RattleLang::TypeInformation type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
     RattleLang::TypeInformation type2 = getTypeFromNode((SimpleNode*) node->jjtGetChild(1));
 
-    if (type1.typenames.size() > 1 || type2.typenames.size() > 2) {
+    if (type1.typenames.size() > 1 || type2.typenames.size() > 1) {
         throw ParsingException("Operation cannot be performed on multiple types");
     }
 
@@ -237,4 +237,23 @@ void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTInde
 
     RattleLang::TypeInformation* nodeType  = ((RattleLang::TypeInformation*) data);
     nodeType->typenames.push_back(IndexType.typenames[value]);
+}
+
+void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTTupleDefine *node, void *data) {
+    size_t numChildren = node->jjtGetNumChildren();
+    TypeInformation* data_info = static_cast<TypeInformation*>(data);
+
+    for (int i = 0; i < numChildren; ++i) {
+        ASTExpression* exp = dynamic_cast<ASTExpression*>(node->jjtGetChild(i));
+        if (exp) {
+            TypeInformation info;
+            this->visit(exp, &info);
+            size_t returnedTypes = info.typenames.size();
+
+            for (int j = 0; j < returnedTypes; ++j) {
+                data_info->typenames.push_back(info.typenames[j]);
+            }
+
+        }
+    }
 }

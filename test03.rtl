@@ -17,6 +17,7 @@ multiple_assignment = returnFour()
 a,b,c = returnFour()
 
 d = 'c' + 2
+tuple_assign = [1, 2, 3*4, 5]
 
 string_name = 'T' + "homa" + 's'
 

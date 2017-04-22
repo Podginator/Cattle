@@ -22,10 +22,6 @@ namespace RattleLang {
 
     struct type;
 
-    enum VariableType {
-        USER_CLASS,
-        PRIMITIVE
-    };
 
     enum operands {
         ADD_OP = 1,
@@ -57,12 +53,11 @@ namespace RattleLang {
 
 
     struct type {
-        type(std::string name, uint16_t operands = 0, VariableType vartype = USER_CLASS)
-                : defined_operations(operands), type_name(name), var_type(vartype)
+        type(std::string name, uint16_t operands = 0)
+                : defined_operations(operands), type_name(name)
         {}
 
-
-        type() : defined_operations(0), type_name(NONE), var_type(PRIMITIVE) {}
+        type() : defined_operations(0), type_name(NONE) {}
 
         bool operator<(const type &rhs) const {
             return type_name < rhs.type_name;
@@ -95,8 +90,6 @@ namespace RattleLang {
 
         std::string type_name;
 
-        VariableType var_type;
-
         std::string get_corresponding_type_string() const {
             if (type_name == NUMBER) return "float";
             if (type_name == BOOLEAN) return "bool";
@@ -106,9 +99,6 @@ namespace RattleLang {
             return type_name;
         }
     };
-
-
-
 }
 
 

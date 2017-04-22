@@ -22,16 +22,16 @@ RattleLang::TypeStorage* RattleLang::TypeStorage::s_instance = 0;
     };
  */
 RattleLang::TypeStorage::TypeStorage(){
-    type number(NUMBER, NUM, PRIMITIVE);
+    type number(NUMBER, NUM);
     m_types[NUMBER] = number;
 
-    type boolean(BOOLEAN, BOOL, PRIMITIVE);
+    type boolean(BOOLEAN, BOOL);
     m_types[BOOLEAN] = boolean;
 
-    type character(CHARACTER, CHAR, PRIMITIVE);
+    type character(CHARACTER, CHAR);
     m_types[CHARACTER] = character;
 
-    type string(STRING, STR, PRIMITIVE);
+    type string(STRING, STR);
     m_types[STRING] = string;
 
 

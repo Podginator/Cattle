@@ -26,5 +26,5 @@ void RattleLang::TypeInformation::set_scope(RattleLang::Context *context) {
 }
 
 bool RattleLang::TypeInformation::isEmpty() {
-    return (num_return() == 1 && typenames[0].type_name == "none") || (num_return() == 0);
+    return (num_return() == 1 && typenames[0].type_name == NONE) || (num_return() == 0);
 }
