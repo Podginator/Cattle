@@ -33,6 +33,10 @@ void RattleLang::ExpressionParser::StartParsing(const SimpleNode* n) {
 
 }
 
+void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTTupleDefine *node, void *data) {
+
+}
+
 void RattleLang::ExpressionParser::defaultVisit(const RattleLang::SimpleNode *node, void *data) {
     // Do nothing.
 }
@@ -337,4 +341,28 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTInd
 void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTIndexedExpression *node, void *data) {
 
     ChildrenAccept(node, data);
+}
+
+
+void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTupleDefine *node, void *data) {
+    ExpressionTypeInferenceVisitor infer(m_context);
+    size_t nodeSize = node->jjtGetNumChildren();
+    size_t totalSize = 0;
+    for (int i = 0; i < nodeSize; ++i) {
+        ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
+        TypeInformation info = infer.StartParsing(exp);
+
+        std::vector<std::string> names;
+        size_t internalSize = info.num_return();
+        for (int j = 0; j < internalSize; ++j) {
+            names.push_back(get_unique_name("tuple_assign"));
+
+        }
+        totalSize += internalSize;
+        
+        AppendToResult(StateMachineParserDecorator<ExpressionParser>::GetParserResults(
+                ExpressionParser(ExpressionOp(ExpressionOp::ASSIGNMENT, names), m_context), exp));
+
+    }
+
 }

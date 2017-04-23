@@ -75,7 +75,7 @@ void Parser::declare(const ASTClassDef *node, void *data) {
         // Remove last ","
         cOutput.pop_back();
     }
-    type class_type = type(className, EQ_OP, USER_CLASS);
+    type class_type = type(className, EQ_OP);
     TypeInformation class_information({class_type}, context);
     TypeStorage::get_instance()->add_type(class_type);
     context->add_class(className, class_information);

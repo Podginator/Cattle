@@ -37,7 +37,7 @@ namespace RattleLang {
             parser->StartParsing(node);
         }
 
-        virtual void defaultVisit(const SimpleNode *node, void *data) {
+         void defaultVisit(const SimpleNode *node, void *data) override  {
 
         }
 
@@ -47,189 +47,193 @@ namespace RattleLang {
             parser-> template defVisit<N>(node, data);
         }
 
-        virtual void visit(const SimpleNode *node, void *data) {
+         void visit(const SimpleNode *node, void *data) override  {
             defVisit<SimpleNode>(node, data);
         }
 
-        virtual void visit(const ASTCode *node, void *data) {
+         void visit(const ASTCode *node, void *data) override  {
             defVisit<ASTCode>(node, data);
         }
 
-        virtual void visit(const ASTStatement *node, void *data) {
+         void visit(const ASTStatement *node, void *data) override  {
             defVisit<ASTStatement>(node, data);
         }
 
-        virtual void visit(const ASTBlock *node, void *data) {
+         void visit(const ASTBlock *node, void *data) override  {
             defVisit<ASTBlock>(node, data);
         }
 
-        virtual void visit(const ASTParmlist *node, void *data) {
+         void visit(const ASTParmlist *node, void *data) override  {
             defVisit<ASTParmlist>(node, data);
         }
 
+         void visit(const ASTTupleDefine *node, void *data) override  {
+            defVisit<ASTTupleDefine>(node, data);
+        }
 
-        virtual void visit(const ASTClassDef *node, void *data) {
+
+         void visit(const ASTClassDef *node, void *data) override  {
             defVisit<ASTClassDef>(node, data);
         }
 
 
-        virtual void visit(const ASTFnBody *node, void *data) {
+         void visit(const ASTFnBody *node, void *data) override  {
             defVisit<ASTFnBody>(node, data);
         }
 
-        virtual void visit(const ASTFnDef *node, void *data) {
+         void visit(const ASTFnDef *node, void *data) override  {
             defVisit<ASTFnDef>(node, data);
         }
 
-        virtual void visit(const ASTReturnExpression *node, void *data) {
+         void visit(const ASTReturnExpression *node, void *data) override  {
             defVisit<ASTReturnExpression>(node, data);
         }
 
-        virtual void visit(const ASTMemDeclaration *node, void *data) {
+         void visit(const ASTMemDeclaration *node, void *data) override  {
             defVisit<ASTMemDeclaration>(node, data);
         }
 
-        virtual void visit(const ASTAssignment *node, void *data) {
+         void visit(const ASTAssignment *node, void *data) override  {
             defVisit<ASTAssignment>(node, data);
         }
 
-        virtual void visit(const ASTIfStatement *node, void *data) {
+         void visit(const ASTIfStatement *node, void *data) override  {
             defVisit<ASTIfStatement>(node, data);
         }
 
-        virtual void visit(const ASTIndexedExpression* node, void* data) {
+         void visit(const ASTIndexedExpression* node, void* data) override  {
             defVisit<ASTIndexedExpression>(node, data);
         }
 
-        virtual void visit(const ASTObjCreate *node, void *data) {
+         void visit(const ASTObjCreate *node, void *data) override  {
             defVisit<ASTObjCreate>(node, data);
         }
 
-        virtual void visit(const ASTMemInstantiate *node, void *data) {
+         void visit(const ASTMemInstantiate *node, void *data) override  {
             defVisit<ASTMemInstantiate>(node, data);
         }
 
-        virtual void visit(const ASTMethodInstantiate *node, void *data) {
+         void visit(const ASTMethodInstantiate *node, void *data) override  {
             defVisit<ASTMethodInstantiate>(node, data);
         }
 
-        virtual void visit(const ASTLabmdaDefine *node, void *data) {
+         void visit(const ASTLabmdaDefine *node, void *data) override  {
             defVisit<ASTLabmdaDefine>(node, data);
         }
 
-        virtual void visit(const ASTForLoop *node, void *data) {
+         void visit(const ASTForLoop *node, void *data) override  {
             defVisit<ASTForLoop>(node, data);
         }
 
-        virtual void visit(const ASTWhileLoop *node, void *data) {
+         void visit(const ASTWhileLoop *node, void *data) override  {
             defVisit<ASTWhileLoop>(node, data);
         }
 
-        virtual void visit(const ASTWrite *node, void *data) {
+         void visit(const ASTWrite *node, void *data) override  {
             defVisit<ASTWrite>(node, data);
         }
 
-        virtual void visit(const ASTArgList *node, void *data) {
+         void visit(const ASTArgList *node, void *data) override  {
             defVisit<ASTArgList>(node, data);
         }
 
-        virtual void visit(const ASTOr *node, void *data) {
+         void visit(const ASTOr *node, void *data) override  {
             defVisit<ASTOr>(node, data);
         }
 
-        virtual void visit(const ASTAnd *node, void *data) {
+         void visit(const ASTAnd *node, void *data) override  {
             defVisit<ASTAnd>(node, data);
         }
 
-        virtual void visit(const ASTCompEqual *node, void *data) {
+         void visit(const ASTCompEqual *node, void *data) override  {
             defVisit<ASTCompEqual>(node, data);
         }
 
-        virtual void visit(const ASTCompNequal *node, void *data) {
+         void visit(const ASTCompNequal *node, void *data) override  {
             defVisit<ASTCompNequal>(node, data);
         }
 
-        virtual void visit(const ASTCompGTE *node, void *data) {
+         void visit(const ASTCompGTE *node, void *data) override  {
             defVisit<ASTCompGTE>(node, data);
         }
 
-        virtual void visit(const ASTCompLTE *node, void *data) {
+         void visit(const ASTCompLTE *node, void *data) override  {
             defVisit<ASTCompLTE>(node, data);
         }
 
-        virtual void visit(const ASTCompGT *node, void *data) {
+         void visit(const ASTCompGT *node, void *data) override  {
             defVisit<ASTCompGT>(node, data);
         }
 
-        virtual void visit(const ASTCompLT *node, void *data) {
+         void visit(const ASTCompLT *node, void *data) override  {
             defVisit<ASTCompLT>(node, data);
         }
 
-        virtual void visit(const ASTAdd *node, void *data) {
+         void visit(const ASTAdd *node, void *data) override  {
             defVisit<ASTAdd>(node, data);
         }
 
-        virtual void visit(const ASTSubtract *node, void *data) {
+         void visit(const ASTSubtract *node, void *data) override  {
             defVisit<ASTSubtract>(node, data);
         }
 
-        virtual void visit(const ASTTimes *node, void *data) {
+         void visit(const ASTTimes *node, void *data) override  {
             defVisit<ASTTimes>(node, data);
         }
 
-        virtual void visit(const ASTDivide *node, void *data) {
+         void visit(const ASTDivide *node, void *data) override  {
             defVisit<ASTDivide>(node, data);
         }
 
-        virtual void visit(const ASTUnaryNot *node, void *data) {
+         void visit(const ASTUnaryNot *node, void *data) override  {
             defVisit<ASTUnaryNot>(node, data);
         }
 
-        virtual void visit(const ASTUnaryPlus *node, void *data) {
+         void visit(const ASTUnaryPlus *node, void *data) override  {
             defVisit<ASTUnaryPlus>(node, data);
         }
 
-        virtual void visit(const ASTUnaryMinus *node, void *data) {
+         void visit(const ASTUnaryMinus *node, void *data) override  {
             defVisit<ASTUnaryMinus>(node, data);
         }
 
-        virtual void visit(const ASTFnInvoke *node, void *data) {
+         void visit(const ASTFnInvoke *node, void *data) override  {
             defVisit<ASTFnInvoke>(node, data);
         }
 
-        virtual void visit(const ASTString *node, void *data) {
+         void visit(const ASTString *node, void *data) override  {
             defVisit<ASTString>(node, data);
         }
 
-        virtual void visit(const ASTMethodInvoke *node, void *data) {
+         void visit(const ASTMethodInvoke *node, void *data) override  {
             defVisit<ASTMethodInvoke>(node, data);
         }
 
-        virtual void visit(const ASTIdentifier *node, void *data) {
+         void visit(const ASTIdentifier *node, void *data) override  {
             defVisit<ASTIdentifier>(node, data);
         }
 
-        virtual void visit(const ASTMemIdentifier *node, void *data) {
+         void visit(const ASTMemIdentifier *node, void *data) override  {
             defVisit<ASTMemIdentifier>(node, data);
         }
 
-        virtual void visit(const ASTDereference *node, void *data) {
+         void visit(const ASTDereference *node, void *data) override  {
             defVisit<ASTDereference>(node, data);
         }
 
-        virtual void visit(const ASTCharacter *node, void *data) {
+         void visit(const ASTCharacter *node, void *data) override  {
             defVisit<ASTCharacter>(node, data);
         }
 
-        virtual void visit(const ASTNumber *node, void *data) {
+         void visit(const ASTNumber *node, void *data) override  {
             defVisit<ASTNumber>(node, data);
         }
 
-        virtual void visit(const ASTTrue *node, void *data) {
+         void visit(const ASTTrue *node, void *data) override  {
             defVisit<ASTTrue>(node, data);
         }
 
-        virtual void visit(const ASTFalse *node, void *data) {
+         void visit(const ASTFalse *node, void *data) override  {
             defVisit<ASTFalse>(node, data);
         }
 
@@ -237,7 +241,7 @@ namespace RattleLang {
             defVisit<ASTEOF>(node, data);
         }
 
-        virtual void visit(const ASTExpression *node, void *data) {
+         void visit(const ASTExpression *node, void *data) override  {
             defVisit<ASTExpression>(node, data);
         }
     };

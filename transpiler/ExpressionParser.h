@@ -117,6 +117,11 @@ namespace RattleLang{
         void visit_fnPass(const ASTIndexedExpression* node, void* data);
 
         void visit_expressionPass(const ASTIndexedExpression* node, void* data);
+
+        void visit_fnPass(const ASTTupleDefine* node, void* data);
+
+        void visit_expressionPass(const ASTTupleDefine* node, void* data);
+
     private:
         std::string res;
         ExpressionState state = FN_PASS;
