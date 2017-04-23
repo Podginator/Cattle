@@ -38,6 +38,7 @@ int main(int argc, char **argv) {
       cout << "Usage: rattle <inputfile>" << endl;
       exit(1);
     }
+    cout << argv[1] << endl;
 
     JAVACC_STRING_TYPE s = ReadFileFully(argv[1]);
     CharStream *stream = new CharStream(s.c_str(), s.size() - 1, 1, 1);
@@ -50,6 +51,13 @@ int main(int argc, char **argv) {
         Parser* nodeVisitor = new Parser(code);
         StateMachineParserDecorator<Parser>* visitorDecorator = new StateMachineParserDecorator<Parser>(nodeVisitor);
         visitorDecorator->StartParsing(code);
+
+        ofstream outputFile;
+        outputFile.open ("output.cpp");
+        outputFile << nodeVisitor->get_c_output();
+        outputFile.close();
+        return 0;
+
     } catch (const exception& e) {
         cout << e.what() << endl;
     }

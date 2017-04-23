@@ -24,7 +24,7 @@ namespace RattleLang {
 
         Parser(ASTCode* code);
         void StartParsing(const SimpleNode* node);
-        std::string getCOutput();
+        std::string get_c_output();
         template <class T>
         void defVisit(const T* node, void* data) {
             bool isDone = (SimpleNode*)(node)->isDone;

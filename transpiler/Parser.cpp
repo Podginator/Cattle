@@ -18,7 +18,7 @@ Parser::Parser(ASTCode *code) {
     context = &Context::global_scope;
 }
 
-std::string Parser::getCOutput() {
+std::string Parser::get_c_output() {
     return cOutput;
 }
 

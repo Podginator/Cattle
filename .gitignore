@@ -79,3 +79,5 @@ makefile
 .idea/.name
 
 *.xml___jb_old___
+
+build/*

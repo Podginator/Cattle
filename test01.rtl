@@ -20,7 +20,6 @@ x,y,z = retThree(1,2)
 a,b = testRecursion(testRecursion(testRecursion(90,9)))
 x = y
 y = z
-z = doThing(1,2)[1]
 
 string_name = "Hello"
 character = 'c'
