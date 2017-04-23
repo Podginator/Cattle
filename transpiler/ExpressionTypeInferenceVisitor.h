@@ -12,13 +12,14 @@
 
 namespace RattleLang {
     class ExpressionTypeInferenceVisitor : public RattleDefaultVisitor {
+
     public:
+
+        static ExpressionTypeInferenceVisitor* get_instance();
+
+        RattleLang::TypeInformation StartParsing(const ASTExpression *node, Context* context);
+
         void defaultVisit(const SimpleNode *node, void *data) override;
-
-    public:
-        ExpressionTypeInferenceVisitor(Context* context);
-
-        RattleLang::TypeInformation StartParsing(const ASTExpression *node);
 
         //Binary Expressions.
         void visit(const ASTOr *node, void *data) override;
@@ -82,7 +83,15 @@ namespace RattleLang {
         void visit(const ASTTupleDefine* node, void* visit) override;
 
     private:
+
+        ExpressionTypeInferenceVisitor();
+
+        static ExpressionTypeInferenceVisitor* instance;
+
+        std::map<const ASTExpression*, TypeInformation> m_typemap;
+
         RattleLang::type retType;
+
         Context* m_context;
 
         // On the initial pass we determine what type of operands are possible.

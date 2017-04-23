@@ -54,4 +54,6 @@ int main(int argc, char **argv) {
         cout << e.what() << endl;
     }
 
+    while(1);
+
 }

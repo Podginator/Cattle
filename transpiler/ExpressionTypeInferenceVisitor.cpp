@@ -7,13 +7,21 @@
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
 
-RattleLang::ExpressionTypeInferenceVisitor::ExpressionTypeInferenceVisitor(Context* context)
-        : retType(NONE, 0), m_context(context) {}
+RattleLang::ExpressionTypeInferenceVisitor* RattleLang::ExpressionTypeInferenceVisitor::instance;
 
-RattleLang::TypeInformation RattleLang::ExpressionTypeInferenceVisitor::StartParsing(const RattleLang::ASTExpression *node) {
+RattleLang::ExpressionTypeInferenceVisitor::ExpressionTypeInferenceVisitor()
+        : retType(NONE, 0){}
+
+RattleLang::TypeInformation RattleLang::ExpressionTypeInferenceVisitor::StartParsing(const RattleLang::ASTExpression *node, Context* context) {
     // Then do all the leaf nodes.
+    m_context = context;
     size_t numChildren = node->jjtGetNumChildren();
     TypeInformation ret({}, m_context);
+
+    if (m_typemap.find(node) != m_typemap.end()) {
+        return m_typemap[node];
+    }
+
 
     if (dynamic_cast<ASTFnInvoke*>(node->jjtGetChild(0))) {
         return  m_context->get_function(get_token_of_child((SimpleNode*)node->jjtGetChild(0) ,0));
@@ -24,6 +32,7 @@ RattleLang::TypeInformation RattleLang::ExpressionTypeInferenceVisitor::StartPar
         childNode->jjtAccept(this, &ret);
     }
 
+    m_typemap[node] = ret; 
     return ret;
 }
 
@@ -140,10 +149,9 @@ void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTUnar
 }
 
 void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTExpression *node, void *data) {
-    ExpressionTypeInferenceVisitor vis(m_context);
     RattleLang::TypeInformation *nodeType = ((RattleLang::TypeInformation *) data);
 
-    *nodeType = vis.StartParsing(node);
+    *nodeType = StartParsing(node, m_context);
 }
 
 void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTFnInvoke *node, void *data) {
@@ -221,7 +229,7 @@ void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTInde
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild((Node*)node->jjtGetChild(0), 0);
 
-    TypeInformation IndexType = StartParsing(exp);
+    TypeInformation IndexType = StartParsing(exp, m_context);
     size_t typeSize = IndexType.typenames.size();
 
     bool onlyDigits = (number->tokenValue.find_first_not_of( "0123456789" ) == std::string::npos);
@@ -256,4 +264,12 @@ void RattleLang::ExpressionTypeInferenceVisitor::visit(const RattleLang::ASTTupl
 
         }
     }
+}
+
+RattleLang::ExpressionTypeInferenceVisitor *RattleLang::ExpressionTypeInferenceVisitor::get_instance() {
+    if (!instance) {
+        instance = new ExpressionTypeInferenceVisitor();
+    };
+
+    return instance;
 }

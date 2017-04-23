@@ -262,9 +262,8 @@ void Parser::declare(const ASTReturnExpression *node, void *data) {
     int i = 0;
     bool done = false;
     for (int j = 0; j < numChildren && !done; ++j) {
-        ExpressionTypeInferenceVisitor visitor(fnContext);
         ASTExpression* expNode = static_cast<ASTExpression *>(node->jjtGetChild(j));
-        TypeInformation exp = visitor.StartParsing(expNode);
+        TypeInformation exp = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(expNode, fnContext);
         std::vector<std::string> localNames;
         // We've got our types
         for (int k = 0; k < exp.num_return() && !(done = i >= returnValues.num_return()); ++k, ++i) {

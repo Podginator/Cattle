@@ -274,13 +274,11 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
     int totalParams = 0;
 
     std::string functionName = m_fnCallName[(SimpleNode*)node->jjtGetParent()];
-    ExpressionTypeInferenceVisitor typeInferenceVisitor(m_context);
-
     if (nodeNum > 0) {
         size_t paramNum = 0;
         for (size_t i = 0; i < nodeNum; ++i) {
             ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-            TypeInformation info = typeInferenceVisitor.StartParsing(exp);
+            TypeInformation info = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(exp, m_context);
             if (info.isEmpty()) {
                 throw TypeException();
             }
@@ -340,29 +338,37 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTInd
 
 void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTIndexedExpression *node, void *data) {
 
-    ChildrenAccept(node, data);
 }
 
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTupleDefine *node, void *data) {
-    ExpressionTypeInferenceVisitor infer(m_context);
     size_t nodeSize = node->jjtGetNumChildren();
-    size_t totalSize = 0;
+    std::vector<std::string> allNames;
+    res.append(SCOPE_OPEN);
+
     for (int i = 0; i < nodeSize; ++i) {
         ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-        TypeInformation info = infer.StartParsing(exp);
-
+        TypeInformation info = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(exp, m_context);
         std::vector<std::string> names;
         size_t internalSize = info.num_return();
         for (int j = 0; j < internalSize; ++j) {
-            names.push_back(get_unique_name("tuple_assign"));
-
+            std::string unName = get_unique_name("tuple_assign");
+            res.append(info.typenames[j].get_corresponding_type_string() + " " + unName + ";\n");
+            names.push_back(unName);
+            allNames.push_back(unName);
         }
-        totalSize += internalSize;
-        
-        AppendToResult(StateMachineParserDecorator<ExpressionParser>::GetParserResults(
-                ExpressionParser(ExpressionOp(ExpressionOp::ASSIGNMENT, names), m_context), exp));
 
+        res.append(StateMachineParserDecorator<ExpressionParser>::GetParserResults(
+                ExpressionParser(ExpressionOp(ExpressionOp::ASSIGNMENT, names), m_context), exp));
     }
+
+    AppendToResult("std::make_tuple(");
+    for (const auto name : allNames) {
+        AppendToResult(name + ",");
+    }
+    returnedExpressions.back().pop_back();
+    AppendToResult(");");
+
+    AppendToResult(SCOPE_CLOSE);
 
 }

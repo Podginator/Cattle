@@ -105,11 +105,10 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
 // Parse an Expression to find out it's type.
 void RattleLang::ScopeParser::declare(const RattleLang::ASTExpression *node, void *data) {
     if (data) {
-        ExpressionTypeInferenceVisitor visitor(m_context);
         TypeInformation *type = reinterpret_cast<RattleLang::TypeInformation *>(data);
 
         if (type) {
-            *type = visitor.StartParsing(node);
+            *type = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(node,m_context);
         }
     }
 }

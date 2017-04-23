@@ -1,1 +1,26 @@
-tuple_assign = [1, 3, 't', 4, [1,2,3,'c'+2]]
+def retOneNum : number () {
+    return 1
+}
+
+def retThreeNum : number, number, number () {
+    return 2, 3, 4
+}
+
+def retTwoNum : number, number () {
+    return 5, 6
+}
+
+def expectFiveParam : number, number, number, number, number, number ( a : number, b : number, c : number, d : number, e : number, f : number )
+{
+    return a, b, c, d, e, f
+}
+
+
+param_tuple = [retOneNum(), retThreeNum(), retTwoNum()]
+g,h,i,j,k = expectFiveParam(param_tuple)
+
+print g
+print h
+print i
+print j
+print k
