@@ -11,11 +11,11 @@
 #include "../gen/ASTTupleDefine.h"
 
 namespace RattleLang {
-    class ExpressionTypeInferenceVisitor : public RattleDefaultVisitor {
+    class TypeInferer : public RattleDefaultVisitor {
 
     public:
 
-        static ExpressionTypeInferenceVisitor* get_instance();
+        static TypeInferer* get_instance();
 
         RattleLang::TypeInformation StartParsing(const ASTExpression *node, Context* context);
 
@@ -84,9 +84,9 @@ namespace RattleLang {
 
     private:
 
-        ExpressionTypeInferenceVisitor();
+        TypeInferer();
 
-        static ExpressionTypeInferenceVisitor* instance;
+        static TypeInferer* instance;
 
         std::map<const ASTExpression*, TypeInformation> m_typemap;
 

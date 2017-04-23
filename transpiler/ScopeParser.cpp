@@ -3,7 +3,7 @@
 //
 
 #include "ScopeParser.h"
-#include "ExpressionTypeInferenceVisitor.h"
+#include "TypeInferer.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
 
@@ -108,7 +108,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTExpression *node, voi
         TypeInformation *type = reinterpret_cast<RattleLang::TypeInformation *>(data);
 
         if (type) {
-            *type = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(node,m_context);
+            *type = TypeInferer::get_instance()->StartParsing(node,m_context);
         }
     }
 }

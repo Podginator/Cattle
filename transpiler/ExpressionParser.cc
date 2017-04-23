@@ -5,7 +5,7 @@
 #include <iostream>
 #include "ExpressionParser.h"
 #include "../exceptions/TypeException.h"
-#include "ExpressionTypeInferenceVisitor.h"
+#include "TypeInferer.h"
 #include "../exceptions/ParameterException.h"
 
 void RattleLang::ExpressionParser::StartParsing(const SimpleNode* n) {
@@ -278,7 +278,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
         size_t paramNum = 0;
         for (size_t i = 0; i < nodeNum; ++i) {
             ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-            TypeInformation info = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(exp, m_context);
+            TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
             if (info.isEmpty()) {
                 throw TypeException();
             }
@@ -348,7 +348,7 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTup
 
     for (int i = 0; i < nodeSize; ++i) {
         ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-        TypeInformation info = ExpressionTypeInferenceVisitor::get_instance()->StartParsing(exp, m_context);
+        TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
         std::vector<std::string> names;
         size_t internalSize = info.num_return();
         for (int j = 0; j < internalSize; ++j) {

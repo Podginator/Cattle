@@ -6,7 +6,7 @@
 #include "../TypeInformation/ExpressionOp.h"
 #include "StateMachineParserDecorator.h"
 #include "StateMachineParser.h"
-#include "ExpressionTypeInferenceVisitor.h"
+#include "TypeInferer.h"
 #include <string>
 
 
