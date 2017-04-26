@@ -91,7 +91,7 @@ namespace RattleLang {
         std::string type_name;
 
         std::string get_corresponding_type_string() const {
-            if (type_name == NUMBER) return "float";
+            if (type_name == NUMBER) return "double";
             if (type_name == BOOLEAN) return "bool";
             if (type_name == STRING) return "std::string";
             if (type_name == CHARACTER) return "char";

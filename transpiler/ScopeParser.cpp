@@ -188,12 +188,10 @@ void RattleLang::ScopeParser::implement(const ASTForLoop *node, void *data) {
         // Perform some kind of break logic.
         std::string unique_name = get_unique_name("for");
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
-        cOut += SCOPE_OPEN;
         cOut += "bool " + unique_name + ";\n";
 
         cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
-        cOut += SCOPE_CLOSE;
 
         // Then perform the inner statement
         std::shared_ptr<Context> forParserContext = std::make_shared<Context>(m_context);

@@ -10,4 +10,4 @@ rm -rf ./output
 rm -rf ./output.cpp
 ./Rattle_CPP $1 
 gcc -std=c++14 ./output.cpp -o ./output -lstdc++
-./output
+time ./output

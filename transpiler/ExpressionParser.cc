@@ -337,7 +337,7 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTInd
 }
 
 void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTIndexedExpression *node, void *data) {
-
+    ChildAccept(node, 0 ,data);
 }
 
 
