@@ -2,7 +2,7 @@ def returnFour : number, number, number, number () {
     return 1, 2, 3, 4
 }
 
-example_return
+example_return = 4
 
 def example : number () {
     return example_return
@@ -17,7 +17,7 @@ multiple_assignment = returnFour()
 a,b,c = returnFour()
 
 d = 'c' + 2
-tuple_assign = [1, 2, 3*4, 5]
+tuple_assign = [1, 2, 3*4, 5, 'B']
 
 string_name = 'T' + "homa" + 's'
 
@@ -27,3 +27,4 @@ print single_assignment
 print string_name
 print a
 print b
+print example()

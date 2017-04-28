@@ -40,6 +40,8 @@ RattleLang::TypeStorage::TypeStorage(){
     m_definedOperations[ADD_OP][std::make_pair(number,character)] = character;
     m_definedOperations[ADD_OP][std::make_pair(character, string)] = string;
     m_definedOperations[ADD_OP][std::make_pair(string, character)] = string;
+    m_definedOperations[ADD_OP][std::make_pair(string, number)] = string;
+    m_definedOperations[ADD_OP][std::make_pair(number, string)] = string;
     m_definedOperations[ADD_OP][std::make_pair(character, character)] = string;
     m_definedOperations[SUB_OP][std::make_pair(character, number)] = character;
     m_definedOperations[SUB_OP][std::make_pair(number,character)] = character;

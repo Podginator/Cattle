@@ -44,7 +44,6 @@ int main(int argc, char **argv) {
     CharStream *stream = new CharStream(s.c_str(), s.size() - 1, 1, 1);
     RattleTokenManager *scanner = new RattleTokenManager(stream);
     Rattle parser(scanner);
-    //parser.set ErrorHandler(new MyErrorHandler());
     ASTCode* code;
     try {
         ASTCode* code = parser.code();
@@ -61,7 +60,5 @@ int main(int argc, char **argv) {
     } catch (const exception& e) {
         cout << e.what() << endl;
     }
-
-    while(1);
 
 }

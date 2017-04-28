@@ -10,6 +10,7 @@
 
 void RattleLang::ExpressionParser::StartParsing(const SimpleNode* n) {
     isMultiAssign = isMultiAssignment(n);
+    expectedOutput = TypeInferer::get_instance()->StartParsing(static_cast<const ASTExpression*>(n), m_context);
 
     // Do an initial pass for this, ensuring that we first elaborate on any functions.
     ChildrenAccept(n);
@@ -128,6 +129,7 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTDer
 
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTExpression *node, void *data) {
+
     returnedExpressions.back() += "(";
     ChildrenAccept(node, data);
     returnedExpressions.back() += ")";
@@ -235,7 +237,13 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTStr
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTNumber *node, void *data) {
+    if (expectedOutput.typenames[0].type_name == STRING) {
+        AppendToResult("std::to_string(");
+    }
     PrintNode(node);
+    if (expectedOutput.typenames[0].type_name == STRING) {
+        AppendToResult(")");
+    }
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTrue *node, void *data) {
@@ -251,9 +259,30 @@ void RattleLang::ExpressionParser::PrintNode(const RattleLang::SimpleNode *node)
 }
 
 void RattleLang::ExpressionParser::doExpression(const RattleLang::SimpleNode *n, const std::string &expression) {
+
+
+    ASTExpression* exp = new ASTExpression(0);
+    exp->jjtAddChild(const_cast<SimpleNode*>(n),0);
+    TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
+    bool needsConverting =(expectedOutput.num_return() == 1 && expectedOutput.typenames[0].type_name == STRING) &&
+                          (info.num_return() == 1 && info.typenames[0].type_name == NUMBER);
+
+    std::string preample = needsConverting ? "std::to_string(" : info.get_typenames()+"(";
+
+    TypeInformation old = expectedOutput;
+    expectedOutput = info;
+
+
+
+
+    AppendToResult(preample);
     ChildAccept(n, 0);
     AppendToResult(expression);
     ChildAccept(n, 1);
+    AppendToResult(")");
+
+    expectedOutput = old;
+
 }
 
 
