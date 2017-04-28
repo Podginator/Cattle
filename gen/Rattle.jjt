@@ -448,7 +448,7 @@ void lambda_define() #LabmdaDefine :
 {}
 {
     // Ie : (x, y)->{ return x+y }
-    parmlist() "->" "{"
+    parmlist() "<" identifier() " : " identifier()  ("," identifier() " : " identifier() )*">" "->" "{"
     fnbody()
     [
       < RETURN > returnexpr()

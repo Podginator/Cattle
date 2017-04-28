@@ -784,7 +784,7 @@ void lambda_define()               :
     try {
 /*@egen*/
     // Ie : (x, y)->{ return x+y }
-    parmlist() "->" "{"
+    parmlist() "<" identifier() " : " identifier()  ("," identifier() " : " identifier() )*">" "->" "{"
     fnbody()
     [
       < RETURN > returnexpr()
