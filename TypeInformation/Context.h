@@ -6,11 +6,11 @@
 #define RATTLE_CPP_CONTEXT_H
 
 #include <string>
+#include <memory>
 #include "TypeInformation.h"
 
 
 namespace RattleLang {
-
 
     class TypeInformation;
 
@@ -25,26 +25,26 @@ namespace RattleLang {
 
         Context(Context* parent);
 
-        void add_variable(const std::string& name, const RattleLang::TypeInformation& info);
+        void add_variable(const std::string& name, std::shared_ptr<RattleLang::TypeInformation> info);
 
-        void add_class(const std::string& name, const RattleLang::TypeInformation& info);
+        void add_class(const std::string& name, std::shared_ptr<RattleLang::TypeInformation> info);
 
-        void add_function(const std::string& name, const RattleLang::TypeInformation& info);
+        void add_function(const std::string& name, std::shared_ptr<RattleLang::TypeInformation> info);
 
-        TypeInformation get_variable(const std::string& name);
+        std::shared_ptr<RattleLang::TypeInformation> get_variable(const std::string& name);
 
-        TypeInformation get_class_definition(const std::string& name);
+        std::shared_ptr<RattleLang::TypeInformation> get_class_definition(const std::string& name);
 
-        TypeInformation get_function(const std::string& name);
+        std::shared_ptr<RattleLang::TypeInformation> get_function(const std::string& name);
 
 
 
     private:
-        std::map<std::string, RattleLang::TypeInformation> m_variables;
+        std::map<std::string, std::shared_ptr<RattleLang::TypeInformation>> m_variables;
 
-        std::map<std::string, RattleLang::TypeInformation> m_classInformation;
+        std::map<std::string, std::shared_ptr<RattleLang::TypeInformation>> m_classInformation;
 
-        std::map<std::string, RattleLang::TypeInformation> m_functionInformation;
+        std::map<std::string, std::shared_ptr<RattleLang::TypeInformation>> m_functionInformation;
 
         Context* parent;
     };

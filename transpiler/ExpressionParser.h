@@ -129,7 +129,7 @@ namespace RattleLang{
         std::map<const SimpleNode*, std::string> m_fnCallName;
         ExpressionOp parent;
         Context* m_context;
-        TypeInformation expectedOutput;
+        std::shared_ptr<TypeInformation> expectedOutput;
         bool isMultiAssign = false;
         bool hasFnCalls = false;
 

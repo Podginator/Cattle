@@ -48,8 +48,7 @@ int main(int argc, char **argv) {
     try {
         ASTCode* code = parser.code();
         Parser* nodeVisitor = new Parser(code);
-        StateMachineParserDecorator<Parser>* visitorDecorator = new StateMachineParserDecorator<Parser>(nodeVisitor);
-        visitorDecorator->StartParsing(code);
+        nodeVisitor->StartParsing(code);
 
         ofstream outputFile;
         outputFile.open ("output.cpp");

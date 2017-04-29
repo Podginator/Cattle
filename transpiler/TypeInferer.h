@@ -17,7 +17,7 @@ namespace RattleLang {
 
         static TypeInferer* get_instance();
 
-        RattleLang::TypeInformation StartParsing(const ASTExpression *node, Context* context);
+        std::shared_ptr<TypeInformation> StartParsing(const ASTExpression *node, Context* context);
 
         void defaultVisit(const SimpleNode *node, void *data) override;
 
@@ -88,7 +88,7 @@ namespace RattleLang {
 
         static TypeInferer* instance;
 
-        std::map<const ASTExpression*, TypeInformation> m_typemap;
+        std::map<const ASTExpression*, std::shared_ptr<TypeInformation>> m_typemap;
 
         RattleLang::type retType;
 
@@ -101,9 +101,11 @@ namespace RattleLang {
         // 000000001111
         // now if we encounter a bool we can do (000000001111 & 001111000000) which would be 0 so we'd fire an error as
 
-        RattleLang::TypeInformation getTypeFromNode(const SimpleNode* node);
+        std::shared_ptr<RattleLang::TypeInformation> getTypeFromNode(const SimpleNode* node);
 
         RattleLang::type getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
+
+        void doOperand(const SimpleNode *node, RattleLang::operands operand, void* info);
 
     };
 

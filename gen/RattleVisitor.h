@@ -221,6 +221,7 @@ public:
   virtual void  visit(const ASTFalse *node, void * data) {
     defaultVisit(node, data);
   }
+
   ~RattleDefaultVisitor() { }
 
 protected:

@@ -4,8 +4,6 @@ RattleLang::TypeInformation::TypeInformation() {
     this->scope = nullptr;
 }
 
-
-
 RattleLang::TypeInformation::TypeInformation(std::initializer_list<RattleLang::type> names, Context* context)
 {
     for (auto i : names) {

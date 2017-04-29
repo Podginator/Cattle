@@ -155,30 +155,20 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTFnInvoke *n
     // Get the function name.
     // Check how many return values there are.
     // Unnecessary unless we're doing a multi assign.
-    TypeInformation type_info = m_context->get_function(name);
-    std::vector<RattleLang::type> types = type_info.typenames;
+    std::shared_ptr<TypeInformation> type_info = m_context->get_function(name);
 
-    if (type_info.isEmpty()) {
+
+    if (!type_info || type_info->isEmpty()) {
         throw TypeException();
     }
 
+    std::vector<RattleLang::type> types = type_info->typenames;
     std::string fnCall = name+"(";
     std::string uniqueName = get_unique_name(name);
     m_fnCallName[node] = uniqueName;
-    if (types[0].type_name != VOID) {
-        std::string endtag = "";
-        if (types.size() > 1) {
-            returnedExpressions.back().append(
-                    "std::tuple<"
-            );
-            endtag =">";
-        }
 
-        for (const RattleLang::type &i : types) {
-            AppendToResult(i.get_corresponding_type_string() + ",");
-        }
-        returnedExpressions.back().pop_back();
-        AppendToResult(endtag + " " + uniqueName + ";\n");
+    if (types[0].type_name != VOID) {
+        AppendToResult(type_info->get_typenames() + " " + uniqueName + ";\n");
         fnCall.insert(0, "\n" + uniqueName + "=");
     }
 
@@ -200,8 +190,7 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTFnI
 
 
 
-    if (m_context->get_function(name).typenames[0].type_name != VOID) {
-
+    if (m_context->get_function(name)->typenames[0].type_name != VOID) {
         if (!isMultiAssign && !data) {
             AppendToResult(m_fnCallName[node]);
             return;
@@ -237,11 +226,11 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTStr
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTNumber *node, void *data) {
-    if (expectedOutput.typenames[0].type_name == STRING) {
+    if (expectedOutput->typenames[0].type_name == STRING) {
         AppendToResult("std::to_string(");
     }
     PrintNode(node);
-    if (expectedOutput.typenames[0].type_name == STRING) {
+    if (expectedOutput->typenames[0].type_name == STRING) {
         AppendToResult(")");
     }
 }
@@ -259,20 +248,16 @@ void RattleLang::ExpressionParser::PrintNode(const RattleLang::SimpleNode *node)
 }
 
 void RattleLang::ExpressionParser::doExpression(const RattleLang::SimpleNode *n, const std::string &expression) {
-
-
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild(const_cast<SimpleNode*>(n),0);
-    TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
-    bool needsConverting =(expectedOutput.num_return() == 1 && expectedOutput.typenames[0].type_name == STRING) &&
-                          (info.num_return() == 1 && info.typenames[0].type_name == NUMBER);
+    std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, m_context);
+    bool needsConverting =(expectedOutput->num_return() == 1 && expectedOutput->typenames[0].type_name == STRING) &&
+                          (info->num_return() == 1 && info->typenames[0].type_name == NUMBER);
 
-    std::string preample = needsConverting ? "std::to_string(" : info.get_typenames()+"(";
+    std::string preample = needsConverting ? "std::to_string(" : info->get_typenames()+"(";
 
-    TypeInformation old = expectedOutput;
+    std::shared_ptr<TypeInformation> old = expectedOutput;
     expectedOutput = info;
-
-
 
 
     AppendToResult(preample);
@@ -299,7 +284,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
 
     // If we've pass
     int nodeNum = node->jjtGetNumChildren();
-    int expectedParams = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue).inner_vars.size();
+    int expectedParams = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue)->inner_vars.size();
     int totalParams = 0;
 
     std::string functionName = m_fnCallName[(SimpleNode*)node->jjtGetParent()];
@@ -307,16 +292,16 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
         size_t paramNum = 0;
         for (size_t i = 0; i < nodeNum; ++i) {
             ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-            TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
-            if (info.isEmpty()) {
+            std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, m_context);
+            if (!info || info->isEmpty()) {
                 throw TypeException();
             }
 
             std::vector<std::string> param_names;
-            size_t resultSize= info.typenames.size();
+            size_t resultSize= info->typenames.size();
             for (int j = 0; j < resultSize; ++j, ++paramNum) {
                 param_names.push_back(functionName + "param" + std::to_string(paramNum));
-                AppendToResult(info.typenames[j].get_corresponding_type_string() + " " + functionName + "param" + std::to_string(paramNum) + ";\n");
+                AppendToResult(info->typenames[j].get_corresponding_type_string() + " " + functionName + "param" + std::to_string(paramNum) + ";\n");
                 totalParams++;
             }
 
@@ -335,7 +320,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTArgList *node, void *data) {
     std::string functionName = m_fnCallName[(SimpleNode*)node->jjtGetParent()];
-    int nodeNum = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue).inner_vars.size();
+    int nodeNum = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue)->inner_vars.size();
 
     if (nodeNum > 0) {
         for (size_t i = 0; i < nodeNum; ++i) {
@@ -377,12 +362,12 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTup
 
     for (int i = 0; i < nodeSize; ++i) {
         ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-        TypeInformation info = TypeInferer::get_instance()->StartParsing(exp, m_context);
+        std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, m_context);
         std::vector<std::string> names;
-        size_t internalSize = info.num_return();
+        size_t internalSize = info->num_return();
         for (int j = 0; j < internalSize; ++j) {
             std::string unName = get_unique_name("tuple_assign");
-            res.append(info.typenames[j].get_corresponding_type_string() + " " + unName + ";\n");
+            res.append(info->typenames[j].get_corresponding_type_string() + " " + unName + ";\n");
             names.push_back(unName);
             allNames.push_back(unName);
         }
