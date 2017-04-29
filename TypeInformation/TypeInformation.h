@@ -43,26 +43,19 @@ namespace RattleLang {
 
         bool isEmpty();
 
-        std::string get_typenames() {
-            size_t numReturned = num_return();
-            if (numReturned == 1) {
-                return typenames[0].get_corresponding_type_string();
-            }
-
-            std::string ret = "std::tuple<";
-
-            for (int i = 0; i < numReturned; ++i) {
-                ret += typenames[i].get_corresponding_type_string() + ",";
-            }
-            ret.pop_back();
-            ret += ">";
-
-            return ret;
-        }
+        std::string get_typenames();
 
         Context* scope;
 
+        // Functions return a type name.
+        virtual std::string get_returntype() {
+            return this->get_typenames();
+        }
+
     };
+
+
+
 
 }
 

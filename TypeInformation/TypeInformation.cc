@@ -19,8 +19,25 @@ size_t RattleLang::TypeInformation::num_return() {
     return typenames.size();
 }
 
+std::string RattleLang::TypeInformation::get_typenames() {
+    size_t numReturned = num_return();
+    if (numReturned == 1) {
+        return typenames[0].get_corresponding_type_string();
+    }
+
+    std::string ret = "std::tuple<";
+
+    for (int i = 0; i < numReturned; ++i) {
+        ret += typenames[i].get_corresponding_type_string() + ",";
+    }
+    ret.pop_back();
+    ret += ">";
+
+    return ret;
+}
+
 void RattleLang::TypeInformation::set_scope(RattleLang::Context *context) {
-    this->scope = context;
+    scope = context;
 }
 
 bool RattleLang::TypeInformation::isEmpty() {

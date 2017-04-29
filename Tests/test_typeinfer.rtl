@@ -1,1 +1,11 @@
-a = 'c' + 12 + "Hello" + 12
+def retOne : number () {
+    return 2
+}
+
+a = 'c' + 12 + "Hello" + 12 + 7*3
+b = (12/7) + 'c'
+c = b
+d = retOne()
+print c
+print b
+print a

@@ -4,6 +4,7 @@
 #include "../exceptions/ParsingException.h"
 #include "ScopeParser.h"
 #include "TypeInferer.h"
+#include "../TypeInformation/LambdaTypeInformation.h"
 
 using namespace RattleLang;
 
@@ -13,6 +14,8 @@ FunctionBuilder::FunctionBuilder(Context* context) {
 
 void FunctionBuilder::StartParsing(const SimpleNode *node, const std::string& fnName) {
     const ASTLabmdaDefine* def = nullptr;
+    m_output.clear();
+
     if (!dynamic_cast<const ASTFnDef*>(node) ||  (def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
         throw ParsingException("Cannot deduce function from node type");
     }
@@ -24,11 +27,12 @@ void FunctionBuilder::StartParsing(const SimpleNode *node, const std::string& fn
 void FunctionBuilder::build_function(const SimpleNode* node, const std::string& fnName,  bool is_lambda) {
     size_t startIndex = is_lambda ? 0 : 1;
     size_t paramIndex = startIndex + 1;
+    std::shared_ptr<TypeInformation> information(is_lambda ? new LambdaTypeInformation() : new TypeInformation());
 
     // Do type list.
     ASTFnTypeList* retTypeList = dynamic_cast<ASTFnTypeList*>(node->jjtGetChild(startIndex));
     std::string retType = "";
-    std::shared_ptr<TypeInformation> information(new TypeInformation());
+
     if (retTypeList) {
         visit(retTypeList, information.get());
         if (!information || information->isEmpty()) {
