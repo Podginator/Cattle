@@ -30,6 +30,7 @@
 #include "ASTBlock.h"
 #include "ASTAnd.h"
 #include "ASTCode.h"
+#include "ASTLambdaPass.h"
 #include "ASTCompLT.h"
 #include "ASTForLoop.h"
 #include "ASTFnInvoke.h"
@@ -54,4 +55,4 @@
 #include "ASTAdd.h"
 #include "ASTTimes.h"
 #endif
-/* JavaCC - OriginalChecksum=d2fc928fff96f8b8b029bfe8336d2f9e (do not edit this line) */
+/* JavaCC - OriginalChecksum=91b4c24d1d688941e4228bba66010fe7 (do not edit this line) */

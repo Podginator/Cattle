@@ -291,12 +291,19 @@ void parmlist() #Parmlist :
 // A parm list should have type declarations too.
   "("
   [
-    identifier() " : " identifier()
+    identifier() " : " ( identifier() | LambdaPass() )
     (
-      "," identifier() " : " identifier()
+      "," identifier() " : " ( identifier() | LambdaPass() )
     )*
   ]
   ")"
+}
+
+void LambdaPass() #LambdaPass :
+{}
+{
+    "fn<"(identifier() ("," identifier())*) ">"
+        "("(identifier() ("," identifier())*)")"
 }
 
 void classdef() #ClassDef :

@@ -4,11 +4,11 @@
 #include "SimpleNode.h"
 namespace RattleLang {
   unsigned int jj_la1_0[] = {
-0x80183a00,0x183a00,0x80183a00,0x0,0x80000000,0x0,0x80180000,0x80180000,0x80183a00,0x0,0x0,0x200000,0x0,0x0,0x0,0x0,0x80000000,0x0,0x0,0x80000000,0x0,0x400,0x80000000,0x0,0x80000000,0x0,0x0,0x200000,0xe8070000,0x0,0x4000,0x8000,0x0,0x0,0x0,0x0,0x0,0x0,0x10000,0xe8060000,0x68060000,0x0,0x0,0x0,0x68060000,0x0,0x80000000,0x60000,};
+0x80183a00,0x183a00,0x80183a00,0x80000000,0x0,0x80000000,0x80000000,0x0,0x0,0x0,0x80180000,0x80180000,0x80183a00,0x0,0x0,0x200000,0x0,0x0,0x0,0x0,0x80000000,0x0,0x0,0x80000000,0x0,0x400,0x80000000,0x0,0x80000000,0x0,0x0,0x200000,0xe8070000,0x0,0x4000,0x8000,0x0,0x0,0x0,0x0,0x0,0x0,0x10000,0xe8060000,0x68060000,0x0,0x0,0x0,0x68060000,0x0,0x80000000,0x60000,};
   unsigned int jj_la1_1[] = {
-0x10,0x10,0x10,0x200,0x0,0x0,0x0,0x0,0x10,0x200,0x80000000,0x0,0x200,0x2010,0x2010,0x80000000,0x0,0x200,0x80000000,0x0,0x200,0x0,0x0,0x200,0x0,0x0,0x0,0x0,0xc000054,0x200,0x0,0x0,0x7a0000,0x7a0000,0xc000000,0xc000000,0x30000000,0x30000000,0xc000000,0x54,0x0,0x14,0x200,0x0,0x0,0x0,0x0,0x0,};
+0x10,0x10,0x10,0x0,0x200,0x0,0x0,0x200,0x200,0x0,0x0,0x0,0x10,0x200,0x80000000,0x0,0x200,0x2010,0x2010,0x80000000,0x0,0x200,0x80000000,0x0,0x200,0x0,0x0,0x200,0x0,0x0,0x0,0x0,0xc000054,0x200,0x0,0x0,0x7a0000,0x7a0000,0xc000000,0xc000000,0x30000000,0x30000000,0xc000000,0x54,0x0,0x14,0x200,0x0,0x0,0x0,0x0,0x0,};
   unsigned int jj_la1_2[] = {
-0x0,0x0,0x0,0x0,0x0,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x4,0x0,0x0,0x0,0x0,0x0,0x8,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x4,0x0,0x4,0x0,0x0,};
+0x0,0x0,0x0,0x1,0x0,0x1,0x0,0x0,0x0,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x4,0x8,0x0,0x0,0x0,0x0,0x0,0x10,0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x8,0x0,0x0,};
 
   /** Constructor with user supplied TokenManager. */
 
@@ -200,7 +200,20 @@ void Rattle::parmlist() {/*@bgen(jjtree) Parmlist */
       case IDENTIFIER:{
         identifier();
         jj_consume_token(63);
-        identifier();
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case IDENTIFIER:{
+          identifier();
+          break;
+          }
+        case 64:{
+          LambdaPass();
+          break;
+          }
+        default:
+          jj_la1[3] = jj_gen;
+          jj_consume_token(-1);
+          errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
+        }
         while (!hasError) {
           switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
           case COMMA:{
@@ -208,19 +221,32 @@ void Rattle::parmlist() {/*@bgen(jjtree) Parmlist */
             break;
             }
           default:
-            jj_la1[3] = jj_gen;
+            jj_la1[4] = jj_gen;
             goto end_label_3;
           }
           jj_consume_token(COMMA);
           identifier();
           jj_consume_token(63);
-          identifier();
+          switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+          case IDENTIFIER:{
+            identifier();
+            break;
+            }
+          case 64:{
+            LambdaPass();
+            break;
+            }
+          default:
+            jj_la1[5] = jj_gen;
+            jj_consume_token(-1);
+            errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
+          }
         }
         end_label_3: ;
         break;
         }
       default:
-        jj_la1[4] = jj_gen;
+        jj_la1[6] = jj_gen;
         ;
       }
       jj_consume_token(RPAREN);
@@ -239,6 +265,61 @@ if (jjtc000) {
 }
 
 
+void Rattle::LambdaPass() {/*@bgen(jjtree) LambdaPass */
+  ASTLambdaPass *jjtn000 = new ASTLambdaPass(JJTLAMBDAPASS);
+  bool jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000->jjtSetFirstToken(getToken(1));
+    try {
+      jj_consume_token(64);
+      identifier();
+      while (!hasError) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case COMMA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[7] = jj_gen;
+          goto end_label_4;
+        }
+        jj_consume_token(COMMA);
+        identifier();
+      }
+      end_label_4: ;
+      jj_consume_token(GT);
+      jj_consume_token(LPAREN);
+      identifier();
+      while (!hasError) {
+        switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
+        case COMMA:{
+          ;
+          break;
+          }
+        default:
+          jj_la1[8] = jj_gen;
+          goto end_label_5;
+        }
+        jj_consume_token(COMMA);
+        identifier();
+      }
+      end_label_5: ;
+      jj_consume_token(RPAREN);
+    } catch ( ...) {
+if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+    }
+if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+        jjtn000->jjtSetLastToken(getToken(0));
+      }
+}
+
+
 void Rattle::classdef() {/*@bgen(jjtree) ClassDef */
   ASTClassDef *jjtn000 = new ASTClassDef(JJTCLASSDEF);
   bool jjtc000 = true;
@@ -248,14 +329,14 @@ void Rattle::classdef() {/*@bgen(jjtree) ClassDef */
       jj_consume_token(CLASS);
       identifier();
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case 64:{
-        jj_consume_token(64);
+      case 65:{
+        jj_consume_token(65);
         identifier();
 jjtn000->polymorphic = true;
         break;
         }
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[9] = jj_gen;
         ;
       }
       jj_consume_token(LBRACE);
@@ -268,8 +349,8 @@ jjtn000->polymorphic = true;
           break;
           }
         default:
-          jj_la1[6] = jj_gen;
-          goto end_label_4;
+          jj_la1[10] = jj_gen;
+          goto end_label_6;
         }
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
         case CLASS:{
@@ -285,12 +366,12 @@ jjtn000->polymorphic = true;
           break;
           }
         default:
-          jj_la1[7] = jj_gen;
+          jj_la1[11] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
       }
-      end_label_4: ;
+      end_label_6: ;
       jj_consume_token(RBRACE);
     } catch ( ...) {
 if (jjtc000) {
@@ -327,12 +408,12 @@ void Rattle::fnbody() {/*@bgen(jjtree) FnBody */
           break;
           }
         default:
-          jj_la1[8] = jj_gen;
-          goto end_label_5;
+          jj_la1[12] = jj_gen;
+          goto end_label_7;
         }
         statement();
       }
-      end_label_5: ;
+      end_label_7: ;
     } catch ( ...) {
 if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -363,13 +444,13 @@ void Rattle::fnTypeList() {/*@bgen(jjtree) FnTypeList */
           break;
           }
         default:
-          jj_la1[9] = jj_gen;
-          goto end_label_6;
+          jj_la1[13] = jj_gen;
+          goto end_label_8;
         }
         jj_consume_token(COMMA);
         identifier();
       }
-      end_label_6: ;
+      end_label_8: ;
     } catch ( ...) {
 if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -421,7 +502,7 @@ void Rattle::fndef() {/*@bgen(jjtree) FnDef */
         break;
         }
       default:
-        jj_la1[10] = jj_gen;
+        jj_la1[14] = jj_gen;
         ;
       }
       parmlist();
@@ -435,7 +516,7 @@ jjtn000->fnHasReturn = true;
         break;
         }
       default:
-        jj_la1[11] = jj_gen;
+        jj_la1[15] = jj_gen;
         ;
       }
       jj_consume_token(RBRACE);
@@ -468,13 +549,13 @@ void Rattle::returnexpr() {/*@bgen(jjtree) ReturnExpression */
           break;
           }
         default:
-          jj_la1[12] = jj_gen;
-          goto end_label_7;
+          jj_la1[16] = jj_gen;
+          goto end_label_9;
         }
         jj_consume_token(COMMA);
         expression();
       }
-      end_label_7: ;
+      end_label_9: ;
     } catch ( ...) {
 if (jjtc000) {
       jjtree.clearNodeScope(jjtn000);
@@ -514,14 +595,14 @@ jjtn000->memHasDefaultVal = true;
           break;
           }
         default:
-          jj_la1[13] = jj_gen;
+          jj_la1[17] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
         break;
         }
       default:
-        jj_la1[14] = jj_gen;
+        jj_la1[18] = jj_gen;
         ;
       }
     } catch ( ...) {
@@ -533,7 +614,7 @@ if (jjtc000) {
     }
     }
 if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000,  2u);
+      jjtree.closeNodeScope(jjtn000,  2);
       jjtn000->jjtSetLastToken(getToken(0));
     }
 }
@@ -560,13 +641,13 @@ jjtn000->typeDeclared = true;
             break;
             }
           default:
-            jj_la1[15] = jj_gen;
+            jj_la1[19] = jj_gen;
             ;
           }
           break;
           }
         default:
-          jj_la1[16] = jj_gen;
+          jj_la1[20] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
@@ -578,8 +659,8 @@ jjtn000->typeDeclared = true;
           break;
           }
         default:
-          jj_la1[17] = jj_gen;
-          goto end_label_8;
+          jj_la1[21] = jj_gen;
+          goto end_label_10;
         }
         jj_consume_token(COMMA);
         if (jj_2_5(2147483647)) {
@@ -596,19 +677,19 @@ jjtn000->isObject = true;
               break;
               }
             default:
-              jj_la1[18] = jj_gen;
+              jj_la1[22] = jj_gen;
               ;
             }
             break;
             }
           default:
-            jj_la1[19] = jj_gen;
+            jj_la1[23] = jj_gen;
             jj_consume_token(-1);
             errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
           }
         }
       }
-      end_label_8: ;
+      end_label_10: ;
       jj_consume_token(ASSIGN);
       expression();
       while (!hasError) {
@@ -618,13 +699,13 @@ jjtn000->isObject = true;
           break;
           }
         default:
-          jj_la1[20] = jj_gen;
-          goto end_label_9;
+          jj_la1[24] = jj_gen;
+          goto end_label_11;
         }
         jj_consume_token(COMMA);
         expression();
       }
-      end_label_9: ;
+      end_label_11: ;
     } catch ( ...) {
 if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -659,7 +740,7 @@ jjtn000->ifHasElse = true;
         break;
         }
       default:
-        jj_la1[21] = jj_gen;
+        jj_la1[25] = jj_gen;
         ;
       }
     } catch ( ...) {
@@ -687,8 +768,8 @@ void Rattle::obj_create() {/*@bgen(jjtree) ObjCreate */
       jj_consume_token(CREATE);
       identifier();
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-      case 65:{
-        jj_consume_token(65);
+      case 66:{
+        jj_consume_token(66);
         while (!hasError) {
           switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
           case IDENTIFIER:{
@@ -696,8 +777,8 @@ void Rattle::obj_create() {/*@bgen(jjtree) ObjCreate */
             break;
             }
           default:
-            jj_la1[22] = jj_gen;
-            goto end_label_10;
+            jj_la1[26] = jj_gen;
+            goto end_label_12;
           }
           if (jj_2_6(2147483647)) {
             method_instantiate();
@@ -711,23 +792,23 @@ void Rattle::obj_create() {/*@bgen(jjtree) ObjCreate */
                 break;
                 }
               default:
-                jj_la1[23] = jj_gen;
+                jj_la1[27] = jj_gen;
                 ;
               }
               break;
               }
             default:
-              jj_la1[24] = jj_gen;
+              jj_la1[28] = jj_gen;
               jj_consume_token(-1);
               errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
             }
           }
         }
-        end_label_10: ;
+        end_label_12: ;
         break;
         }
       default:
-        jj_la1[25] = jj_gen;
+        jj_la1[29] = jj_gen;
         ;
       }
       jj_consume_token(RBRACE);
@@ -779,19 +860,19 @@ void Rattle::method_instantiate() {/*@bgen(jjtree) MethodInstantiate */
       identifier();
       while (!hasError) {
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case 66:{
+        case 67:{
           ;
           break;
           }
         default:
-          jj_la1[26] = jj_gen;
-          goto end_label_11;
+          jj_la1[30] = jj_gen;
+          goto end_label_13;
         }
-        jj_consume_token(66);
+        jj_consume_token(67);
         identifier();
 jjtn000->isObject = true;
       }
-      end_label_11: ;
+      end_label_13: ;
       arglist();
     } catch ( ...) {
 if (jjtc000) {
@@ -816,7 +897,7 @@ void Rattle::lambda_define() {/*@bgen(jjtree) LabmdaDefine */
     try {
       parmlist();
       fnTypeList();
-      jj_consume_token(66);
+      jj_consume_token(67);
       jj_consume_token(LBRACE);
       fnbody();
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
@@ -827,7 +908,7 @@ jjtn000->fnHasReturn = true;
         break;
         }
       default:
-        jj_la1[27] = jj_gen;
+        jj_la1[31] = jj_gen;
         ;
       }
       jj_consume_token(RBRACE);
@@ -919,7 +1000,7 @@ if (jjtc001) {
               }
     }
 if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001,  1u);
+                jjtree.closeNodeScope(jjtn001,  1);
                 jjtn001->jjtSetLastToken(getToken(0));
               }
 }
@@ -949,7 +1030,7 @@ void Rattle::arglist() {/*@bgen(jjtree) ArgList */
         break;
         }
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[32] = jj_gen;
         ;
       }
       while (!hasError) {
@@ -959,13 +1040,13 @@ void Rattle::arglist() {/*@bgen(jjtree) ArgList */
           break;
           }
         default:
-          jj_la1[29] = jj_gen;
-          goto end_label_12;
+          jj_la1[33] = jj_gen;
+          goto end_label_14;
         }
         jj_consume_token(COMMA);
         expression();
       }
-      end_label_12: ;
+      end_label_14: ;
       jj_consume_token(RPAREN);
     } catch ( ...) {
 if (jjtc000) {
@@ -1013,8 +1094,8 @@ void Rattle::or_expression() {
         break;
         }
       default:
-        jj_la1[30] = jj_gen;
-        goto end_label_13;
+        jj_la1[34] = jj_gen;
+        goto end_label_15;
       }
       jj_consume_token(OR);
 ASTOr *jjtn001 = new ASTOr(JJTOR);
@@ -1032,11 +1113,11 @@ if (jjtc001) {
              }
       }
 if (jjtc001) {
-               jjtree.closeNodeScope(jjtn001,  2u);
+               jjtree.closeNodeScope(jjtn001,  2);
                jjtn001->jjtSetLastToken(getToken(0));
              }
     }
-    end_label_13: ;
+    end_label_15: ;
 }
 
 
@@ -1049,8 +1130,8 @@ void Rattle::and_expression() {
         break;
         }
       default:
-        jj_la1[31] = jj_gen;
-        goto end_label_14;
+        jj_la1[35] = jj_gen;
+        goto end_label_16;
       }
       jj_consume_token(AND);
 ASTAnd *jjtn001 = new ASTAnd(JJTAND);
@@ -1068,11 +1149,11 @@ if (jjtc001) {
               }
       }
 if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001,  2u);
+                jjtree.closeNodeScope(jjtn001,  2);
                 jjtn001->jjtSetLastToken(getToken(0));
               }
     }
-    end_label_14: ;
+    end_label_16: ;
 }
 
 
@@ -1084,7 +1165,7 @@ void Rattle::compare_expression() {
     case LT:
     case LE:
     case GE:
-    case 67:{
+    case 68:{
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case EQ:{
         jj_consume_token(EQ);
@@ -1103,13 +1184,13 @@ if (jjtc001) {
            }
         }
 if (jjtc001) {
-             jjtree.closeNodeScope(jjtn001,  2u);
+             jjtree.closeNodeScope(jjtn001,  2);
              jjtn001->jjtSetLastToken(getToken(0));
            }
         break;
         }
-      case 67:{
-        jj_consume_token(67);
+      case 68:{
+        jj_consume_token(68);
 ASTCompNequal *jjtn002 = new ASTCompNequal(JJTCOMPNEQUAL);
          bool jjtc002 = true;
          jjtree.openNodeScope(jjtn002);
@@ -1125,7 +1206,7 @@ if (jjtc002) {
          }
         }
 if (jjtc002) {
-           jjtree.closeNodeScope(jjtn002,  2u);
+           jjtree.closeNodeScope(jjtn002,  2);
            jjtn002->jjtSetLastToken(getToken(0));
          }
         break;
@@ -1147,7 +1228,7 @@ if (jjtc003) {
          }
         }
 if (jjtc003) {
-           jjtree.closeNodeScope(jjtn003,  2u);
+           jjtree.closeNodeScope(jjtn003,  2);
            jjtn003->jjtSetLastToken(getToken(0));
          }
         break;
@@ -1169,7 +1250,7 @@ if (jjtc004) {
          }
         }
 if (jjtc004) {
-           jjtree.closeNodeScope(jjtn004,  2u);
+           jjtree.closeNodeScope(jjtn004,  2);
            jjtn004->jjtSetLastToken(getToken(0));
          }
         break;
@@ -1191,7 +1272,7 @@ if (jjtc005) {
         }
         }
 if (jjtc005) {
-          jjtree.closeNodeScope(jjtn005,  2u);
+          jjtree.closeNodeScope(jjtn005,  2);
           jjtn005->jjtSetLastToken(getToken(0));
         }
         break;
@@ -1213,20 +1294,20 @@ if (jjtc006) {
         }
         }
 if (jjtc006) {
-          jjtree.closeNodeScope(jjtn006,  2u);
+          jjtree.closeNodeScope(jjtn006,  2);
           jjtn006->jjtSetLastToken(getToken(0));
         }
         break;
         }
       default:
-        jj_la1[32] = jj_gen;
+        jj_la1[36] = jj_gen;
         jj_consume_token(-1);
         errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
       }
       break;
       }
     default:
-      jj_la1[33] = jj_gen;
+      jj_la1[37] = jj_gen;
       ;
     }
 }
@@ -1242,8 +1323,8 @@ void Rattle::add_expression() {
         break;
         }
       default:
-        jj_la1[34] = jj_gen;
-        goto end_label_15;
+        jj_la1[38] = jj_gen;
+        goto end_label_17;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case PLUS:{
@@ -1263,7 +1344,7 @@ if (jjtc001) {
           }
         }
 if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001,  2u);
+            jjtree.closeNodeScope(jjtn001,  2);
             jjtn001->jjtSetLastToken(getToken(0));
           }
         break;
@@ -1285,18 +1366,18 @@ if (jjtc002) {
             }
         }
 if (jjtc002) {
-              jjtree.closeNodeScope(jjtn002,  2u);
+              jjtree.closeNodeScope(jjtn002,  2);
               jjtn002->jjtSetLastToken(getToken(0));
             }
         break;
         }
       default:
-        jj_la1[35] = jj_gen;
+        jj_la1[39] = jj_gen;
         jj_consume_token(-1);
         errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
       }
     }
-    end_label_15: ;
+    end_label_17: ;
 }
 
 
@@ -1310,8 +1391,8 @@ void Rattle::mul_expression() {
         break;
         }
       default:
-        jj_la1[36] = jj_gen;
-        goto end_label_16;
+        jj_la1[40] = jj_gen;
+        goto end_label_18;
       }
       switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
       case STAR:{
@@ -1331,7 +1412,7 @@ if (jjtc001) {
           }
         }
 if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001,  2u);
+            jjtree.closeNodeScope(jjtn001,  2);
             jjtn001->jjtSetLastToken(getToken(0));
           }
         break;
@@ -1353,18 +1434,18 @@ if (jjtc002) {
         }
         }
 if (jjtc002) {
-          jjtree.closeNodeScope(jjtn002,  2u);
+          jjtree.closeNodeScope(jjtn002,  2);
           jjtn002->jjtSetLastToken(getToken(0));
         }
         break;
         }
       default:
-        jj_la1[37] = jj_gen;
+        jj_la1[41] = jj_gen;
         jj_consume_token(-1);
         errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
       }
     }
-    end_label_16: ;
+    end_label_18: ;
 }
 
 
@@ -1387,7 +1468,7 @@ if (jjtc001) {
             }
       }
 if (jjtc001) {
-              jjtree.closeNodeScope(jjtn001,  1u);
+              jjtree.closeNodeScope(jjtn001,  1);
               jjtn001->jjtSetLastToken(getToken(0));
             }
       break;
@@ -1409,7 +1490,7 @@ if (jjtc002) {
         }
       }
 if (jjtc002) {
-          jjtree.closeNodeScope(jjtn002,  1u);
+          jjtree.closeNodeScope(jjtn002,  1);
           jjtn002->jjtSetLastToken(getToken(0));
         }
       break;
@@ -1431,13 +1512,13 @@ if (jjtc003) {
         }
       }
 if (jjtc003) {
-          jjtree.closeNodeScope(jjtn003,  1u);
+          jjtree.closeNodeScope(jjtn003,  1);
           jjtn003->jjtSetLastToken(getToken(0));
         }
       break;
       }
     default:
-      jj_la1[38] = jj_gen;
+      jj_la1[42] = jj_gen;
       if (jj_2_7(2147483647)) {
         indexed_expression();
       } else {
@@ -1455,7 +1536,7 @@ if (jjtc003) {
           break;
           }
         default:
-          jj_la1[39] = jj_gen;
+          jj_la1[43] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
@@ -1500,7 +1581,7 @@ void Rattle::primary_expression() {
       break;
       }
     default:
-      jj_la1[40] = jj_gen;
+      jj_la1[44] = jj_gen;
       if (jj_2_8(2147483647)) {
         lambda_define();
       } else if (jj_2_9(2147483647)) {
@@ -1524,7 +1605,7 @@ void Rattle::primary_expression() {
           break;
           }
         default:
-          jj_la1[41] = jj_gen;
+          jj_la1[45] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
@@ -1548,13 +1629,13 @@ void Rattle::tuple_define() {/*@bgen(jjtree) TupleDefine */
           break;
           }
         default:
-          jj_la1[42] = jj_gen;
-          goto end_label_17;
+          jj_la1[46] = jj_gen;
+          goto end_label_19;
         }
         jj_consume_token(COMMA);
         expression();
       }
-      end_label_17: ;
+      end_label_19: ;
       jj_consume_token(RBRACKET);
     } catch ( ...) {
 if (jjtc000) {
@@ -1602,20 +1683,20 @@ void Rattle::method_invoke() {/*@bgen(jjtree) MethodInvoke */
     try {
       identifier();
       while (!hasError) {
-        jj_consume_token(66);
+        jj_consume_token(67);
         identifier();
 jjtn000->isObject = true;
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case 66:{
+        case 67:{
           ;
           break;
           }
         default:
-          jj_la1[43] = jj_gen;
-          goto end_label_18;
+          jj_la1[47] = jj_gen;
+          goto end_label_20;
         }
       }
-      end_label_18: ;
+      end_label_20: ;
       arglist();
     } catch ( ...) {
 if (jjtc000) {
@@ -1652,7 +1733,7 @@ void Rattle::literal() {
       break;
       }
     default:
-      jj_la1[44] = jj_gen;
+      jj_la1[48] = jj_gen;
       jj_consume_token(-1);
       errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
     }
@@ -1696,19 +1777,19 @@ void Rattle::member_identifier() {Token* t;/*@bgen(jjtree) MemIdentifier */
 jjtn000->tokenValue = t->image;
         jjtn000->isObject = true;
       while (!hasError) {
-        jj_consume_token(66);
+        jj_consume_token(67);
         identifier();
         switch ((jj_ntk==-1)?jj_ntk_f():jj_ntk) {
-        case 66:{
+        case 67:{
           ;
           break;
           }
         default:
-          jj_la1[45] = jj_gen;
-          goto end_label_19;
+          jj_la1[49] = jj_gen;
+          goto end_label_21;
         }
       }
-      end_label_19: ;
+      end_label_21: ;
     } catch ( ...) {
 if (jjtc000) {
         jjtree.clearNodeScope(jjtn000);
@@ -1743,7 +1824,7 @@ jjtn000->isObject = true;
           break;
           }
         default:
-          jj_la1[46] = jj_gen;
+          jj_la1[50] = jj_gen;
           jj_consume_token(-1);
           errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
         }
@@ -1886,7 +1967,7 @@ if (jjtc002) {
       break;
       }
     default:
-      jj_la1[47] = jj_gen;
+      jj_la1[51] = jj_gen;
       jj_consume_token(-1);
       errorHandler->handleParseError(token, getToken(1), __FUNCTION__, this), hasError = true;
     }
@@ -1921,7 +2002,7 @@ void Rattle::ReInit(TokenManager* tokenManager){
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 48; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 52; i++) jj_la1[i] = -1;
   }
 
 

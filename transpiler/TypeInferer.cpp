@@ -194,6 +194,10 @@ RattleLang::type RattleLang::TypeInferer::getTypeFromOperation(const RattleLang:
     std::shared_ptr<TypeInformation> type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
     std::shared_ptr<TypeInformation> type2 = getTypeFromNode((SimpleNode*) node->jjtGetChild(1));
 
+    if (!type1 || !type2) {
+        throw ParsingException("Variable does not exist", node->jjtGetFirstToken()->beginLine);
+    }
+
     if (type1->typenames.size() > 1 || type2->typenames.size() > 1) {
         throw ParsingException("Operation cannot be performed on multiple types", node->jjtGetFirstToken()->beginLine);
     }

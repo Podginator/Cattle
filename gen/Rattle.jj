@@ -390,9 +390,9 @@ void parmlist()           :
 // A parm list should have type declarations too.
   "("
   [
-    identifier() " : " identifier()
+    identifier() " : " ( identifier() | LambdaPass() )
     (
-      "," identifier() " : " identifier()
+      "," identifier() " : " ( identifier() | LambdaPass() )
     )*
   ]
   ")"/*@bgen(jjtree)*/
@@ -409,6 +409,34 @@ void parmlist()           :
       jjtn000->jjtSetLastToken(getToken(0));
     }
   }
+/*@egen*/
+}
+
+void LambdaPass()             :
+{/*@bgen(jjtree) LambdaPass */
+  ASTLambdaPass *jjtn000 = new ASTLambdaPass(JJTLAMBDAPASS);
+  bool jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+  jjtn000->jjtSetFirstToken(getToken(1));
+/*@egen*/}
+{/*@bgen(jjtree) LambdaPass */
+    try {
+/*@egen*/
+    "fn<"(identifier() ("," identifier())*) ">"
+        "("(identifier() ("," identifier())*)")"/*@bgen(jjtree)*/
+    } catch (...) {
+      if (jjtc000) {
+        jjtree.clearNodeScope(jjtn000);
+        jjtc000 = false;
+      } else {
+        jjtree.popNode();
+      }
+    } {
+      if (jjtc000) {
+        jjtree.closeNodeScope(jjtn000, true);
+        jjtn000->jjtSetLastToken(getToken(0));
+      }
+    }
 /*@egen*/
 }
 
