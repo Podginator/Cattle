@@ -82,6 +82,8 @@ namespace RattleLang {
 
         void visit(const ASTTupleDefine* node, void* visit) override;
 
+        void visit(const ASTLabmdaDefine *node, void *data) override;
+
     private:
 
         TypeInferer();
@@ -110,9 +112,6 @@ namespace RattleLang {
     };
 
 }
-
-
-
 
 
 #endif //RATTLE_CPP_EXPRESSIONTYPEINFERENCEVISITOR_H

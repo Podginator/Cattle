@@ -509,7 +509,7 @@ if (jjtc000) {
     }
     }
 if (jjtc000) {
-      jjtree.closeNodeScope(jjtn000,  2);
+      jjtree.closeNodeScope(jjtn000,  2u);
     }
 }
 
@@ -877,7 +877,7 @@ if (jjtc001) {
               }
     }
 if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001,  1);
+                jjtree.closeNodeScope(jjtn001,  1u);
               }
 }
 
@@ -984,7 +984,7 @@ if (jjtc001) {
              }
       }
 if (jjtc001) {
-               jjtree.closeNodeScope(jjtn001,  2);
+               jjtree.closeNodeScope(jjtn001,  2u);
              }
     }
     end_label_13: ;
@@ -1018,7 +1018,7 @@ if (jjtc001) {
               }
       }
 if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001,  2);
+                jjtree.closeNodeScope(jjtn001,  2u);
               }
     }
     end_label_14: ;
@@ -1051,7 +1051,7 @@ if (jjtc001) {
            }
         }
 if (jjtc001) {
-             jjtree.closeNodeScope(jjtn001,  2);
+             jjtree.closeNodeScope(jjtn001,  2u);
            }
         break;
         }
@@ -1071,7 +1071,7 @@ if (jjtc002) {
          }
         }
 if (jjtc002) {
-           jjtree.closeNodeScope(jjtn002,  2);
+           jjtree.closeNodeScope(jjtn002,  2u);
          }
         break;
         }
@@ -1091,7 +1091,7 @@ if (jjtc003) {
          }
         }
 if (jjtc003) {
-           jjtree.closeNodeScope(jjtn003,  2);
+           jjtree.closeNodeScope(jjtn003,  2u);
          }
         break;
         }
@@ -1111,7 +1111,7 @@ if (jjtc004) {
          }
         }
 if (jjtc004) {
-           jjtree.closeNodeScope(jjtn004,  2);
+           jjtree.closeNodeScope(jjtn004,  2u);
          }
         break;
         }
@@ -1131,7 +1131,7 @@ if (jjtc005) {
         }
         }
 if (jjtc005) {
-          jjtree.closeNodeScope(jjtn005,  2);
+          jjtree.closeNodeScope(jjtn005,  2u);
         }
         break;
         }
@@ -1151,7 +1151,7 @@ if (jjtc006) {
         }
         }
 if (jjtc006) {
-          jjtree.closeNodeScope(jjtn006,  2);
+          jjtree.closeNodeScope(jjtn006,  2u);
         }
         break;
         }
@@ -1199,7 +1199,7 @@ if (jjtc001) {
           }
         }
 if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001,  2);
+            jjtree.closeNodeScope(jjtn001,  2u);
           }
         break;
         }
@@ -1219,7 +1219,7 @@ if (jjtc002) {
             }
         }
 if (jjtc002) {
-              jjtree.closeNodeScope(jjtn002,  2);
+              jjtree.closeNodeScope(jjtn002,  2u);
             }
         break;
         }
@@ -1263,7 +1263,7 @@ if (jjtc001) {
           }
         }
 if (jjtc001) {
-            jjtree.closeNodeScope(jjtn001,  2);
+            jjtree.closeNodeScope(jjtn001,  2u);
           }
         break;
         }
@@ -1283,7 +1283,7 @@ if (jjtc002) {
         }
         }
 if (jjtc002) {
-          jjtree.closeNodeScope(jjtn002,  2);
+          jjtree.closeNodeScope(jjtn002,  2u);
         }
         break;
         }
@@ -1315,7 +1315,7 @@ if (jjtc001) {
             }
       }
 if (jjtc001) {
-              jjtree.closeNodeScope(jjtn001,  1);
+              jjtree.closeNodeScope(jjtn001,  1u);
             }
       break;
       }
@@ -1335,7 +1335,7 @@ if (jjtc002) {
         }
       }
 if (jjtc002) {
-          jjtree.closeNodeScope(jjtn002,  1);
+          jjtree.closeNodeScope(jjtn002,  1u);
         }
       break;
       }
@@ -1355,7 +1355,7 @@ if (jjtc003) {
         }
       }
 if (jjtc003) {
-          jjtree.closeNodeScope(jjtn003,  1);
+          jjtree.closeNodeScope(jjtn003,  1u);
         }
       break;
       }

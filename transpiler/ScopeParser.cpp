@@ -6,6 +6,7 @@
 #include "TypeInferer.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
+#include "../TypeInformation/LambdaTypeInformation.h"
 
 RattleLang::ScopeParser::ScopeParser(RattleLang::Context *context, bool exclusiveScope) {
     m_context = context;
@@ -78,17 +79,14 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                 // Find the subinformation
                 if (!varInfo || m_context != varInfo->scope) {
                     std::shared_ptr<TypeInformation> declared_info;
-                    if (indexOfExpressions == 1 && typenamesSize > 1) {
-                        cOut += typeFound->get_typenames();
+                    if ((indexOfExpressions == 1 && typenamesSize > 1) || dynamic_cast<ASTLabmdaDefine*>(node->jjtGetChild(1)->jjtGetChild(0))) {
                         declared_info = std::shared_ptr<TypeInformation>(typeFound);
-
                     } else {
-                        cOut += typeFound->typenames[k].get_corresponding_type_string();
                         declared_info =std::shared_ptr<TypeInformation>(new TypeInformation({typeFound->typenames[k]}, m_context));
                     }
 
                     m_context->add_variable(get_token_of_child(node, i), declared_info);
-                    cOut +=  " " + varName + ";\n";
+                    cOut +=  declared_info->get_returntype() + " " + varName + ";\n";
                 }
 
             }

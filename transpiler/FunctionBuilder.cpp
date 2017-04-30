@@ -7,16 +7,17 @@
 #include "../TypeInformation/LambdaTypeInformation.h"
 
 using namespace RattleLang;
+using namespace std;
 
 FunctionBuilder::FunctionBuilder(Context* context) {
     m_context = context;
 }
 
-void FunctionBuilder::StartParsing(const SimpleNode *node, const std::string& fnName) {
+void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName) {
     const ASTLabmdaDefine* def = nullptr;
     m_output.clear();
 
-    if (!dynamic_cast<const ASTFnDef*>(node) ||  (def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
+    if (!dynamic_cast<const ASTFnDef*>(node) &&  !(def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
         throw ParsingException("Cannot deduce function from node type");
     }
 
@@ -24,64 +25,93 @@ void FunctionBuilder::StartParsing(const SimpleNode *node, const std::string& fn
     build_function(node, fnName, def);
 }
 
-void FunctionBuilder::build_function(const SimpleNode* node, const std::string& fnName,  bool is_lambda) {
-    size_t startIndex = is_lambda ? 0 : 1;
-    size_t paramIndex = startIndex + 1;
-    std::shared_ptr<TypeInformation> information(is_lambda ? new LambdaTypeInformation() : new TypeInformation());
+// We need to declare the function first.
+shared_ptr<TypeInformation> FunctionBuilder::declare_function(const SimpleNode *node, const string &fnName, bool is_lambda) {
+    size_t startIndex = 1;
+    size_t paramIndex = is_lambda ? 0 : 2;
+    shared_ptr<TypeInformation> information(is_lambda ? new LambdaTypeInformation({}, m_context) : new TypeInformation({}, m_context));
 
     // Do type list.
     ASTFnTypeList* retTypeList = dynamic_cast<ASTFnTypeList*>(node->jjtGetChild(startIndex));
-    std::string retType = "";
-
     if (retTypeList) {
         visit(retTypeList, information.get());
         if (!information || information->isEmpty()) {
             throw TypeException();
         }
-
-        retType = information->get_typenames();
     } else {
-        paramIndex -= 1;
-        information = std::shared_ptr<TypeInformation>(new TypeInformation({type(VOID, 0)}, m_context));
-        retType = "void";
+        paramIndex = is_lambda ? paramIndex : 1;
+        information->typenames.push_back(type(VOID, 0));
     }
-
-    // Add the function.
-    m_output += retType + " " + fnName;
 
     // Handle Param List
     ASTParmlist* parmlist = dynamic_cast<ASTParmlist*>(node->jjtGetChild(paramIndex));
     if (!parmlist) {
         throw ParsingException("Cannot Find Parameter List, Fatal Error. ");
     }
-    std::vector<std::pair<std::string, type>> params;
+    vector<pair<string, type>> params;
     visit(parmlist, &params);
-    m_output += "(";
 
     Context* fnContext = new Context(m_context);
     if (params.size() != 0) {
         for (const auto &param : params) {
-            m_output += param.second.get_corresponding_type_string();
-            m_output += " " + param.first + ",";
-
-            std::shared_ptr<TypeInformation> varInfo(new TypeInformation({param.second}, fnContext));
+            shared_ptr<TypeInformation> varInfo(new TypeInformation({param.second}, fnContext));
             fnContext->add_variable(param.first, varInfo);
             information->inner_vars[param.first] = varInfo;
         }
-        m_output.pop_back();
     }
-    m_output += ")";
-    m_output += SCOPE_OPEN;
+
+    // To do?
     m_context->add_function(fnName, information);
+    return information;
+}
+
+void FunctionBuilder::build_function(const SimpleNode* node, const string& fnName,  bool is_lambda) {
+    size_t startIndex = 1;
+    size_t paramIndex = is_lambda ? 0 : 2;
+    shared_ptr<TypeInformation> information = m_context->get_function(fnName);
+
+    if (!information) {
+        information = declare_function(node, fnName, is_lambda);
+    }
+
+    // Do type list.
+    ASTFnTypeList* retTypeList = dynamic_cast<ASTFnTypeList*>(node->jjtGetChild(startIndex));
+    string retType = information->get_typenames();
+    paramIndex = retTypeList ? paramIndex : paramIndex - 1;
+
+    // Handle Param List
+    ASTParmlist* parmlist = dynamic_cast<ASTParmlist*>(node->jjtGetChild(paramIndex));
+    if (!parmlist) {
+        throw ParsingException("Cannot Find Parameter List, Fatal Error. ");
+    }
+
+    string paramList = "";
+    paramList += "(";
+
+    map<string, shared_ptr<TypeInformation>> params = information->inner_vars;
+    Context* fnContext = nullptr;
+    if (params.size() != 0) {
+        for (const auto &param : params) {
+            fnContext = param.second->scope;
+            paramList += param.second->get_typenames();
+            paramList += " " + param.first + ",";
+        }
+        paramList.pop_back();
+    }
+    paramList += ")";
+    fnContext = fnContext ? fnContext : new Context(m_context);
+
+    m_output = is_lambda ? "[=]" + paramList : retType + " " + fnName + paramList;
+    m_output += SCOPE_OPEN;
 
     ASTFnBody* fnBody = dynamic_cast<ASTFnBody*>(node->jjtGetChild(paramIndex + 1));
     visit(fnBody, fnContext);
 
+    pair<shared_ptr<TypeInformation>, Context*> typeContext = make_pair(information, fnContext);
     if (node->fnHasReturn) {
-        ASTReturnExpression* fnReturn = dynamic_cast<ASTReturnExpression*>(node->jjtGetChild(paramIndex + 2));
-        visit(fnReturn, fnContext);
+        ASTReturnExpression* fnReturn = dynamic_cast<ASTReturnExpression*>(node->jjtGetChild(is_lambda ? 3 : paramIndex + 2 ));
+        visit(fnReturn, &typeContext);
     }
-
     m_output += SCOPE_CLOSE;
 }
 
@@ -95,11 +125,11 @@ void RattleLang::FunctionBuilder::visit(const RattleLang::ASTFnBody *node, void 
 }
 
 void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
-    std::string fnName = get_token_of_child(static_cast<SimpleNode *>(node->jjtGetParent()), 0);
-    Context* fnContext = static_cast<Context *>(data);
-    std::shared_ptr<TypeInformation> returnValues = m_context->get_function(fnName);
-
-    std::vector<std::string> names;
+    pair<shared_ptr<TypeInformation>, Context*>* typeAndContext =
+            static_cast<pair<shared_ptr<TypeInformation>, Context*>*>(data);
+    Context* fnContext = typeAndContext->second;
+    shared_ptr<TypeInformation> returnValues = typeAndContext->first;
+    vector<string> names;
     // How many expressions in
     size_t numChildren = node->jjtGetNumChildren();
 
@@ -107,12 +137,12 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
     bool done = false;
     for (int j = 0; j < numChildren && !done; ++j) {
         ASTExpression* expNode = static_cast<ASTExpression *>(node->jjtGetChild(j));
-        std::shared_ptr<TypeInformation> exp = TypeInferer::get_instance()->StartParsing(expNode, fnContext);
-        std::vector<std::string> localNames;
+        shared_ptr<TypeInformation> exp = TypeInferer::get_instance()->StartParsing(expNode, fnContext);
+        vector<string> localNames;
 
         // We've got our types
         for (int k = 0; k < exp->num_return() && !(done = i >= returnValues->num_return()); ++k, ++i) {
-            std::string varname = "_" + std::to_string(i) + fnName + "ret";
+            string varname = "_" + to_string(i) +  "fnRetVal";
             m_output += returnValues->typenames[i].get_corresponding_type_string() + " " + varname + ";\n";
             names.push_back(varname);
             localNames.push_back(varname);
@@ -122,7 +152,7 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
     }
 
     m_output += "\nreturn ";
-    m_output += numChildren > 1 ? "std::make_tuple(" : "";
+    m_output += numChildren > 1 ? "make_tuple(" : "";
     for (const auto& name : names) {
         m_output += name + ",";
     }
@@ -132,7 +162,7 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
 
 void FunctionBuilder::visit(const ASTParmlist *node, void *data) {
     if (node && data) {
-        std::vector<std::pair<std::string, type>>* info = static_cast< std::vector<std::pair<std::string, type>>*>(data);
+        vector<pair<string, type>>* info = static_cast< vector<pair<string, type>>*>(data);
         size_t numChildren = node->jjtGetNumChildren();
         if (numChildren == 0) {
             // It takes no parameters, this is fine.
@@ -173,8 +203,6 @@ void RattleLang::FunctionBuilder::visit(const RattleLang::ASTFnTypeList *node, v
 
             typeInfo->typenames.push_back(currentType);
         }
-
-        data = typeInfo;
     }
 }
 

@@ -106,7 +106,9 @@ void SimpleNode::dump(const JJString& prefix) const {
 
 SimpleNode::~SimpleNode() {
     for (size_t i = 0; i < children.size(); ++i) {
-      delete children[i];
+        if (children[i]) {
+            delete children[i];
+        }
     }
 }
 }

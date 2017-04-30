@@ -73,6 +73,7 @@ std::string Parser::create_preample() {
     return  "#include <fstream>\n"
             "#include <iomanip>\n"
             "#include <iostream>\n"
+            "#include <functional>\n"
             "#include <tuple>\n"
             "#include <string>\n"
             "using namespace std;\n";

@@ -1,0 +1,12 @@
+b = ( a : number, aa : number ) : number, number -> { return a, 42 }
+
+def retTwoNum : number, number () {
+    return b(12,112)[1], 2
+}
+
+c = ( d : string ) : string -> { return "Hello " + b(12,2)[0] }
+
+
+print c("Hello")
+
+print retTwoNum()[0] + "Num!" + (12/24+3)

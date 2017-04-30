@@ -23,10 +23,14 @@ namespace RattleLang {
             std::string res = "std::function<" + this->get_typenames() + "(";
             size_t param_size = inner_vars.size();
 
-            for (const auto &param : inner_vars) {
-                res += param.second->get_typenames() + ",";
+            if (inner_vars.size() > 0){
+                for (const auto &param : inner_vars) {
+                    res += param.second->get_typenames() + ",";
+                }
+                res.pop_back();
             }
-            res.pop_back();
+
+            res += ")>";
 
             return res;
         }

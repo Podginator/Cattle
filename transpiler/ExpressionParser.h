@@ -52,7 +52,7 @@ namespace RattleLang{
 
         // Defaults.
         void visit_fnPass(const SimpleNode* node, void* data){
-            //ChildrenAccept(node, data);
+            ChildrenAccept(node, data);
         }
 
         void visit_expressionPass(const SimpleNode* node, void* data){
@@ -122,6 +122,8 @@ namespace RattleLang{
 
         void visit_expressionPass(const ASTTupleDefine* node, void* data);
 
+        void visit_expressionPass(const ASTLabmdaDefine* node, void* data);
+
     private:
         std::string res;
         ExpressionState state = FN_PASS;
@@ -143,6 +145,10 @@ namespace RattleLang{
 
         // Do each Child and add a new returned value.
         void DoEachExpression(const SimpleNode* node);
+
+        bool NeedsConverting(SimpleNode* node);
+
+        void ConvertIfNeeded(SimpleNode* node);
     };
 }
 

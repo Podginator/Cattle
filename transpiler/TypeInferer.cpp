@@ -6,6 +6,7 @@
 #include "../TypeInformation/TypeStorage.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
+#include "FunctionBuilder.h"
 
 using namespace RattleLang;
 
@@ -188,8 +189,6 @@ std::shared_ptr<TypeInformation> RattleLang::TypeInferer::getTypeFromNode(const 
     return nodeType;
 }
 
-
-
 RattleLang::type RattleLang::TypeInferer::getTypeFromOperation(const RattleLang::SimpleNode *node,
                                                                                   RattleLang::operands operand) {
     std::shared_ptr<TypeInformation> type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
@@ -223,8 +222,8 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node
         throw ParsingException("Index Out Of Range");
     }
 
-    RattleLang::TypeInformation* nodeType  = ((RattleLang::TypeInformation*) data);
-    nodeType->typenames.push_back(IndexType->typenames[value]);
+    std::shared_ptr<RattleLang::TypeInformation>* nodeType  = (std::shared_ptr<RattleLang::TypeInformation>* ) (data);
+    (*nodeType)->typenames.push_back(IndexType->typenames[value]);
 }
 
 void RattleLang::TypeInferer::visit(const RattleLang::ASTTupleDefine *node, void *data) {
@@ -260,3 +259,12 @@ TypeInferer::doOperand(const SimpleNode *node, RattleLang::operands operand, voi
     RattleLang::type nodeType = getTypeFromOperation(node, operand);
     (*typeInformation)->typenames.push_back(nodeType);
 }
+
+
+void RattleLang::TypeInferer::visit(const RattleLang::ASTLabmdaDefine *node, void *data) {
+    std::shared_ptr<TypeInformation>* typeInformation = static_cast<std::shared_ptr<TypeInformation>*>(data);
+    ASTAssignment* ass = (ASTAssignment*)node->jjtGetParent()->jjtGetParent();
+    FunctionBuilder builder(m_context);
+    (*typeInformation) = builder.declare_function(node, get_token_of_child(ass, 0), true);
+}
+

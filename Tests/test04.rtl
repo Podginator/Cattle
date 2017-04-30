@@ -1,3 +1,6 @@
+a = ( x : number, y : number) : number -> { return 2 + 3 }
+b = 23
+
 def retOneNum : number () {
     return 1
 }

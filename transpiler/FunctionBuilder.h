@@ -21,11 +21,12 @@ namespace RattleLang {
         void visit(const ASTParmlist *node, void *data) override;
         void visit(const ASTReturnExpression *node, void *data) override;
         std::string get_c_output() { return m_output; }
-
+        std::shared_ptr<TypeInformation> declare_function(const SimpleNode* node, const std::string& name,  bool is_lambda);
 
     private:
 
         void build_function(const SimpleNode* node, const std::string& name,  bool is_named);
+
 
         std::string m_output;
         Context* m_context;
