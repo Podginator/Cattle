@@ -69,9 +69,17 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
             for (int k = 0; k < typeFound->typenames.size() && i < indexOfExpressions; k++, i++) {
                 std::string varName = get_token_of_child(node, i);
                 std::shared_ptr<TypeInformation> varInfo = m_context->get_variable(varName);
+
                 // The variable exists in a scope other than this one.
                 if (varInfo && !varInfo->isEmpty()) {
                     if (!m_exclusive_scope) {
+
+                        // Throw a parsing exception if the types do not match.
+                        if (varInfo->get_c_typename() != typeFound->get_c_typename()) {
+                            throw ParsingException("Type Mismatch, cannot convert " + varInfo->get_rattle_typename()
+                                                   + " to " + typeFound->get_rattle_typename());
+                        }
+
                         continue;
                     }
                 }
@@ -86,7 +94,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                     }
 
                     m_context->add_variable(get_token_of_child(node, i), declared_info);
-                    cOut +=  declared_info->get_returntype() + " " + varName + ";\n";
+                    cOut += declared_info->get_c_return_types() + " " + varName + ";\n";
                 }
 
             }

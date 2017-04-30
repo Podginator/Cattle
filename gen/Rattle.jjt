@@ -20,6 +20,8 @@ options
   OUTPUT_LANGUAGE="c++";
   NAMESPACE="RattleLang";
   NODE_EXTENDS = "BaseASTNode";
+  NODE_SCOPE_HOOK=true;
+  TRACK_TOKENS= true;
 }
 
 PARSER_BEGIN(Rattle)

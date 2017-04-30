@@ -44,6 +44,7 @@ int main(int argc, char **argv) {
     CharStream *stream = new CharStream(s.c_str(), s.size() - 1, 1, 1);
     RattleTokenManager *scanner = new RattleTokenManager(stream);
     Rattle parser(scanner);
+    parser.setErrorHandler(new ErrorHandler());
     ASTCode* code;
     try {
         ASTCode* code = parser.code();

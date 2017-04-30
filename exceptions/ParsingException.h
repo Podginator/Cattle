@@ -6,20 +6,28 @@
 #define RATTLE_CPP_PARSINGEXCEPTION_H
 
 #include <exception>
+#include <cstring>
 
 namespace RattleLang {
     class ParsingException : public std::exception{
     public:
         ParsingException (const char* err) {
-            m_what = err;
+            strcpy(m_what, err);
+        }
+
+        ParsingException (const std::string& err) {
+            strcpy(m_what, err.c_str());
         }
 
         const char * what () const throw () {
             return m_what;
         }
 
+        ~ParsingException() {
+        }
+
     private:
-        const char* m_what;
+        char m_what[256];
     };
 }
 

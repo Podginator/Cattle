@@ -9,4 +9,4 @@ c = ( d : string ) : string -> { return "Hello " + b(12,2)[0] }
 
 print c("Hello")
 
-print retTwoNum()[0] + "Num!" + (12/24+3)
+print retTwoNum()[0] + "Num!" + 1+2+3/42

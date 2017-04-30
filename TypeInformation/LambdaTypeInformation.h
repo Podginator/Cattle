@@ -19,13 +19,13 @@ namespace RattleLang {
                 : TypeInformation(types, context){}
 
 
-        std::string get_returntype() override {
-            std::string res = "std::function<" + this->get_typenames() + "(";
+        std::string get_c_return_types() override {
+            std::string res = "std::function<" + this->get_c_typename() + "(";
             size_t param_size = inner_vars.size();
 
             if (inner_vars.size() > 0){
                 for (const auto &param : inner_vars) {
-                    res += param.second->get_typenames() + ",";
+                    res += param.second->get_c_typename() + ",";
                 }
                 res.pop_back();
             }

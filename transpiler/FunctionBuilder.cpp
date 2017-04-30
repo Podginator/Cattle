@@ -76,7 +76,7 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
 
     // Do type list.
     ASTFnTypeList* retTypeList = dynamic_cast<ASTFnTypeList*>(node->jjtGetChild(startIndex));
-    string retType = information->get_typenames();
+    string retType = information->get_c_typename();
     paramIndex = retTypeList ? paramIndex : paramIndex - 1;
 
     // Handle Param List
@@ -93,7 +93,7 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     if (params.size() != 0) {
         for (const auto &param : params) {
             fnContext = param.second->scope;
-            paramList += param.second->get_typenames();
+            paramList += param.second->get_c_typename();
             paramList += " " + param.first + ",";
         }
         paramList.pop_back();
