@@ -11,23 +11,22 @@
 namespace RattleLang {
     class ParsingException : public std::exception{
     public:
-        ParsingException (const char* err) {
-            strcpy(m_what, err);
-        }
 
-        ParsingException (const std::string& err) {
-            strcpy(m_what, err.c_str());
+        ParsingException (const std::string& err, int line) {
+            m_what = err;
+            m_what.append(" at line: " + std::to_string(line));
+
         }
 
         const char * what () const throw () {
-            return m_what;
+            return m_what.c_str();
         }
 
         ~ParsingException() {
         }
 
     private:
-        char m_what[256];
+        std::string m_what;
     };
 }
 

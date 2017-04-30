@@ -18,7 +18,7 @@ void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName)
     m_output.clear();
 
     if (!dynamic_cast<const ASTFnDef*>(node) &&  !(def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
-        throw ParsingException("Cannot deduce function from node type");
+        throw ParsingException("Cannot deduce function from node type", node->jjtGetFirstToken()->beginLine);
     }
 
     // If LambdaDefine is not nullptr then we are a named function.
@@ -46,7 +46,7 @@ shared_ptr<TypeInformation> FunctionBuilder::declare_function(const SimpleNode *
     // Handle Param List
     ASTParmlist* parmlist = dynamic_cast<ASTParmlist*>(node->jjtGetChild(paramIndex));
     if (!parmlist) {
-        throw ParsingException("Cannot Find Parameter List, Fatal Error. ");
+        throw ParsingException("Cannot Find Parameter List, Fatal Error. ", node->jjtGetFirstToken()->beginLine);
     }
     vector<pair<string, type>> params;
     visit(parmlist, &params);
@@ -82,7 +82,7 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     // Handle Param List
     ASTParmlist* parmlist = dynamic_cast<ASTParmlist*>(node->jjtGetChild(paramIndex));
     if (!parmlist) {
-        throw ParsingException("Cannot Find Parameter List, Fatal Error. ");
+        throw ParsingException("Cannot Find Parameter List, Fatal Error. ", node->jjtGetFirstToken()->beginLine);
     }
 
     string paramList = "";
@@ -170,7 +170,7 @@ void FunctionBuilder::visit(const ASTParmlist *node, void *data) {
         }
 
         if (numChildren % 2 != 0) {
-            throw ParsingException("Parameter should be formatted as id : type, FATAL ERROR.");
+            throw ParsingException("Parameter should be formatted as id : type, FATAL ERROR.", node->jjtGetFirstToken()->beginLine);
         }
 
         // Get The Parameter Name and Type.

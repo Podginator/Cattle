@@ -8,6 +8,7 @@ set(SOURCE_FILES
         gen/ASTAdd.h
         gen/ASTAnd.cc
         gen/ASTAnd.h
+        gen/ASTAnd.h
         gen/ASTArgList.cc
         gen/ASTArgList.h
         gen/ASTAssignment.cc
@@ -32,8 +33,6 @@ set(SOURCE_FILES
         gen/ASTCompLTE.h
         gen/ASTCompNequal.cc
         gen/ASTCompNequal.h
-        gen/ASTDeclaration.cc
-        gen/ASTDeclaration.h
         gen/ASTDereference.cc
         gen/ASTDereference.h
         gen/ASTDivide.cc
@@ -137,6 +136,6 @@ set(SOURCE_FILES
         TypeInformation/TypeStorage.h
         TypeInformation/ExpressionOp.h
         TypeInformation/ExpressionOp.cpp
-        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cpp gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
+        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

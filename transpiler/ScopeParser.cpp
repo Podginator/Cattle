@@ -60,7 +60,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
             declare(exp, &typeFound);
 
             if (!typeFound || typeFound->isEmpty()) {
-                throw ParsingException("Variable Doesn't exist in this scope");
+                throw ParsingException("Variable Doesn't exist in this scope", node->jjtGetFirstToken()->beginLine);
             }
 
             size_t typenamesSize = typeFound->typenames.size();
@@ -77,7 +77,8 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                         // Throw a parsing exception if the types do not match.
                         if (varInfo->get_c_typename() != typeFound->get_c_typename()) {
                             throw ParsingException("Type Mismatch, cannot convert " + varInfo->get_rattle_typename()
-                                                   + " to " + typeFound->get_rattle_typename());
+                                                   + " to " + typeFound->get_rattle_typename() ,
+                                                   (node->jjtGetFirstToken()->beginLine) );
                         }
 
                         continue;
