@@ -303,7 +303,7 @@ void LambdaPass() #LambdaPass :
 {}
 {
     "fn<"(identifier() ("," identifier())*) ">"
-        "("(identifier() ("," identifier())*)")"
+        ( "(" identifier() ("," identifier())* ")" ) #LambdaIds
 }
 
 void classdef() #ClassDef :

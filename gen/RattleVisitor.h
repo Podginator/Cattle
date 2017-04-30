@@ -63,7 +63,13 @@ class RattleVisitor
   virtual void  visit(const ASTNumber *node, void * data) = 0;
   virtual void  visit(const ASTTrue *node, void * data) = 0;
   virtual void  visit(const ASTFalse *node, void * data) = 0;
-  virtual ~RattleVisitor() { }
+  virtual void  visit(const ASTLambdaPass *node, void * data) = 0;
+    virtual void  visit(const ASTLambdaIds *node, void * data) = 0;
+
+
+
+
+    virtual ~RattleVisitor() { }
 };
 class RattleDefaultVisitor : public RattleVisitor {
 public:
@@ -222,15 +228,22 @@ public:
     defaultVisit(node, data);
   }
 
-  ~RattleDefaultVisitor() { }
+  virtual void visit (const ASTLambdaPass *node, void* data) {
+    defaultVisit(node, data);
+  }
+    virtual void  visit(const ASTLambdaIds *node, void * data) {
+      defaultVisit(node, data);
+    }
+
+    ~RattleDefaultVisitor() { }
 
 protected:
 
-    std::string  get_token_of_child(const SimpleNode* node, size_t index) {
+    static std::string  get_token_of_child(const SimpleNode* node, size_t index) {
       return dynamic_cast<SimpleNode*>(node->jjtGetChild(index))->tokenValue;
     }
 
-    int get_index_of_expressions_in_assignment(const ASTAssignment* node) {
+    static int get_index_of_expressions_in_assignment(const ASTAssignment* node) {
       // Iterate through all the nodes.
       for (int i = 0; i < node->jjtGetNumChildren(); i++) {
         // When the node is no longer an Identifier or Member_Identifer, end.
@@ -258,6 +271,7 @@ protected:
 
 
     }
+
 };
 }
 #endif

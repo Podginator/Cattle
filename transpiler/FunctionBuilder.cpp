@@ -5,6 +5,8 @@
 #include "ScopeParser.h"
 #include "TypeInferer.h"
 #include "../TypeInformation/LambdaTypeInformation.h"
+#include "../gen/ASTLambdaPass.h"
+#include "../misc/StringHelper.h"
 
 using namespace RattleLang;
 using namespace std;
@@ -48,19 +50,18 @@ shared_ptr<TypeInformation> FunctionBuilder::declare_function(const SimpleNode *
     if (!parmlist) {
         throw ParsingException("Cannot Find Parameter List, Fatal Error. ", node->jjtGetFirstToken()->beginLine);
     }
-    vector<pair<string, type>> params;
+    vector<pair<string, std::shared_ptr<TypeInformation>>> params;
     visit(parmlist, &params);
 
     Context* fnContext = new Context(m_context);
     if (params.size() != 0) {
         for (const auto &param : params) {
-            shared_ptr<TypeInformation> varInfo(new TypeInformation({param.second}, fnContext));
-            fnContext->add_variable(param.first, varInfo);
-            information->inner_vars[param.first] = varInfo;
+            param.second->set_scope(fnContext);
+            fnContext->add_variable(param.first, param.second);
+            information->inner_vars.push_back(param);
         }
     }
 
-    // To do?
     m_context->add_function(fnName, information);
     return information;
 }
@@ -88,13 +89,12 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     string paramList = "";
     paramList += "(";
 
-    map<string, shared_ptr<TypeInformation>> params = information->inner_vars;
+    vector<pair<string, shared_ptr<TypeInformation>>> params = information->inner_vars;
     Context* fnContext = nullptr;
     if (params.size() != 0) {
         for (const auto &param : params) {
             fnContext = param.second->scope;
-            paramList += param.second->get_c_typename();
-            paramList += " " + param.first + ",";
+            paramList += param.second->get_c_return_types() + " " + param.first + ",";
         }
         paramList.pop_back();
     }
@@ -130,7 +130,6 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
     Context* fnContext = typeAndContext->second;
     shared_ptr<TypeInformation> returnValues = typeAndContext->first;
     vector<string> names;
-    // How many expressions in
     size_t numChildren = node->jjtGetNumChildren();
 
     int i = 0;
@@ -152,39 +151,73 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
     }
 
     m_output += "\nreturn ";
+
+
     m_output += numChildren > 1 ? "make_tuple(" : "";
-    for (const auto& name : names) {
-        m_output += name + ",";
-    }
-    m_output.pop_back();
+
+    m_output += StringHelper::combine_str(names.begin(), names.end(), ',');
     m_output += numChildren > 1 ?");" : ";";
 }
 
 void FunctionBuilder::visit(const ASTParmlist *node, void *data) {
-    if (node && data) {
-        vector<pair<string, type>>* info = static_cast< vector<pair<string, type>>*>(data);
-        size_t numChildren = node->jjtGetNumChildren();
-        if (numChildren == 0) {
-            // It takes no parameters, this is fine.
-            return;
+    vector<pair<string, std::shared_ptr<TypeInformation>>>* info =
+            static_cast<vector<pair<string, shared_ptr<TypeInformation>>>*>(data);
+    size_t numChildren = node->jjtGetNumChildren();
+
+    // We can be parameterless.
+    if (numChildren == 0) {
+        return;
+    }
+
+    // We expect our parameters in the form (name : type) - So if it were just (a) this would be incorrect.
+    if (numChildren % 2 != 0) {
+        throw ParsingException("Parameter should be formatted as id : type, FATAL ERROR.",
+                               node->jjtGetFirstToken()->beginLine);
+    }
+
+    // Get The Parameter Name and Type.
+    for (int i = 0; i < numChildren; i += 2) {
+        ASTIdentifier* name = static_cast<ASTIdentifier*>(node->jjtGetChild(i));
+        std::shared_ptr<TypeInformation> parameter_info;
+
+        node->jjtGetChild(i+1)->jjtAccept(this, &parameter_info);
+        info->push_back({name->tokenValue, parameter_info});
+    }
+}
+
+void FunctionBuilder::visit(const ASTIdentifier *node, void *data) {
+    auto parameter_info = static_cast<shared_ptr<TypeInformation>*>(data);
+    RattleLang::type param_Type = TypeStorage::get_instance()->get_type(node->tokenValue);
+    if (param_Type.type_name == NONE) {
+        throw ParsingException("Unrecognized type passed as function parameter", node->jjtGetFirstToken()->beginLine);
+    }
+    *parameter_info = shared_ptr<TypeInformation>(new TypeInformation({param_Type}, nullptr));
+}
+
+void FunctionBuilder::visit(const ASTLambdaPass *node, void *data) {
+    auto parameter_info = static_cast<shared_ptr<TypeInformation>*>(data);
+    *parameter_info = shared_ptr<TypeInformation>(new LambdaTypeInformation());
+
+    size_t children = node->jjtGetNumChildren();
+    // FN<type, type, type>(type,type,type)
+    for (int j = 0; j < children - 1; ++j) {
+        ASTIdentifier* id = static_cast<ASTIdentifier*>(node->jjtGetChild(j));
+        RattleLang::type param_Type = TypeStorage::get_instance()->get_type(id->tokenValue);
+        if (param_Type.type_name == NONE) {
+            throw ParsingException("Unrecognized type passed as function parameter", node->jjtGetFirstToken()->beginLine);
         }
+        (*parameter_info)->typenames.push_back(param_Type);
+    }
 
-        if (numChildren % 2 != 0) {
-            throw ParsingException("Parameter should be formatted as id : type, FATAL ERROR.", node->jjtGetFirstToken()->beginLine);
+    ASTLambdaIds* parmlist = static_cast<ASTLambdaIds*>(node->jjtGetChild(children-1));
+    children = parmlist->jjtGetNumChildren();
+    for (int j = 0; j < children; ++j) {
+        ASTIdentifier* id = static_cast<ASTIdentifier*>(parmlist->jjtGetChild(j));
+        RattleLang::type param_Type = TypeStorage::get_instance()->get_type(id->tokenValue);
+        if (param_Type.type_name == NONE) {
+            throw ParsingException("Unrecognized type passed as function parameter", node->jjtGetFirstToken()->beginLine);
         }
-
-        // Get The Parameter Name and Type.
-        for (int i = 0; i < numChildren; i += 2) {
-            ASTIdentifier* name = static_cast<ASTIdentifier*>(node->jjtGetChild(i));
-            ASTIdentifier* type = static_cast<ASTIdentifier*>(node->jjtGetChild(i + 1));
-
-            RattleLang::type param_Type = TypeStorage::get_instance()->get_type(type->tokenValue);
-            if (param_Type.type_name == NONE) {
-                throw TypeException();
-            }
-
-            info->push_back({name->tokenValue, param_Type});
-        }
+        (*parameter_info)->inner_vars.push_back(make_pair(std::to_string(j), shared_ptr<TypeInformation>(new TypeInformation({param_Type}))));
     }
 }
 

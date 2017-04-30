@@ -5,6 +5,7 @@
 #include "Context.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ScopeException.h"
+#include "LambdaTypeInformation.h"
 
 RattleLang::Context RattleLang::Context::global_scope;
 
@@ -73,6 +74,10 @@ void RattleLang::Context::add_function(const std::string &name, std::shared_ptr<
 std::shared_ptr<RattleLang::TypeInformation> RattleLang::Context::get_function(const std::string &name) {
     if (m_functionInformation.find(name) != m_functionInformation.end()) {
         return m_functionInformation[name];
+    }
+
+    if (m_variables.find(name) != m_variables.end() && std::dynamic_pointer_cast<LambdaTypeInformation>(m_variables[name])) {
+        return m_variables[name];
     }
 
     if (parent) {

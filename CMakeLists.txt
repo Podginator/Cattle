@@ -71,6 +71,10 @@ set(SOURCE_FILES
         gen/ASTNumber.h
         gen/ASTObjCreate.cc
         gen/ASTObjCreate.h
+        gen/ASTLambdaPass.cc
+        gen/ASTLambdaPass.h
+        gen/ASTLambdaIds.cc
+        gen/ASTLambdaIds.h
         gen/ASTOr.cc
         gen/ASTOr.h
         gen/ASTParmlist.cc
@@ -136,6 +140,7 @@ set(SOURCE_FILES
         TypeInformation/TypeStorage.h
         TypeInformation/ExpressionOp.h
         TypeInformation/ExpressionOp.cpp
+        misc/StringHelper.h
         main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

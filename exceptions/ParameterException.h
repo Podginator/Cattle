@@ -10,16 +10,16 @@
 namespace RattleLang {
     class ParameterException : public std::exception{
     public:
-        ParameterException () {
-            m_what = "Too few / too many parameters";
+        ParameterException (int line) {
+            m_what = "Incorrect number of parameters at line: " + std::to_string(line);
         }
 
         const char * what () const throw () {
-            return m_what;
+            return m_what.c_str();
         }
 
     private:
-        const char* m_what;
+        std::string m_what;
     };
 }
 

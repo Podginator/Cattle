@@ -4,9 +4,15 @@ def retTwoNum : number, number () {
     return b(12,112)[1], 2
 }
 
+def passLambda : number ( adder : fn<number>(number, number), adding : number ) {
+    return adder(1, adding)
+}
+
 c = ( d : string ) : string -> { return "Hello " + b(12,2)[0] }
+d = ( n : number, b : number) : number -> { return n + b }
 
 
 print c("Hello")
 
 print retTwoNum()[0] + "Num!" + 1+2+3/42
+print passLambda(d, 12)

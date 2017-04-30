@@ -515,6 +515,14 @@ void Bool();
     return false;
   }
 
+ inline bool jj_3R_103()
+ {
+    if (jj_done) return true;
+    if (jj_scan_token(COMMA)) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
  inline bool jj_3R_73()
  {
     if (jj_done) return true;
@@ -527,14 +535,6 @@ void Bool();
     if (jj_done) return true;
     if (jj_scan_token(AND)) return true;
     if (jj_3R_77()) return true;
-    return false;
-  }
-
- inline bool jj_3R_103()
- {
-    if (jj_done) return true;
-    if (jj_scan_token(COMMA)) return true;
-    if (jj_3R_36()) return true;
     return false;
   }
 

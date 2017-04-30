@@ -233,11 +233,11 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTNum
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTrue *node, void *data) {
-    PrintNode(node);
+    AppendToResult("true");
 }
 
 void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTFalse *node, void *data) {
-    PrintNode(node);
+    AppendToResult("false");
 }
 
 void RattleLang::ExpressionParser::PrintNode(const RattleLang::SimpleNode *node) {
@@ -312,25 +312,32 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
 
     // If we've pass
     int nodeNum = node->jjtGetNumChildren();
-    int expectedParams = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue)->inner_vars.size();
+    std::shared_ptr<TypeInformation> fnType = m_context->get_function(static_cast<SimpleNode*>(node->jjtGetParent()->jjtGetChild(0))->tokenValue);
+    int expectedParams = fnType->inner_vars.size();
     int totalParams = 0;
 
     std::string functionName = m_fnCallName[(SimpleNode*)node->jjtGetParent()];
     if (nodeNum > 0) {
-        size_t paramNum = 0;
         for (size_t i = 0; i < nodeNum; ++i) {
-            ASTExpression* exp = static_cast<ASTExpression*>(node->jjtGetChild(i));
-            std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, m_context);
+            ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(i));
+            std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, fnType->scope);
             if (!info || info->isEmpty()) {
                 throw TypeException();
             }
 
             std::vector<std::string> param_names;
-            size_t resultSize= info->typenames.size();
-            for (int j = 0; j < resultSize; ++j, ++paramNum) {
-                param_names.push_back(functionName + "param" + std::to_string(paramNum));
-                AppendToResult(info->typenames[j].get_corresponding_type_string() + " " + functionName + "param" + std::to_string(paramNum) + ";\n");
-                totalParams++;
+            size_t resultSize = info->typenames.size();
+
+            if (std::dynamic_pointer_cast<LambdaTypeInformation>(info)) {
+                param_names.push_back(functionName + "param" + std::to_string(totalParams));
+                AppendToResult(info->get_c_return_types() + " " + functionName + "param" +
+                               std::to_string(totalParams++) + ";\n");
+            } else {
+                for (int j = 0; j < resultSize; ++j, totalParams++) {
+                    param_names.push_back(functionName + "param" + std::to_string(totalParams));
+                    AppendToResult(info->typenames[j].get_corresponding_type_string() + " " + functionName + "param" +
+                                   std::to_string(totalParams) + ";\n");
+                }
             }
 
             AppendToResult(StateMachineParserDecorator<ExpressionParser>::GetParserResults(
@@ -338,7 +345,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
         }
 
         if (totalParams != expectedParams) {
-            throw ParameterException();
+            throw ParameterException(node->jjtGetFirstToken()->beginLine);
         }
         returnedExpressions.back().pop_back();
     }

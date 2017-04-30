@@ -5,6 +5,7 @@
 #include <map>
 #include <initializer_list>
 #include <string>
+#include <unordered_map>
 #include "type.h"
 #include "Context.h"
 
@@ -34,7 +35,7 @@ namespace RattleLang {
 
         // This is for a class instance - a class can have many inner vars, and even some inner classes. 
         // This allows us to have inner classes and infer their types. 
-        std::map<std::string, std::shared_ptr<TypeInformation>> inner_vars;
+        std::vector<std::pair<std::string, std::shared_ptr<TypeInformation>>> inner_vars;
 
         // Return the number of returned items. 
         size_t num_return();
