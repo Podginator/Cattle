@@ -146,13 +146,13 @@ namespace RattleLang{
         // Do each Child and add a new returned value.
         void DoEachExpression(const SimpleNode* node);
 
-        std::shared_ptr<TypeInformation> GetTypeInfo(const SimpleNode* node);
+        std::shared_ptr<TypeInformation> get_type_info(const SimpleNode *node);
 
-        bool NeedsConverting(SimpleNode* node);
+        bool needs_converting(SimpleNode *node);
 
-        bool NeedsConverting(std::shared_ptr<TypeInformation> expression_info);
+        bool needs_converting(std::shared_ptr<TypeInformation> expression_info);
 
-        void ConvertIfNeeded(SimpleNode* node);
+        void convert_if_needed(SimpleNode *node);
     };
 }
 

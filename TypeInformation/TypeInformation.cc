@@ -26,7 +26,7 @@ std::string RattleLang::TypeInformation::get_c_typename() {
     }
 
     std::string ret = "std::tuple<";
-    ret.append(StringHelper::combine_str(typenames, ',', &type::get_type_name));
+    ret.append(StringHelper::combine_str(typenames, ',', &type::get_corresponding_type_string));
     ret += ">";
 
     return ret;
