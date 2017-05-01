@@ -7,12 +7,13 @@
 
 
 #include <string>
+using namespace std;
 
 class StringHelper {
 public:
     template <typename Iterator>
-    static std::string combine_str( Iterator iteratable, const char token) {
-        std::string retVal = "";
+    static string combine_str( Iterator iteratable, const char token) {
+        string retVal = "";
 
         for(auto it= iteratable.begin(); it < iteratable.end(); it++) {
            retVal.append((*it) + token);
@@ -24,8 +25,8 @@ public:
 
 
     template <typename Iterator, class Function>
-    static std::string combine_str( Iterator iteratable, const char token,  Function f) {
-        std::string retVal = "";
+    static string combine_str( Iterator iteratable, const char token,  Function f) {
+        string retVal = "";
 
         for(auto it= iteratable.begin(); it < iteratable.end(); it++) {
             retVal.append(((*it).*f)() + token);
@@ -36,8 +37,8 @@ public:
     }
 
     template <typename Iterator, typename Member, typename Function>
-    static std::string combine_str_ptr( Iterator iteratable, const char token,  Member m, Function f = nullptr) {
-        std::string retVal = "";
+    static string combine_str_ptr( Iterator iteratable, const char token,  Member m, Function f = nullptr) {
+        string retVal = "";
 
         for(auto it = iteratable.begin(); it < iteratable.end(); it++) {
             auto iterated = *it;

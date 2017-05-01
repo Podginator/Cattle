@@ -19,7 +19,7 @@ void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName)
 
     const ASTLabmdaDefine* def = nullptr;
     if (!dynamic_cast<const ASTFnDef*>(node) &&  !(def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
-        throw ParsingException("Cannot deduce function from node type", get_line_num(node));
+        throw ParsingException("No function found ", get_line_num(node));
     }
 
     // If LambdaDefine is not nullptr then we are a named function.
@@ -34,7 +34,7 @@ TypeInfoPtr FunctionBuilder::declare_function(const SimpleNode *node, const stri
     // Do type list.
     ASTFnTypeList* retTypeList = get_child_as<ASTFnTypeList>(node, 1);
     if (retTypeList) {
-        visit(retTypeList, information.get());
+        visit(retTypeList, &information);
         if (TypeInformation::is_empty(information)) {
             throw TypeException(get_line_num(node));
         }
@@ -215,7 +215,7 @@ void FunctionBuilder::visit(const ASTLambdaPass *node, void *data) {
 
 void RattleLang::FunctionBuilder::visit(const RattleLang::ASTFnTypeList *node, void *data) {
     if (node && data) {
-        TypeInformation* typeInfo = static_cast<TypeInformation*>(data);
+        TypeInfoPtr* typeInfo = static_cast<TypeInfoPtr*>(data);
         size_t childrenSize = node->jjtGetNumChildren();
 
         for (int i = 0; i < childrenSize ; ++i) {
@@ -226,7 +226,7 @@ void RattleLang::FunctionBuilder::visit(const RattleLang::ASTFnTypeList *node, v
                 throw TypeException(get_line_num(node));
             }
 
-            typeInfo->typenames.push_back(currentType);
+            (*typeInfo)->typenames.push_back(currentType);
         }
     }
 }

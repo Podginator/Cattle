@@ -33,6 +33,7 @@ public:
 //\#define jjtCreate(p, id) new SimpleNode(p, id)
 //#fi
 
+    void                 setDone() { this->isDone = true;}
   virtual void           jjtOpen() const;
   virtual void           jjtClose() const;
   virtual void           jjtSetParent(Node *n);

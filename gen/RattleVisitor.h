@@ -66,13 +66,72 @@ class RattleVisitor
   virtual void  visit(const ASTLambdaPass *node, void * data) = 0;
     virtual void  visit(const ASTLambdaIds *node, void * data) = 0;
 
+    static std::string  get_token_of_child(const SimpleNode* node, size_t index) {
+      return dynamic_cast<SimpleNode*>(node->jjtGetChild(index))->tokenValue;
+    }
+
+    static std::string  get_token_of_node(const Node* node) {
+      return dynamic_cast<SimpleNode*>(node)->tokenValue;
+    }
+
+    template<typename T>
+    static T* get_parent_as(const Node* node, int parent_level = 1) {
+      Node* return_node = node;
+      int index = 0;
+      while (index++ != parent_level) {
+        return_node = node->jjtGetParent();
+      }
+
+      return dynamic_cast<T*>(return_node);
+    }
 
     template<typename T>
     static T* get_child_as(const Node* node, int child) {
       return dynamic_cast<T*>(node->jjtGetChild(child));
     }
+    template<typename T>
+    static T* get_node_as(const Node* node) {
+      return dynamic_cast<const T*>(node);
+    }
+
+    static size_t get_number_children(const Node* node) {
+      return node->jjtGetNumChildren();
+    }
+
+    static size_t get_line_num(const SimpleNode* node) {
+      return node->jjtGetFirstToken()->beginLine;
+    }
 
     virtual ~RattleVisitor() { }
+protected:
+    std::string get_unique_name(const std::string& prefix = "default") {
+      static std::map<std::string, int> prefix_map;
+      int num = 0;
+      if (prefix_map.find(prefix) != prefix_map.end()) {
+        num = prefix_map[prefix];
+      }
+      prefix_map[prefix] = num + 1;
+
+      // TODO: Check if this variable is declared anyway.
+
+      return "__" + std::to_string(num) + prefix;
+    }
+
+
+    static int get_index_of_expressions_in_assignment(const ASTAssignment* node) {
+      // Iterate through all the nodes.
+      for (int i = 0; i < node->jjtGetNumChildren(); i++) {
+        // When the node is no longer an Identifier or Member_Identifer, end.
+        ASTExpression* exp = dynamic_cast<ASTExpression*>(node->jjtGetChild(i));
+
+        if (exp) {
+          return i;
+        }
+      }
+
+      return -1;
+    }
+
 };
 class RattleDefaultVisitor : public RattleVisitor {
 public:
@@ -239,43 +298,6 @@ public:
     }
 
     ~RattleDefaultVisitor() { }
-
-public:
-
-    static std::string  get_token_of_child(const SimpleNode* node, size_t index) {
-      return dynamic_cast<SimpleNode*>(node->jjtGetChild(index))->tokenValue;
-    }
-protected:
-    static int get_index_of_expressions_in_assignment(const ASTAssignment* node) {
-      // Iterate through all the nodes.
-      for (int i = 0; i < node->jjtGetNumChildren(); i++) {
-        // When the node is no longer an Identifier or Member_Identifer, end.
-        ASTExpression* exp = dynamic_cast<ASTExpression*>(node->jjtGetChild(i));
-
-        if (exp) {
-          return i;
-        }
-      }
-
-      return -1;
-    }
-public:
-    static size_t get_line_num(const SimpleNode* node) {
-      return node->jjtGetFirstToken()->beginLine;
-    }
-protected:
-    std::string get_unique_name(const std::string& prefix = "default") {
-      static std::map<std::string, int> prefix_map;
-      int num = 0;
-      if (prefix_map.find(prefix) != prefix_map.end()) {
-        num = prefix_map[prefix];
-      }
-      prefix_map[prefix] = num + 1;
-
-      // TODO: Check if this variable is declared anyway.
-
-      return "__" + std::to_string(num) + prefix;
-    }
 
 };
 }

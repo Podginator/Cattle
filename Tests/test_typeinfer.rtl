@@ -5,3 +5,11 @@ b = "1" + 13/2
 b = "1" + (12+2+3)
 c = false
 c = true
+
+def retTwo : number, number(){
+    return 1, 2
+}
+
+user_tuple = [1, 2, c, a, 12/13, retTwo()]
+
+print user_tuple[1]

@@ -59,7 +59,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
             TypeInfoPtr typeFound(new TypeInformation());
             declare(exp, &typeFound);
 
-            if (!typeFound || typeFound->isEmpty()) {
+            if (!typeFound || typeFound->is_empty()) {
                 throw ParsingException("Variable Doesn't exist in this scope", get_line_num(node));
             }
 
@@ -71,7 +71,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                 TypeInfoPtr varInfo = m_context->get_variable(varName);
 
                 // The variable exists in a scope other than this one.
-                if (varInfo && !varInfo->isEmpty()) {
+                if (varInfo && !varInfo->is_empty()) {
                     if (!m_exclusive_scope) {
 
                         // Throw a parsing exception if the types do not match.

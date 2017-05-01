@@ -128,7 +128,7 @@ namespace RattleLang{
         std::string res;
         ExpressionState state = FN_PASS;
         std::vector<std::string> returnedExpressions;
-        std::map<const SimpleNode*, std::string> m_fnCallName;
+        std::map<const Node*, std::string> m_fnCallName;
         ExpressionOp parent;
         Context* m_context;
         TypeInfoPtr expectedOutput;

@@ -53,7 +53,7 @@ void MainParser::visit(const ASTClassDef *node, void *data) {
 
             auto subclass_name = get_token_of_child(node, i);
             TypeInfoPtr subclass_info = context->get_class_definition(subclass_name );
-            if (subclass_info && !subclass_info->isEmpty()) {
+            if (subclass_info && !subclass_info->is_empty()) {
                 cOutput += " public " + get_token_of_child(node, i) + ",";
             } else {
                 throw TypeException(get_line_num(node));

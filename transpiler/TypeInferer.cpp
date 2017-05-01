@@ -222,7 +222,7 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node
     int value = atoi(number->tokenValue.c_str());
 
     // If there's only one value, or
-    if (typeSize == 1 || typeSize < (value + 1) || IndexType->isEmpty()) {
+    if (typeSize == 1 || typeSize < (value + 1) || IndexType->is_empty()) {
         throw ParsingException("Index Out Of Range", get_line_num(node));
     }
 
@@ -239,6 +239,11 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTTupleDefine *node, void
         if (exp) {
             TypeInfoPtr info = TypeInfoPtr(new TypeInformation());
             this->visit(exp, &info);
+
+            if (TypeInformation::is_empty(info)) {
+                throw TypeException(get_line_num(node));
+            }
+
             size_t returnedTypes = info->typenames.size();
 
             for (int j = 0; j < returnedTypes; ++j) {

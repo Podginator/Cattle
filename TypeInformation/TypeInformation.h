@@ -49,30 +49,18 @@ namespace RattleLang {
 
         void set_scope(Context* context);
 
-        bool isEmpty();
+        bool is_empty();
+
+        bool is_void();
 
         std::string get_c_typename();
 
         Context* scope;
 
         // Functions return a type name.
-        virtual std::string get_c_return_types() {
-            return this->get_c_typename();
-        }
+        virtual std::string get_c_return_types();
 
-        virtual std::string get_rattle_typename() {
-            size_t numReturned = num_return();
-            if (numReturned == 1) {
-                return typenames[0].type_name;
-            }
-
-            std::string ret = "[";
-
-            ret += StringHelper::combine_str(typenames, ',', &type::get_type_name);
-            ret += "]";
-
-            return ret;
-        }
+        virtual std::string get_rattle_typename();
 
         static bool is_empty(TypeInfoPtr ptr) {
             return !ptr || ptr->isEmpty();
