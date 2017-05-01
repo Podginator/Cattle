@@ -2,7 +2,7 @@
 // Created by podgi on 4/12/2017.
 //
 #include <iostream>
-#include "Parser.h"
+#include "MainParser.h"
 #include "ScopeParser.h"
 
 #include "../exceptions/TypeException.h"
@@ -11,18 +11,18 @@
 using namespace RattleLang;
 
 
-Parser::Parser(ASTCode *code) {
+MainParser::MainParser(ASTCode *code) {
     codeNode = code;
     cOutput = create_preample();
     context = &Context::global_scope;
 }
 
-std::string Parser::get_c_output() {
+std::string MainParser::get_c_output() {
     return cOutput;
 }
 
 
-void Parser::StartParsing(const SimpleNode *node) {
+void MainParser::StartParsing(const SimpleNode *node) {
     create_preample();
     node->childrenAccept(this, nullptr);
     cOutput += "\n// Main \n";
@@ -34,11 +34,11 @@ void Parser::StartParsing(const SimpleNode *node) {
     std::cout<<cOutput<<std::endl;
 }
 
-void Parser::defaultVisit(const SimpleNode *node, void *data) {
+void MainParser::defaultVisit(const SimpleNode *node, void *data) {
     // Do nothing.
 }
 
-void Parser::visit(const ASTClassDef *node, void *data) {
+void MainParser::visit(const ASTClassDef *node, void *data) {
     std::string className = get_token_of_child(node, 0);
     cOutput += "class " + className;
 
@@ -69,7 +69,7 @@ void Parser::visit(const ASTClassDef *node, void *data) {
     cOutput += ";\n";
 }
 
-std::string Parser::create_preample() {
+std::string MainParser::create_preample() {
     return  "#include <fstream>\n"
             "#include <iomanip>\n"
             "#include <iostream>\n"
@@ -79,18 +79,18 @@ std::string Parser::create_preample() {
             "using namespace std;\n";
 }
 
-void Parser::visit(const ASTAssignment *node, void *data) {
+void MainParser::visit(const ASTAssignment *node, void *data) {
     cOutput += StateMachineParserDecorator<ScopeParser>::GetParserSingleNodeResult(ScopeParser(&Context::global_scope),
                                                                                    node);
 }
 
-void Parser::visit(const ASTFnDef *node, void *data) {
+void MainParser::visit(const ASTFnDef *node, void *data) {
     FunctionBuilder builder(context);
     builder.StartParsing(node, get_token_of_child(node, 0));
     cOutput.append(builder.get_c_output());
 }
 
-void Parser::visit(const ASTStatement *node, void *data) {
+void MainParser::visit(const ASTStatement *node, void *data) {
     node->childrenAccept(this, nullptr);
 }
 

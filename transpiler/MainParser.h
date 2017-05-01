@@ -14,11 +14,11 @@ namespace RattleLang {
 
     // A bare bones parser that simply visits pre-defines all the variables
     // functions and classes - Then declares the main function.
-    class Parser : public RattleDefaultVisitor {
+    class MainParser : public RattleDefaultVisitor {
     public:
 
 
-        Parser(ASTCode* code);
+        MainParser(ASTCode* code);
         void StartParsing(const SimpleNode* node);
         std::string get_c_output();
 

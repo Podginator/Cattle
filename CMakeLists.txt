@@ -132,7 +132,7 @@ set(SOURCE_FILES
         gen/TokenManager.h
         gen/TokenMgrError.cc
         gen/TokenMgrError.h
-        transpiler/Parser.h
+        transpiler/MainParser.h
         transpiler/ExpressionParser.h
         TypeInformation/TypeInformation.cc
         TypeInformation/TypeInformation.h
@@ -141,6 +141,6 @@ set(SOURCE_FILES
         TypeInformation/ExpressionOp.h
         TypeInformation/ExpressionOp.cpp
         misc/StringHelper.h
-        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/Parser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
+        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/MainParser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

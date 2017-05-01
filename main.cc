@@ -10,7 +10,7 @@
 #include "gen/RattleTokenManager.h"
 #include "gen/ParseException.h"
 #include "gen/Rattle.h"
-#include "transpiler/Parser.h"
+#include "transpiler/MainParser.h"
 
 using namespace RattleLang;
 using namespace std;
@@ -48,12 +48,12 @@ int main(int argc, char **argv) {
     ASTCode* code;
     try {
         ASTCode* code = parser.code();
-        Parser* nodeVisitor = new Parser(code);
-        nodeVisitor->StartParsing(code);
+        MainParser nodeVisitor(code);
+        nodeVisitor.StartParsing(code);
 
         ofstream outputFile;
         outputFile.open ("output.cpp");
-        outputFile << nodeVisitor->get_c_output();
+        outputFile << nodeVisitor.get_c_output();
         outputFile.close();
         return 0;
 
