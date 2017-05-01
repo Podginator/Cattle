@@ -24,10 +24,9 @@ namespace RattleLang {
             size_t param_size = inner_vars.size();
 
             if (inner_vars.size() > 0){
-                for (const auto &param : inner_vars) {
-                    res += param.second->get_c_typename() + ",";
-                }
-                res.pop_back();
+                //Bordering on absurd, really.
+                res.append(StringHelper::combine_str_ptr(inner_vars, ',',
+                                                         &NamedVariableInfo::second, &TypeInformation::get_c_typename));
             }
 
             res += ")>";

@@ -56,7 +56,7 @@ void Parser::visit(const ASTClassDef *node, void *data) {
             if (subclass_info && !subclass_info->isEmpty()) {
                 cOutput += " public " + get_token_of_child(node, i) + ",";
             } else {
-                throw TypeException();
+                throw TypeException(get_line_num(node));
             }
         }
         // Remove last ","

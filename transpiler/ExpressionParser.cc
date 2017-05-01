@@ -162,8 +162,8 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTFnInvoke *n
     }
 
 
-    if (!type_info || type_info->isEmpty()) {
-        throw TypeException();
+    if (TypeInformation::is_empty(type_info)) {
+        throw TypeException(get_line_num(node));
     }
 
     std::vector<RattleLang::type> types = type_info->typenames;
@@ -322,7 +322,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
             ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(i));
             std::shared_ptr<TypeInformation> info = TypeInferer::get_instance()->StartParsing(exp, fnType->scope);
             if (!info || info->isEmpty()) {
-                throw TypeException();
+                throw TypeException(get_line_num(node));
             }
 
             std::vector<std::string> param_names;
@@ -345,7 +345,7 @@ void RattleLang::ExpressionParser::visit_fnPass(const RattleLang::ASTArgList *no
         }
 
         if (totalParams != expectedParams) {
-            throw ParameterException(node->jjtGetFirstToken()->beginLine);
+            throw ParameterException(get_line_num(node));
         }
         returnedExpressions.back().pop_back();
     }
@@ -411,10 +411,7 @@ void RattleLang::ExpressionParser::visit_expressionPass(const RattleLang::ASTTup
     }
 
     AppendToResult("std::make_tuple(");
-    for (const auto name : allNames) {
-        AppendToResult(name + ",");
-    }
-    returnedExpressions.back().pop_back();
+    AppendToResult(StringHelper::combine_str(allNames, ','));
     AppendToResult(");");
 
     AppendToResult(SCOPE_CLOSE);

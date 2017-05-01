@@ -98,7 +98,7 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryNot *node, void *d
     }
 
 
-    throw TypeException();
+    throw TypeException(get_line_num(node));
 
 }
 
@@ -112,7 +112,7 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryPlus *node, void *
     }
 
 
-    throw TypeException();
+    throw TypeException(get_line_num(node));
 
 }
 
@@ -126,7 +126,7 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryMinus *node, void 
     }
 
 
-    throw TypeException();
+    throw TypeException(get_line_num(node));
 
 }
 
@@ -195,11 +195,11 @@ RattleLang::type RattleLang::TypeInferer::getTypeFromOperation(const RattleLang:
     std::shared_ptr<TypeInformation> type2 = getTypeFromNode((SimpleNode*) node->jjtGetChild(1));
 
     if (!type1 || !type2) {
-        throw ParsingException("Variable does not exist", node->jjtGetFirstToken()->beginLine);
+        throw ParsingException("Variable does not exist", get_line_num(node));
     }
 
     if (type1->typenames.size() > 1 || type2->typenames.size() > 1) {
-        throw ParsingException("Operation cannot be performed on multiple types", node->jjtGetFirstToken()->beginLine);
+        throw ParsingException("Operation cannot be performed on multiple types", get_line_num(node));
     }
 
     return TypeStorage::get_instance()->get_return_type_from_operation(type1->typenames[0], type2->typenames[0], operand);
@@ -217,13 +217,13 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node
     size_t typeSize = IndexType->typenames.size();
     bool onlyDigits = (number->tokenValue.find_first_not_of( "0123456789" ) == std::string::npos);
     if (!onlyDigits) {
-        throw ParsingException("Index may only be positive integer values", node->jjtGetFirstToken()->beginLine);
+        throw ParsingException("Index may only be positive integer values", get_line_num(node));
     }
     int value = atoi(number->tokenValue.c_str());
 
     // If there's only one value, or
     if (typeSize == 1 || typeSize < (value + 1) || IndexType->isEmpty()) {
-        throw ParsingException("Index Out Of Range", node->jjtGetFirstToken()->beginLine);
+        throw ParsingException("Index Out Of Range", get_line_num(node));
     }
 
     std::shared_ptr<RattleLang::TypeInformation>* nodeType  = (std::shared_ptr<RattleLang::TypeInformation>* ) (data);

@@ -6,6 +6,7 @@
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ScopeException.h"
 #include "LambdaTypeInformation.h"
+#include "../gen/RattleVisitor.h"
 
 RattleLang::Context RattleLang::Context::global_scope;
 
@@ -66,7 +67,7 @@ void RattleLang::Context::add_function(const std::string &name, std::shared_ptr<
     if (m_functionInformation.find(name) == m_functionInformation.end()) {
         this->m_functionInformation[name] = info;
     } else {
-        throw TypeException();
+        throw ScopeException("Function already exists in this scope");
     }
 
 }

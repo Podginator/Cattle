@@ -90,7 +90,11 @@ namespace RattleLang {
 
         std::string type_name;
 
-        std::string get_corresponding_type_string() const {
+        std::string get_type_name() {
+            return type_name;
+        }
+
+        std::string get_corresponding_type_string() {
             return type::get_corresponding_type_string(type_name);
         }
 

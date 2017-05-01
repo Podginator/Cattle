@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "type.h"
 #include "Context.h"
+#include "../misc/StringHelper.h"
 
 
 namespace RattleLang {
@@ -22,9 +23,14 @@ namespace RattleLang {
     // This won't work for blocks, though, and maybe that's important...
 
     class Context;
+    class TypeInformation;
+    typedef std::pair<std::string, std::shared_ptr<TypeInformation>> NamedVariableInfo;
+    typedef std::shared_ptr<TypeInformation> TypeInfoPtr;
 
     class TypeInformation {
     public:
+
+
         TypeInformation();
 
         // The Constructor, takes a variable amount of types.
@@ -35,7 +41,7 @@ namespace RattleLang {
 
         // This is for a class instance - a class can have many inner vars, and even some inner classes. 
         // This allows us to have inner classes and infer their types. 
-        std::vector<std::pair<std::string, std::shared_ptr<TypeInformation>>> inner_vars;
+        std::vector<NamedVariableInfo> inner_vars;
 
         // Return the number of returned items. 
         size_t num_return();
@@ -61,13 +67,14 @@ namespace RattleLang {
 
             std::string ret = "[";
 
-            for (int i = 0; i < numReturned; ++i) {
-                ret += typenames[i].type_name + ",";
-            }
-            ret.pop_back();
+            ret += StringHelper::combine_str(typenames, ',', &type::get_type_name);
             ret += "]";
 
             return ret;
+        }
+
+        static bool is_empty(TypeInfoPtr ptr) {
+            return !ptr || ptr->isEmpty();
         }
 
     };

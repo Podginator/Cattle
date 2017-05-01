@@ -11,16 +11,45 @@
 class StringHelper {
 public:
     template <typename Iterator>
-    static std::string combine_str( Iterator begin, Iterator end, const char token ) {
+    static std::string combine_str( Iterator iteratable, const char token) {
         std::string retVal = "";
 
-        for(Iterator it= begin; it < end; it++) {
+        for(auto it= iteratable.begin(); it < iteratable.end(); it++) {
            retVal.append((*it) + token);
         }
         retVal.pop_back();
 
         return retVal;
     }
+
+
+    template <typename Iterator, class Function>
+    static std::string combine_str( Iterator iteratable, const char token,  Function f) {
+        std::string retVal = "";
+
+        for(auto it= iteratable.begin(); it < iteratable.end(); it++) {
+            retVal.append(((*it).*f)() + token);
+        }
+        retVal.pop_back();
+
+        return retVal;
+    }
+
+    template <typename Iterator, typename Member, typename Function>
+    static std::string combine_str_ptr( Iterator iteratable, const char token,  Member m, Function f = nullptr) {
+        std::string retVal = "";
+
+        for(auto it = iteratable.begin(); it < iteratable.end(); it++) {
+            auto iterated = *it;
+            auto iterated_member = iterated.*m;
+            retVal.append(f ? ((*iterated_member).*f)() + token : "");
+        }
+        retVal.pop_back();
+
+        return retVal;
+    }
+
+
 };
 
 

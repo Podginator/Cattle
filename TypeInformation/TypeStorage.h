@@ -41,6 +41,7 @@ namespace RattleLang {
         void add_context_to_node(RattleLang::SimpleNode* key, RattleLang::Context *context);
 
     };
+
 }
 
 #endif

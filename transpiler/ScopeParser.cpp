@@ -41,7 +41,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
             std::shared_ptr<TypeInformation> typeInfo(new TypeInformation({varType}, m_context));
             m_context->add_variable(type_name, typeInfo);
         } else {
-            throw TypeException();
+            throw TypeException(get_line_num(node));
         }
     } else {
         int indexOfExpressions = get_index_of_expressions_in_assignment(node);
@@ -60,7 +60,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
             declare(exp, &typeFound);
 
             if (!typeFound || typeFound->isEmpty()) {
-                throw ParsingException("Variable Doesn't exist in this scope", node->jjtGetFirstToken()->beginLine);
+                throw ParsingException("Variable Doesn't exist in this scope", get_line_num(node));
             }
 
             size_t typenamesSize = typeFound->typenames.size();
@@ -77,8 +77,7 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, voi
                         // Throw a parsing exception if the types do not match.
                         if (varInfo->get_c_typename() != typeFound->get_c_typename()) {
                             throw ParsingException("Type Mismatch, cannot convert " + varInfo->get_rattle_typename()
-                                                   + " to " + typeFound->get_rattle_typename() ,
-                                                   (node->jjtGetFirstToken()->beginLine) );
+                                                   + " to " + typeFound->get_rattle_typename() , get_line_num(node));
                         }
 
                         continue;
@@ -265,7 +264,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTWrite *node, void *
 
     // We should only have one type.
     if (typeinfo->typenames.size() > 1) {
-        throw TypeException();
+        throw TypeException(get_line_num(node));
     };
 
     std::string unique_name = get_unique_name("print");
