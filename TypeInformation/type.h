@@ -95,6 +95,10 @@ namespace RattleLang {
         }
 
         std::string get_corresponding_type_string() {
+            return type::corresponding_type_string(type_name);
+        }
+
+        static std::string corresponding_type_string(std::string type_name) {
             if (type_name == NUMBER) return "double";
             if (type_name == BOOLEAN) return "bool";
             if (type_name == STRING) return "std::string";
@@ -102,7 +106,6 @@ namespace RattleLang {
 
             return type_name;
         }
-
     };
 }
 
