@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 07/04/2017.
-//
-
 #include "TypeInferer.h"
 #include "../TypeInformation/TypeStorage.h"
 #include "../exceptions/TypeException.h"

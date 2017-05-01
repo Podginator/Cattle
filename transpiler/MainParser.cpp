@@ -1,6 +1,4 @@
-//
-// Created by podgi on 4/12/2017.
-//
+
 #include <iostream>
 #include "MainParser.h"
 #include "ScopeParser.h"

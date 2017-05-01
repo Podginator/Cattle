@@ -1,7 +1,3 @@
-//
-// Created by podgi on 4/12/2017.
-//
-
 #ifndef RATTLE_CPP_TYPEEXCEPTION_H
 #define RATTLE_CPP_TYPEEXCEPTION_H
 

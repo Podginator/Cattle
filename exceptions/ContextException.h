@@ -1,7 +1,3 @@
-//
-// Created by podgi on 4/14/2017.
-//
-
 #ifndef RATTLE_CPP_CONTEXTEXCEPTION_H
 #define RATTLE_CPP_CONTEXTEXCEPTION_H
 

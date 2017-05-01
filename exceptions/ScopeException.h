@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 22/04/2017.
-//
-
 #ifndef RATTLE_CPP_SCOPEEXCEPTION_H
 #define RATTLE_CPP_SCOPEEXCEPTION_H
 

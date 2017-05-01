@@ -63,7 +63,7 @@ namespace RattleLang {
         virtual std::string get_rattle_typename();
 
         static bool is_empty(TypeInfoPtr ptr) {
-            return !ptr || ptr->isEmpty();
+            return !ptr || ptr->is_empty();
         }
 
     };

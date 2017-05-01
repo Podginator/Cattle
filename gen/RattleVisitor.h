@@ -70,19 +70,20 @@ class RattleVisitor
       return dynamic_cast<SimpleNode*>(node->jjtGetChild(index))->tokenValue;
     }
 
-    static std::string  get_token_of_node(const Node* node) {
-      return dynamic_cast<SimpleNode*>(node)->tokenValue;
+    static std::string get_token_of_node(const Node* node) {
+      return dynamic_cast<const SimpleNode*>(node)->tokenValue;
     }
 
     template<typename T>
     static T* get_parent_as(const Node* node, int parent_level = 1) {
-      Node* return_node = node;
+      const Node* return_node = node;
       int index = 0;
       while (index++ != parent_level) {
         return_node = node->jjtGetParent();
       }
 
-      return dynamic_cast<T*>(return_node);
+
+      return dynamic_cast<T*>(const_cast<Node*>(return_node));
     }
 
     template<typename T>

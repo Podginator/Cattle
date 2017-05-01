@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 03/04/2017.
-//
-
 #include <iostream>
 #include "ExpressionParser.h"
 #include "../exceptions/TypeException.h"
@@ -9,6 +5,7 @@
 #include "../exceptions/ParameterException.h"
 #include "FunctionBuilder.h"
 #include "../TypeInformation/LambdaTypeInformation.h"
+
 using namespace RattleLang;
 using namespace std;
 
@@ -168,8 +165,6 @@ void ExpressionParser::visit_fnPass(const ASTFnInvoke *node, void *data) {
     }
 
     ChildAccept(node, 1, data);
-
-
     AppendToResult(fnCall);
 
     // Perform an iteration expanding out all the nodes
@@ -305,7 +300,7 @@ void ExpressionParser::visit_fnPass(const ASTArgList *node, void *data) {
     int expected_params = fn_type->inner_vars.size();
     int total_params = 0;
 
-    string function_rattle_name = m_fnCallName[node->jjtGetParent()];
+    string function_c_name = m_fnCallName[node->jjtGetParent()];
     if (children_size > 0) {
         for (size_t i = 0; i < children_size; ++i) {
             ASTExpression *exp = get_child_as<ASTExpression>(node, i);
@@ -317,16 +312,16 @@ void ExpressionParser::visit_fnPass(const ASTArgList *node, void *data) {
             vector<string> param_names;
             size_t resultSize = expression_type->num_return();
 
-            // TODO:: Make more elegant.
             if (dynamic_pointer_cast<LambdaTypeInformation>(expression_type)) {
-                param_names.push_back(function_rattle_name + "param" + to_string(total_params));
-                AppendToResult(expression_type->get_c_return_types() + " " + function_rattle_name + "param" +
-                               to_string(total_params++) + ";\n");
+                param_names.push_back(function_c_name + "param" + to_string(total_params));
+                AppendToResult(expression_type->get_c_return_types() + " " + function_c_name + "param" +
+                               to_string(total_params) + ";\n");
+                total_params++;
             } else {
-                for (int j = 0; j < resultSize; ++j, total_params++) {
-                    param_names.push_back(function_rattle_name + "param" + to_string(total_params));
-                    AppendToResult(expression_type->typenames[j].get_corresponding_type_string() + " " + function_rattle_name + "param" +
-                                   to_string(total_params) + ";\n");
+                for (size_t j = 0; j < resultSize; ++j, ++total_params) {
+                    param_names.push_back(function_c_name + "param" + to_string(total_params));
+                    AppendToResult(expression_type->typenames[j].get_corresponding_type_string() + " "
+                                   + function_c_name + "param" +  to_string(total_params) + ";\n");
                 }
             }
 

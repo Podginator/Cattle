@@ -1,9 +1,0 @@
-
-a = (number : x,
-
-print 0
-k = 1
-for (i=0; i<100000000; i= i + 1) {
-    //k = k
-}
-print 1

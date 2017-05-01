@@ -1,7 +1,3 @@
-//
-// Created by podgi on 4/29/2017.
-//
-
 #ifndef RATTLE_CPP_LAMBDATYPEINFORMATION_H
 #define RATTLE_CPP_LAMBDATYPEINFORMATION_H
 

@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 03/04/2017.
-//
-
 #ifndef RATTLE_CPP_STATEEXPRESSIONPARSER_H
 #define RATTLE_CPP_STATEEXPRESSIONPARSER_H
 

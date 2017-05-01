@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 02/04/2017.
-//
-
 #ifndef RATTLE_CPP_EXPRESSIONOP_H
 #define RATTLE_CPP_EXPRESSIONOP_H
 

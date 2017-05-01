@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 12/04/2017.
-//
-
 #ifndef RATTLE_CPP_CONTEXT_H
 #define RATTLE_CPP_CONTEXT_H
 

@@ -1,112 +1,87 @@
-//
-// Created by podgi on 4/12/2017.
-//
-
 #include "ScopeParser.h"
 #include "TypeInferer.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
 #include "../TypeInformation/LambdaTypeInformation.h"
+using namespace std;
+using namespace RattleLang;
 
-RattleLang::ScopeParser::ScopeParser(RattleLang::Context *context, bool exclusiveScope) {
+ScopeParser::ScopeParser(Context *context, bool exclusiveScope) {
     m_context = context;
     m_exclusive_scope = exclusiveScope;
     state = DECLARATION;
 }
 
-void RattleLang::ScopeParser::StartParsing(const RattleLang::SimpleNode *n) {
-    // Iunno.
+void ScopeParser::StartParsing(const SimpleNode *n) {
     ChildrenAccept(n);
 
-    int stateNum = static_cast<int>(state);
-    if (stateNum == static_cast<int>(LAST)) {
+    int current_state = static_cast<int>(state);
+    if (current_state == static_cast<int>(LAST)) {
         return;
     }
 
-    state = static_cast<BlockState >(++stateNum);
+    state = static_cast<BlockState>(++current_state);
     StartParsing(n);
 }
 
-void RattleLang::ScopeParser::declare(const RattleLang::ASTAssignment *node, void *data) {
-    // Currently if an assignment is type declared, then it means there's only 1 assignment
+void ScopeParser::declare(const ASTAssignment *node, void *data) {
+    size_t index_of_expressions = get_index_of_expressions_in_assignment(node);
+    size_t i = 0;
+    size_t j = 0;
+    size_t node_children = get_number_children(node);
 
-    if (node->typeDeclared) {
-        std::string type_name = dynamic_cast<SimpleNode *>(node->jjtGetChild(1))->tokenValue;
-        RattleLang::type varType = TypeStorage::get_instance()->get_type(type_name);
+    ExpressionOp op(ExpressionOp::ASSIGNMENT, {});
+    while ((i < index_of_expressions) && ((index_of_expressions + j) < node_children)) {
+        vector<string> operators;
+        int current_expression = index_of_expressions + j;
 
-        if (varType.type_name != NONE) {
-            //Declare the variable.
-            std::string varName = dynamic_cast<SimpleNode *>(node->jjtGetChild(0))->tokenValue;
-            cOut += type_name + " " + varName + ";";
-            TypeInfoPtr typeInfo(new TypeInformation({varType}, m_context));
-            m_context->add_variable(type_name, typeInfo);
-        } else {
-            throw TypeException(get_line_num(node));
-        }
-    } else {
-        int indexOfExpressions = get_index_of_expressions_in_assignment(node);
-        int i = 0;
-        int j = 0;
+        // Made up of 1 or more expressions.
+        ASTExpression *exp = get_child_as<ASTExpression>(node, current_expression);
+        TypeInfoPtr expression_type(new TypeInformation());
+        declare(exp, &expression_type);
+        size_t typename_returned = expression_type->num_return();
+        m_expression_count[exp] = typename_returned;
 
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, {});
-        while (i < indexOfExpressions && (indexOfExpressions + j) < node->jjtGetNumChildren()) {
+        for (int k = 0; (k < typename_returned) && (i < index_of_expressions); k++, i++) {
+            string variable_name = get_token_of_child(node, i);
+            TypeInfoPtr variable_info = m_context->get_variable(variable_name);
 
-            std::vector<std::string> operators;
-            int currentExpression = indexOfExpressions + j;
-
-            // Made up of 1 or more expressions.
-            ASTExpression *exp = dynamic_cast<ASTExpression *>(node->jjtGetChild(currentExpression));
-            TypeInfoPtr typeFound(new TypeInformation());
-            declare(exp, &typeFound);
-
-            if (!typeFound || typeFound->is_empty()) {
-                throw ParsingException("Variable Doesn't exist in this scope", get_line_num(node));
-            }
-
-            size_t typenamesSize = typeFound->typenames.size();
-            m_expression_count[exp] = typenamesSize;
-
-            for (int k = 0; k < typeFound->typenames.size() && i < indexOfExpressions; k++, i++) {
-                std::string varName = get_token_of_child(node, i);
-                TypeInfoPtr varInfo = m_context->get_variable(varName);
-
-                // The variable exists in a scope other than this one.
-                if (varInfo && !varInfo->is_empty()) {
-                    if (!m_exclusive_scope) {
-
-                        // Throw a parsing exception if the types do not match.
-                        if (varInfo->get_c_typename() != typeFound->get_c_typename()) {
-                            throw ParsingException("Type Mismatch, cannot convert " + varInfo->get_rattle_typename()
-                                                   + " to " + typeFound->get_rattle_typename() , get_line_num(node));
-                        }
-
-                        continue;
-                    }
-                }
-
-                // Find the subinformation
-                if (!varInfo || m_context != varInfo->scope) {
-                    TypeInfoPtr declared_info;
-                    if ((indexOfExpressions == 1 && typenamesSize > 1) || dynamic_cast<ASTLabmdaDefine*>(node->jjtGetChild(1)->jjtGetChild(0))) {
-                        declared_info = TypeInfoPtr(typeFound);
-                    } else {
-                        declared_info =TypeInfoPtr(new TypeInformation({typeFound->typenames[k]}, m_context));
+            // The variable exists in a scope other than this one.
+            if (!TypeInformation::is_empty(variable_info)) {
+                if (!m_exclusive_scope) {
+                    // Throw a parsing exception if the types do not match.
+                    if (variable_info->get_c_typename() != expression_type->get_c_typename()) {
+                        throw ParsingException("Type Mismatch, cannot convert " + variable_info->get_rattle_typename()
+                                               + " to " + expression_type->get_rattle_typename(), get_line_num(node));
                     }
 
-                    m_context->add_variable(get_token_of_child(node, i), declared_info);
-                    cOut += declared_info->get_c_return_types() + " " + varName + ";\n";
+                    // Otherwise continue, as we've already declared a variable of this type.
+                    continue;
+                }
+            }
+
+            // Find the subinformation
+            if (!variable_info || m_context != variable_info->scope) {
+                TypeInfoPtr declared_info;
+                if (((index_of_expressions == 1) && (typename_returned > 1)) ||
+                    get_child_as<ASTLabmdaDefine>(node->jjtGetChild(1), 0)) {
+                    declared_info = TypeInfoPtr(expression_type);
+                } else {
+                    declared_info = TypeInfoPtr(new TypeInformation({expression_type->typenames[k]}, m_context));
                 }
 
+                m_context->add_variable(get_token_of_child(node, i), declared_info);
+                cOut += declared_info->get_c_return_types() + " " + variable_name + ";\n";
             }
-            ++j;
         }
+        ++j;
     }
 }
 
 // Parse an Expression to find out it's type.
-void RattleLang::ScopeParser::declare(const RattleLang::ASTExpression *node, void *data) {
+void ScopeParser::declare(const ASTExpression *node, void *data) {
     if (data) {
-        TypeInfoPtr *type = reinterpret_cast< TypeInfoPtr*>(data);
+        TypeInfoPtr* type = (reinterpret_cast< TypeInfoPtr*>(data));
 
         if (type) {
             *type = TypeInfoPtr(TypeInferer::get_instance()->StartParsing(node,m_context));
@@ -114,27 +89,28 @@ void RattleLang::ScopeParser::declare(const RattleLang::ASTExpression *node, voi
     }
 }
 
-void RattleLang::ScopeParser::implement(const RattleLang::ASTExpression *node, void *data) {
+void ScopeParser::implement(const ASTExpression *node, void *data) {
     if (!node->isDone) {
         ExpressionOp op = data ? *(static_cast<ExpressionOp *>(data)) : ExpressionOp(ExpressionOp::ANONYMOUS, {});
         cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), node);
     }
 }
 
-void RattleLang::ScopeParser::implement(const RattleLang::ASTAssignment *node, void *data) {
-    int indexOfExpressions = get_index_of_expressions_in_assignment(node);
+void ScopeParser::implement(const ASTAssignment *node, void *data) {
+    int index_of_expressions = get_index_of_expressions_in_assignment(node);
+    size_t num_children = get_number_children(node);
     int i = 0;
     int j = 0;
 
-    while (i < indexOfExpressions && (indexOfExpressions + j) < node->jjtGetNumChildren()) {
+    while ((i < index_of_expressions) && ((index_of_expressions + j) < num_children)) {
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {});
-        std::vector<std::string> operators;
-        int currentExpression = indexOfExpressions + j;
+        vector<string> operators;
+        int current_expression = index_of_expressions + j;
 
         // Made up of 1 or more expressions.
-        ASTExpression *exp = dynamic_cast<ASTExpression *>(node->jjtGetChild(currentExpression));
+        ASTExpression *exp = get_child_as<ASTExpression>(node, current_expression);
         size_t count = m_expression_count[exp];
-        for (int k = 0; k < count && i < indexOfExpressions; ++k, ++i) {
+        for (int k = 0; (k < count) && (i < index_of_expressions); ++k, ++i) {
             op.parents.push_back(get_token_of_child(node, i));
         }
         implement(exp, &op);
@@ -143,51 +119,52 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTAssignment *node, v
 }
 
 // Implement a while loop.
-void RattleLang::ScopeParser::implement(const ASTWhileLoop *node, void *data) {
-    ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(0));
-    TypeInformation booltype;
-    declare(exp, &booltype);
+void ScopeParser::implement(const ASTWhileLoop *node, void *data) {
+    ASTExpression *exp = get_child_as<ASTExpression>(node, 0);
+    TypeInfoPtr bool_type;
+    declare(exp, &bool_type);
 
-    // Check we're a bool
-    if (booltype.typenames[0].type_name == BOOLEAN) {
+    if (bool_type->typenames[0].type_name == BOOLEAN) {
         cOut += "while(true)";
         cOut += SCOPE_OPEN;
-        // Perform some kind of break logic.
-        std::string unique_name = get_unique_name("while");
+
+        // Perform Operation to ensure that we break out of a loop.
+        string unique_name = get_unique_name("while");
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
-        cOut += SCOPE_OPEN;
 
         cOut += "bool " + unique_name + ";\n";
         cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
-        cOut += SCOPE_CLOSE;
 
         // Then perform the inner statement.
-        std::shared_ptr<Context> whileParserContext = std::make_shared<Context>(m_context);
+        shared_ptr<Context> whileParserContext = make_shared<Context>(m_context);
         cOut += StateMachineParserDecorator<ScopeParser>::GetParserResults(ScopeParser(whileParserContext.get()),
-                                                                           static_cast<ASTStatement *>(node->jjtGetChild(1)));
+                                                                           get_child_as<ASTStatement>(node, 1));
         cOut += SCOPE_CLOSE;
+        return;
     };
+
+    throw ParsingException("boolean expression require for while loop", get_line_num(node));
 
 }
 
-// Implement a while loop.
-void RattleLang::ScopeParser::implement(const ASTForLoop *node, void *data) {
+// Implement a For loop.
+void ScopeParser::implement(const ASTForLoop *node, void *data) {
     cOut += SCOPE_OPEN;
-    ASTAssignment *assignment = static_cast<ASTAssignment *>(node->jjtGetChild(0));
+    ASTAssignment *assignment = get_child_as<ASTAssignment>(node, 0);
     declare(assignment, data);
     implement(assignment, data);
 
-    ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(1));
-    TypeInformation booltype;
+    ASTExpression *exp = get_child_as<ASTExpression>(node, 1);
+    TypeInfoPtr booltype;
     declare(exp, &booltype);
 
     // Check we're a bool
-    if (booltype.typenames[0].type_name == BOOLEAN) {
+    if (booltype->typenames[0].type_name == BOOLEAN) {
         cOut += "while(true) {\n";
 
         // Perform some kind of break logic.
-        std::string unique_name = get_unique_name("for");
+        string unique_name = get_unique_name("for");
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += "bool " + unique_name + ";\n";
 
@@ -195,12 +172,12 @@ void RattleLang::ScopeParser::implement(const ASTForLoop *node, void *data) {
         cOut += "\nif (!" + unique_name + ") break;\n";
 
         // Then perform the inner statement
-        std::shared_ptr<Context> forParserContext = std::make_shared<Context>(m_context);
+        shared_ptr<Context> forParserContext = make_shared<Context>(m_context);
         cOut += StateMachineParserDecorator<ScopeParser>::GetParserResults(ScopeParser(forParserContext.get()),
                                                                            static_cast<ASTStatement *>(node->jjtGetChild(3)));
 
 
-        ASTAssignment* innerAssingment = static_cast<ASTAssignment*>(node->jjtGetChild(2));
+        ASTAssignment* innerAssingment = get_child_as<ASTAssignment>(node, 2);
         declare(innerAssingment, data);
         implement(innerAssingment, data);
 
@@ -210,15 +187,15 @@ void RattleLang::ScopeParser::implement(const ASTForLoop *node, void *data) {
 
 }
 
-void RattleLang::ScopeParser::implement(const RattleLang::ASTIfStatement *node, void *data) {
+void ScopeParser::implement(const ASTIfStatement *node, void *data) {
     // If statements consist of an expression and 1 or 2 statements
     ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(0));
-    TypeInformation booltype;
+    TypeInfoPtr booltype;
     declare(exp, &booltype);
 
     // Check we're a bool
-    if (booltype.typenames[0].type_name == BOOLEAN) {
-        std::string unique_name = get_unique_name("if");
+    if (booltype->typenames[0].type_name == BOOLEAN) {
+        string unique_name = get_unique_name("if");
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += SCOPE_OPEN;
         cOut += "bool " + unique_name + ";\n";
@@ -227,7 +204,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTIfStatement *node, 
         cOut += SCOPE_OPEN;
 
         // Then perform the inner statement.
-        std::shared_ptr<Context> ifParserContext = std::make_shared<Context>(m_context);
+        shared_ptr<Context> ifParserContext = make_shared<Context>(m_context);
         cOut += StateMachineParserDecorator<ScopeParser>::GetParserResults(ScopeParser(ifParserContext.get()),
                                                                            static_cast<ASTStatement *>(node->jjtGetChild(1)));
         cOut += SCOPE_CLOSE;
@@ -236,7 +213,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTIfStatement *node, 
             // do the same.
             cOut += "else ";
             cOut += SCOPE_OPEN;
-            std::shared_ptr<Context> elseParserContext = std::make_shared<Context>(m_context);
+            shared_ptr<Context> elseParserContext = make_shared<Context>(m_context);
             cOut += StateMachineParserDecorator<ScopeParser>::GetParserResults(ScopeParser(elseParserContext.get()),
                                                                                static_cast<ASTStatement *>(node->jjtGetChild(2)));
             cOut += SCOPE_CLOSE;
@@ -247,7 +224,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTIfStatement *node, 
 
 }
 
-void RattleLang::ScopeParser::implement(const RattleLang::ASTFnInvoke *node, void *data) {
+void ScopeParser::implement(const ASTFnInvoke *node, void *data) {
     ASTExpression *exp = new ASTExpression(0);
     exp->jjtAddChild((Node *) node, 0);
 
@@ -257,9 +234,9 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTFnInvoke *node, voi
 }
 
 // Get the print Statement
-void RattleLang::ScopeParser::implement(const RattleLang::ASTWrite *node, void *data) {
+void ScopeParser::implement(const ASTWrite *node, void *data) {
     ASTExpression *exp = static_cast<ASTExpression *>(node->jjtGetChild(0));
-    TypeInfoPtr typeinfo = std::make_shared<TypeInformation>();
+    TypeInfoPtr typeinfo = make_shared<TypeInformation>();
     declare(exp, &typeinfo);
 
     // We should only have one type.
@@ -267,7 +244,7 @@ void RattleLang::ScopeParser::implement(const RattleLang::ASTWrite *node, void *
         throw TypeException(get_line_num(node));
     };
 
-    std::string unique_name = get_unique_name("print");
+    string unique_name = get_unique_name("print");
     ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
     cOut += SCOPE_OPEN;
     cOut += typeinfo->typenames[0].get_corresponding_type_string() + " " + unique_name + ";\n";

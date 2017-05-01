@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 12/04/2017.
-//
-
 #include "Context.h"
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ScopeException.h"

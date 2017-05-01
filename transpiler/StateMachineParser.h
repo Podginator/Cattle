@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 04/04/2017.
-//
-
 #ifndef RATTLE_CPP_STATEABLEPARSER_H
 #define RATTLE_CPP_STATEABLEPARSER_H
 #include "../gen/RattleTree.h"

@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 07/04/2017.
-//
-
 #ifndef RATTLE_CPP_TYPE_H
 #define RATTLE_CPP_TYPE_H
 
