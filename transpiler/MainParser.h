@@ -28,7 +28,7 @@ namespace RattleLang {
         void visit(const ASTFnDef* node, void* data) override;
         void visit(const ASTAssignment* node, void* data) override;
 
-       ~Parser() { }
+       ~MainParser() { }
 
         void visit(const ASTStatement *node, void *data) override;
 

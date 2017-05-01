@@ -24,8 +24,9 @@ namespace RattleLang {
 
     class Context;
     class TypeInformation;
-    typedef std::pair<std::string, std::shared_ptr<TypeInformation>> NamedVariableInfo;
     typedef std::shared_ptr<TypeInformation> TypeInfoPtr;
+    typedef std::pair<std::string, TypeInfoPtr> NamedVariableInfo;
+
 
     class TypeInformation {
     public:

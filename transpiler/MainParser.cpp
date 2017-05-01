@@ -52,7 +52,7 @@ void MainParser::visit(const ASTClassDef *node, void *data) {
             }
 
             auto subclass_name = get_token_of_child(node, i);
-            std::shared_ptr<TypeInformation> subclass_info = context->get_class_definition(subclass_name );
+            TypeInfoPtr subclass_info = context->get_class_definition(subclass_name );
             if (subclass_info && !subclass_info->isEmpty()) {
                 cOutput += " public " + get_token_of_child(node, i) + ",";
             } else {
@@ -63,7 +63,7 @@ void MainParser::visit(const ASTClassDef *node, void *data) {
         cOutput.pop_back();
     }
     type class_type = type(className, EQ_OP);
-    std::shared_ptr<TypeInformation> class_information(new TypeInformation({class_type}, context));
+    TypeInfoPtr class_information(new TypeInformation({class_type}, context));
     TypeStorage::get_instance()->add_type(class_type);
     context->add_class(className, class_information);
     cOutput += ";\n";

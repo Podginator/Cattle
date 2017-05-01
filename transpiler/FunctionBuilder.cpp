@@ -15,15 +15,15 @@ FunctionBuilder::FunctionBuilder(Context* context) {
 }
 
 void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName) {
-    const ASTLabmdaDefine* def = nullptr;
     m_output.clear();
 
+    const ASTLabmdaDefine* def = nullptr;
     if (!dynamic_cast<const ASTFnDef*>(node) &&  !(def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
         throw ParsingException("Cannot deduce function from node type", get_line_num(node));
     }
 
     // If LambdaDefine is not nullptr then we are a named function.
-    build_function(node, fnName, def);
+    build_function(node, fnName, def != nullptr);
 }
 
 // We need to declare the function first.

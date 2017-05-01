@@ -131,7 +131,7 @@ namespace RattleLang{
         std::map<const SimpleNode*, std::string> m_fnCallName;
         ExpressionOp parent;
         Context* m_context;
-        std::shared_ptr<TypeInformation> expectedOutput;
+        TypeInfoPtr expectedOutput;
         bool isMultiAssign = false;
         bool hasFnCalls = false;
 
@@ -146,11 +146,11 @@ namespace RattleLang{
         // Do each Child and add a new returned value.
         void DoEachExpression(const SimpleNode* node);
 
-        std::shared_ptr<TypeInformation> get_type_info(const SimpleNode *node);
+        TypeInfoPtr get_type_info(const SimpleNode *node);
 
         bool needs_converting(SimpleNode *node);
 
-        bool needs_converting(std::shared_ptr<TypeInformation> expression_info);
+        bool needs_converting(TypeInfoPtr expression_info);
 
         void convert_if_needed(SimpleNode *node);
     };

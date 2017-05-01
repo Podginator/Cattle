@@ -17,7 +17,7 @@ namespace RattleLang {
 
         static TypeInferer* get_instance();
 
-        std::shared_ptr<TypeInformation> StartParsing(const ASTExpression *node, Context* context);
+        TypeInfoPtr StartParsing(const ASTExpression *node, Context* context);
 
         void defaultVisit(const SimpleNode *node, void *data) override;
 
@@ -90,7 +90,7 @@ namespace RattleLang {
 
         static TypeInferer* instance;
 
-        std::map<const ASTExpression*, std::shared_ptr<TypeInformation>> m_typemap;
+        std::map<const ASTExpression*, TypeInfoPtr> m_typemap;
 
         RattleLang::type retType;
 
