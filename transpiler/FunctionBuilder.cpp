@@ -17,8 +17,8 @@ FunctionBuilder::FunctionBuilder(Context* context) {
 void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName) {
     m_output.clear();
 
-    const ASTLabmdaDefine* def = nullptr;
-    if (!dynamic_cast<const ASTFnDef*>(node) &&  !(def = dynamic_cast<const ASTLabmdaDefine*>(node))) {
+    ASTLambdaDefine* def = nullptr;
+    if (!get_node_as<ASTFnDef>(node) &&  !(def = get_node_as<ASTLambdaDefine>(node))) {
         throw ParsingException("No function found ", get_line_num(node));
     }
 

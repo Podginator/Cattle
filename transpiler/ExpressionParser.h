@@ -122,7 +122,7 @@ namespace RattleLang{
 
         void visit_expressionPass(const ASTTupleDefine* node, void* data);
 
-        void visit_expressionPass(const ASTLabmdaDefine* node, void* data);
+        void visit_expressionPass(const ASTLambdaDefine* node, void* data);
 
     private:
         std::string res;

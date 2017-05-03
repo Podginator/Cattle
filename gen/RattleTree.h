@@ -13,7 +13,7 @@
 #include "ASTClassDef.h"
 #include "ASTCompLTE.h"
 #include "ASTMethodInstantiate.h"
-#include "ASTLabmdaDefine.h"
+#include "ASTLambdaDefine.h"
 #include "ASTParmlist.h"
 #include "ASTIfStatement.h"
 #include "ASTAssignment.h"

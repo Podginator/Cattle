@@ -907,7 +907,7 @@ if (jjtc000) {
 
 
 void Rattle::lambda_define() {/*@bgen(jjtree) LabmdaDefine */
-  ASTLabmdaDefine *jjtn000 = new ASTLabmdaDefine(JJTLABMDADEFINE);
+  ASTLambdaDefine *jjtn000 = new ASTLambdaDefine(JJTLABMDADEFINE);
   bool jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtn000->jjtSetFirstToken(getToken(1));

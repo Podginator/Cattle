@@ -9,11 +9,11 @@ namespace RattleLang {
 class Rattle;
 
 
-class ASTLabmdaDefine : public SimpleNode {
+class ASTLambdaDefine : public SimpleNode {
 public: 
-           ASTLabmdaDefine(int id);
-           ASTLabmdaDefine(Rattle *parser, int id);
-  virtual ~ASTLabmdaDefine();
+           ASTLambdaDefine(int id);
+           ASTLambdaDefine(Rattle *parser, int id);
+  virtual ~ASTLambdaDefine();
 
   /** Accept the visitor. **/
   virtual void  jjtAccept(RattleVisitor *visitor, void * data) const ;

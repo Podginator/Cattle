@@ -266,7 +266,7 @@ TypeInferer::doOperand(const SimpleNode *node, RattleLang::operands operand, voi
 }
 
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTLabmdaDefine *node, void *data) {
+void RattleLang::TypeInferer::visit(const RattleLang::ASTLambdaDefine *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     ASTAssignment* ass = (ASTAssignment*)node->jjtGetParent()->jjtGetParent();
     FunctionBuilder builder(m_context);

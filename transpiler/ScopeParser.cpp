@@ -64,7 +64,7 @@ void ScopeParser::declare(const ASTAssignment *node, void *data) {
             if (!variable_info || m_context != variable_info->scope) {
                 TypeInfoPtr declared_info;
                 if (((index_of_expressions == 1) && (typename_returned > 1)) ||
-                    get_child_as<ASTLabmdaDefine>(node->jjtGetChild(1), 0)) {
+                    get_child_as<ASTLambdaDefine>(node->jjtGetChild(1), 0)) {
                     declared_info = TypeInfoPtr(expression_type);
                 } else {
                     declared_info = TypeInfoPtr(new TypeInformation({expression_type->typenames[k]}, m_context));

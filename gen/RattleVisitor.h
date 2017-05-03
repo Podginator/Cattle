@@ -30,7 +30,7 @@ class RattleVisitor
   virtual void  visit(const ASTObjCreate *node, void * data) = 0;
   virtual void  visit(const ASTMemInstantiate *node, void * data) = 0;
   virtual void  visit(const ASTMethodInstantiate *node, void * data) = 0;
-  virtual void  visit(const ASTLabmdaDefine *node, void * data) = 0;
+  virtual void  visit(const ASTLambdaDefine *node, void * data) = 0;
   virtual void  visit(const ASTForLoop *node, void * data) = 0;
   virtual void  visit(const ASTWhileLoop *node, void * data) = 0;
   virtual void  visit(const ASTWrite *node, void * data) = 0;
@@ -191,7 +191,7 @@ public:
   virtual void  visit(const ASTMethodInstantiate *node, void * data) {
     defaultVisit(node, data);
   }
-  virtual void  visit(const ASTLabmdaDefine *node, void * data) {
+  virtual void  visit(const ASTLambdaDefine *node, void * data) {
     defaultVisit(node, data);
   }
   virtual void  visit(const ASTForLoop *node, void * data) {

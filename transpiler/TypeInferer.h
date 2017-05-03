@@ -78,7 +78,7 @@ namespace RattleLang {
 
         void visit(const ASTTupleDefine* node, void* visit) override;
 
-        void visit(const ASTLabmdaDefine *node, void *data) override;
+        void visit(const ASTLambdaDefine *node, void *data) override;
 
     private:
 

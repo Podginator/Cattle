@@ -239,15 +239,14 @@ void ExpressionParser::doExpression(const SimpleNode *n, const string &expressio
     // Wrap the typename to ensure we don't get instances where we're getting an int instead
     // of "number" (or double)
     AppendToResult(expression_info->get_c_typename()+"(");
-    convert_if_needed((SimpleNode *) n->jjtGetChild(0));
+    convert_if_needed(get_child_as<SimpleNode>(n, 0));
     AppendToResult(expression);
-    convert_if_needed((SimpleNode *) n->jjtGetChild(1));
+    convert_if_needed(get_child_as<SimpleNode>(n, 1));
     AppendToResult(")");
 }
 
 
-shared_ptr<TypeInformation>
-ExpressionParser::get_type_info(const SimpleNode *node) {
+shared_ptr<TypeInformation> ExpressionParser::get_type_info(const SimpleNode *node) {
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild(const_cast<SimpleNode*>(node),0);
     return TypeInferer::get_instance()->StartParsing(exp, m_context);
@@ -409,7 +408,7 @@ void ExpressionParser::visit_expressionPass(const ASTTupleDefine *node, void *da
 
 }
 
-void ExpressionParser::visit_expressionPass(const ASTLabmdaDefine *node, void *data) {
+void ExpressionParser::visit_expressionPass(const ASTLambdaDefine *node, void *data) {
     FunctionBuilder builder(m_context);
     SimpleNode* parent = get_parent_as<SimpleNode>(node, 2);
     builder.StartParsing(node, get_token_of_child(parent, 0));

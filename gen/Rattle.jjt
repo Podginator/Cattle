@@ -452,7 +452,7 @@ void method_instantiate() #MethodInstantiate :
 }
 
 
-void lambda_define() #LabmdaDefine :
+void lambda_define() #LambdaDefine :
 {}
 {
     // Ie : (x, y)->{ return x+y }

@@ -55,8 +55,8 @@ set(SOURCE_FILES
         gen/ASTIdentifier.h
         gen/ASTIfStatement.cc
         gen/ASTIfStatement.h
-        gen/ASTLabmdaDefine.cc
-        gen/ASTLabmdaDefine.h
+        gen/ASTLambdaDefine.cc
+        gen/ASTLambdaDefine.h
         gen/ASTMemDeclaration.cc
         gen/ASTMemDeclaration.h
         gen/ASTMemIdentifier.cc
@@ -141,6 +141,6 @@ set(SOURCE_FILES
         TypeInformation/ExpressionOp.h
         TypeInformation/ExpressionOp.cpp
         misc/StringHelper.h
-        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/MainParser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h)
+        main.cc transpiler/ExpressionParser.cc transpiler/StateMachineParserDecorator.h transpiler/StateMachineParser.h TypeInformation/type.h transpiler/TypeInferer.cpp transpiler/TypeInferer.h TypeInformation/Context.cpp TypeInformation/Context.h transpiler/ScopeParser.cpp transpiler/ScopeParser.h exceptions/TypeException.h exceptions/ParsingException.h transpiler/MainParser.cpp gen/ASTFnTypeList.cc gen/ASTFnTypeList.h exceptions/ContextException.h exceptions/ScopeException.h transpiler/FunctionBuilder.cpp transpiler/FunctionBuilder.h TypeInformation/LambdaTypeInformation.h TypeInformation/LambdaTypeInformation.cpp transpiler/ExpressionCombiner/DefaultExpressionCombiner.cpp transpiler/ExpressionCombiner/DefaultExpressionCombiner.h transpiler/ExpressionCombiner/ExpressionCombiner.cpp transpiler/ExpressionCombiner/ExpressionCombiner.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

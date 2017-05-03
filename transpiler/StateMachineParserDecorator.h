@@ -113,8 +113,8 @@ namespace RattleLang {
             defVisit<ASTMethodInstantiate>(node, data);
         }
 
-         void visit(const ASTLabmdaDefine *node, void *data) override  {
-            defVisit<ASTLabmdaDefine>(node, data);
+         void visit(const ASTLambdaDefine *node, void *data) override  {
+            defVisit<ASTLambdaDefine>(node, data);
         }
 
          void visit(const ASTForLoop *node, void *data) override  {
