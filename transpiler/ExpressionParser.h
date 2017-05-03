@@ -9,6 +9,8 @@
 #include "../TypeInformation/ExpressionOp.h"
 #include <string>
 
+using namespace std;
+
 namespace RattleLang{ 
 
     // There is a lot of side effects in this code.
@@ -29,17 +31,17 @@ namespace RattleLang{
         void StartParsing(const SimpleNode* n);
 
 
-        std::string get_c_output() { return res; }
+        string get_c_output() { return res; }
 
         template <class T>
         void defVisit(const T* node, void* data) {
 
             switch (state) {
                 case FN_PASS:
-                    visit_fnPass(node, data);
+                    visit_fn_pass(node, data);
                     break;
                 case EXPRESSION_PASS:
-                    visit_expressionPass(node, data);
+                    visit_expression_pass(node, data);
                     break;
                 default:
                     break;
@@ -51,93 +53,103 @@ namespace RattleLang{
 
 
         // Defaults.
-        void visit_fnPass(const SimpleNode* node, void* data){
+        void visit_fn_pass(const SimpleNode* node, void* data){
             ChildrenAccept(node, data);
         }
 
-        void visit_expressionPass(const SimpleNode* node, void* data){
+        void visit_expression_pass(const SimpleNode* node, void* data){
             ChildrenAccept(node, data);
         }
 
         // Should only exist for
-        void  visit_expressionPass(const ASTOr *node, void * data);
+        void  visit_expression_pass(const ASTOr *node, void * data);
 
-        void  visit_expressionPass(const ASTAnd *node, void * data);
+        void  visit_expression_pass(const ASTAnd *node, void * data);
 
-        void  visit_expressionPass(const ASTCompEqual *node, void * data);
+        void  visit_expression_pass(const ASTCompEqual *node, void * data);
 
-        void  visit_expressionPass(const ASTCompNequal *node, void * data);
+        void  visit_expression_pass(const ASTCompNequal *node, void * data);
 
-        void  visit_expressionPass(const ASTCompGTE *node, void * data);
+        void  visit_expression_pass(const ASTCompGTE *node, void * data);
 
-        void  visit_expressionPass(const ASTCompLTE *node, void * data);
+        void  visit_expression_pass(const ASTCompLTE *node, void * data);
 
-        void  visit_expressionPass(const ASTCompGT *node, void * data);
+        void  visit_expression_pass(const ASTCompGT *node, void * data);
 
-        void  visit_expressionPass(const ASTCompLT *node, void * data);
+        void  visit_expression_pass(const ASTCompLT *node, void * data);
 
-        void  visit_expressionPass(const ASTAdd *node, void * data);
+        void  visit_expression_pass(const ASTAdd *node, void * data);
 
-        void  visit_expressionPass(const ASTSubtract *node, void * data);
+        void  visit_expression_pass(const ASTSubtract *node, void * data);
 
-        void  visit_expressionPass(const ASTTimes *node, void * data);
+        void  visit_expression_pass(const ASTTimes *node, void * data);
 
-        void  visit_expressionPass(const ASTDivide *node, void * data);
+        void  visit_expression_pass(const ASTDivide *node, void * data);
 
-        void  visit_expressionPass(const ASTUnaryNot *node, void * data);
+        void  visit_expression_pass(const ASTUnaryNot *node, void * data);
 
-        void  visit_expressionPass(const ASTUnaryPlus *node, void * data);
+        void  visit_expression_pass(const ASTUnaryPlus *node, void * data);
 
-        void  visit_expressionPass(const ASTUnaryMinus *node, void * data);
+        void  visit_expression_pass(const ASTUnaryMinus *node, void * data);
 
-        void visit_expressionPass(const ASTDereference* node, void* data);
+        void visit_expression_pass(const ASTDereference* node, void* data);
 
-        void  visit_expressionPass(const ASTExpression* node, void* data);
-        void  visit_fnPass(const ASTExpression* node, void* data);
+        void  visit_expression_pass(const ASTExpression* node, void* data);
+        void  visit_fn_pass(const ASTExpression* node, void* data);
 
         // A function invoke should
-        void  visit_expressionPass(const ASTFnInvoke *node, void * data);
-        void  visit_fnPass(const ASTFnInvoke *node, void * data);
+        void  visit_expression_pass(const ASTFnInvoke *node, void * data);
+        void  visit_fn_pass(const ASTFnInvoke *node, void * data);
 
-        void visit_fnPass(const ASTArgList* node, void* data);
-        void  visit_expressionPass(const ASTArgList *node, void * data);
+        void visit_fn_pass(const ASTArgList* node, void* data);
+        void  visit_expression_pass(const ASTArgList *node, void * data);
 
-        void  visit_expressionPass(const ASTCharacter *node, void * data);
+        void  visit_expression_pass(const ASTCharacter *node, void * data);
 
-        void  visit_expressionPass(const ASTString *node, void * data);
+        void  visit_expression_pass(const ASTString *node, void * data);
 
-        void  visit_expressionPass(const ASTNumber *node, void * data);
+        void  visit_expression_pass(const ASTNumber *node, void * data);
 
-        void  visit_expressionPass(const ASTTrue *node, void * data);
+        void  visit_expression_pass(const ASTTrue *node, void * data);
 
-        void  visit_expressionPass(const ASTFalse *node, void * data);
+        void  visit_expression_pass(const ASTFalse *node, void * data);
 
-        void visit_expressionPass(const ASTIdentifier* node, void* data);
+        void visit_expression_pass(const ASTIdentifier* node, void* data);
 
-        void visit_fnPass(const ASTIndexedExpression* node, void* data);
+        void visit_fn_pass(const ASTIndexedExpression* node, void* data);
 
-        void visit_expressionPass(const ASTIndexedExpression* node, void* data);
+        void visit_expression_pass(const ASTIndexedExpression* node, void* data);
 
-        void visit_fnPass(const ASTTupleDefine* node, void* data);
+        void visit_fn_pass(const ASTTupleDefine* node, void* data);
 
-        void visit_expressionPass(const ASTTupleDefine* node, void* data);
+        void visit_expression_pass(const ASTTupleDefine* node, void* data);
 
-        void visit_expressionPass(const ASTLambdaDefine* node, void* data);
+        void visit_expression_pass(const ASTLambdaDefine* node, void* data);
 
     private:
-        std::string res;
+        string res;
+
         ExpressionState state = FN_PASS;
-        std::vector<std::string> returnedExpressions;
-        std::map<const Node*, std::string> m_fnCallName;
+
+        std::vector<string> returnedExpressions;
+
+        map<const Node*, string> m_fnCallName;
+
         ExpressionOp parent;
+
         Context* m_context;
+
         TypeInfoPtr expectedOutput;
+
         bool isMultiAssign = false;
+
         bool hasFnCalls = false;
 
-        void PrintNode(const SimpleNode* node);
+        void print_node(const SimpleNode *node);
 
-        void doExpression(const SimpleNode* n, const std::string& expression);
+        void do_expression(const SimpleNode *n, const string &expression);
+
+        void do_expression(const SimpleNode *n);
 
         bool isMultiAssignment(const SimpleNode* exp);
 

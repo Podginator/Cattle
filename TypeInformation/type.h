@@ -20,13 +20,17 @@ namespace RattleLang {
 
 
     enum operands {
+        NONE = 0,
         ADD_OP = 1,
         SUB_OP = 1 << 1,
         MUL_OP = 1 << 2,
         DIV_OP = 1 << 3,
         LTE_OP = 1 << 4,
+        LT_OP = LTE_OP,
         GTE_OP = 1 << 5,
+        GT_OP = GTE_OP,
         EQ_OP = 1 << 6,
+        NEQ_OP = EQ_OP,
         NOT_OP = 1 << 7,
         OR_OP  = 1 << 8,
         AND_OP = 1 << 9,

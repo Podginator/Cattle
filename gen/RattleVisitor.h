@@ -91,9 +91,15 @@ class RattleVisitor
       return dynamic_cast<T*>(node->jjtGetChild(child));
     }
     template<typename T>
-    static T* get_node_as(const Node* node) {
+    static const T* get_node_as(const Node* node) {
       return dynamic_cast<const T*>(node);
     }
+
+    template<typename T>
+    static T* get_node_as(Node* node) {
+      return dynamic_cast<T*>(const_cast<Node*>(node));
+    }
+
 
     static size_t get_number_children(const Node* node) {
       return node->jjtGetNumChildren();

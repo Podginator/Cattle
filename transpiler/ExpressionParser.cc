@@ -33,77 +33,77 @@ void ExpressionParser::StartParsing(const SimpleNode* n) {
     }
 }
 
-void ExpressionParser::visit_fnPass(const ASTTupleDefine *node, void *data) {
+void ExpressionParser::visit_fn_pass(const ASTTupleDefine *node, void *data) {
 }
 
 void ExpressionParser::defaultVisit(const SimpleNode *node, void *data) {
     // Do nothing.
 }
 
-void ExpressionParser::visit_expressionPass(const ASTOr *node, void *data) {
-    doExpression(node, "||");
+void ExpressionParser::visit_expression_pass(const ASTOr *node, void *data) {
+    do_expression(node, "||");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTAnd *node, void *data) {
-    doExpression(node, "&&");
+void ExpressionParser::visit_expression_pass(const ASTAnd *node, void *data) {
+    do_expression(node, "&&");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompEqual *node, void *data) {
-    doExpression(node, "==");
+void ExpressionParser::visit_expression_pass(const ASTCompEqual *node, void *data) {
+    do_expression(node, "==");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompNequal *node, void *data) {
-    doExpression(node, "!=");
+void ExpressionParser::visit_expression_pass(const ASTCompNequal *node, void *data) {
+    do_expression(node, "!=");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompGTE *node, void *data) {
-    doExpression(node, ">=");
+void ExpressionParser::visit_expression_pass(const ASTCompGTE *node, void *data) {
+    do_expression(node, ">=");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompLTE *node, void *data) {
-    doExpression(node, "<=");
+void ExpressionParser::visit_expression_pass(const ASTCompLTE *node, void *data) {
+    do_expression(node, "<=");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompGT *node, void *data) {
-    doExpression(node, ">");
+void ExpressionParser::visit_expression_pass(const ASTCompGT *node, void *data) {
+    do_expression(node, ">");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCompLT *node, void *data) {
-    doExpression(node, "<");
+void ExpressionParser::visit_expression_pass(const ASTCompLT *node, void *data) {
+    do_expression(node, "<");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTAdd *node, void *data) {
-    doExpression(node, "+");
+void ExpressionParser::visit_expression_pass(const ASTAdd *node, void *data) {
+    do_expression(node, "+");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTSubtract *node, void *data) {
-    doExpression(node, "-");
+void ExpressionParser::visit_expression_pass(const ASTSubtract *node, void *data) {
+    do_expression(node, "-");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTTimes *node, void *data) {
-    doExpression(node, "*");
+void ExpressionParser::visit_expression_pass(const ASTTimes *node, void *data) {
+    do_expression(node, "*");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTDivide *node, void *data) {
-    doExpression(node, "/");
+void ExpressionParser::visit_expression_pass(const ASTDivide *node, void *data) {
+    do_expression(node, "/");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTUnaryNot *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTUnaryNot *node, void *data) {
     AppendToResult("!");
     ChildAccept(node, 0, data);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTUnaryPlus *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTUnaryPlus *node, void *data) {
     AppendToResult("+");
     ChildAccept(node, 0, data);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTUnaryMinus *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTUnaryMinus *node, void *data) {
     AppendToResult("-");
     ChildAccept(node, 0, data);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTIdentifier *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTIdentifier *node, void *data) {
     if (data) {
         int val = *(static_cast<int *>(data));
         AppendToResult("get<" + to_string(val) + ">" + "(");
@@ -111,7 +111,7 @@ void ExpressionParser::visit_expressionPass(const ASTIdentifier *node, void *dat
     AppendToResult(get_token_of_node(node) + (data ? ")" : ""));
 }
 
-void ExpressionParser::visit_expressionPass(const ASTDereference *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTDereference *node, void *data) {
     if (isMultiAssign) {
         string name(get_token_of_child(node, 0));
         AppendToResult("get<0>(" + name + ")");
@@ -124,19 +124,19 @@ void ExpressionParser::visit_expressionPass(const ASTDereference *node, void *da
     }
 }
 
-void ExpressionParser::visit_expressionPass(const ASTExpression *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTExpression *node, void *data) {
     returnedExpressions.back() += "(";
     ChildrenAccept(node, data);
     returnedExpressions.back() += ")";
     const_cast<ASTExpression*>(node)->isDone = true;
 }
 
-void ExpressionParser::visit_fnPass(const ASTExpression *node, void* data) {
+void ExpressionParser::visit_fn_pass(const ASTExpression *node, void* data) {
     ChildrenAccept(node, data);
     const_cast<ASTExpression*>(node)->isDone = true;
 }
 
-void ExpressionParser::visit_fnPass(const ASTFnInvoke *node, void *data) {
+void ExpressionParser::visit_fn_pass(const ASTFnInvoke *node, void *data) {
 
     string name = get_token_of_child(node,  0);
     const_cast<ASTFnInvoke *>(node)->isDone = true;
@@ -177,7 +177,7 @@ void ExpressionParser::visit_fnPass(const ASTFnInvoke *node, void *data) {
 
 }
 
-void ExpressionParser::visit_expressionPass(const ASTFnInvoke *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTFnInvoke *node, void *data) {
     string name = get_token_of_child(node, 0);
     int start_index = data ? *((int*)data) : 0;
     TypeInfoPtr fn_info = m_context->get_function(name);
@@ -203,34 +203,34 @@ void ExpressionParser::visit_expressionPass(const ASTFnInvoke *node, void *data)
     }
 }
 
-void ExpressionParser::visit_expressionPass(const ASTCharacter *node, void *data) {
-    PrintNode(node);
+void ExpressionParser::visit_expression_pass(const ASTCharacter *node, void *data) {
+    print_node(node);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTString *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTString *node, void *data) {
     AppendToResult("string(");
-    PrintNode(node);
+    print_node(node);
     AppendToResult(")");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTNumber *node, void *data) {
-    PrintNode(node);
+void ExpressionParser::visit_expression_pass(const ASTNumber *node, void *data) {
+    print_node(node);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTTrue *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTTrue *node, void *data) {
     AppendToResult("true");
 }
 
-void ExpressionParser::visit_expressionPass(const ASTFalse *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTFalse *node, void *data) {
     AppendToResult("false");
 }
 
-void ExpressionParser::PrintNode(const SimpleNode *node) {
+void ExpressionParser::print_node(const SimpleNode *node) {
     AppendToResult(get_token_of_node(node));
 }
 
 // An expression might not be a "Base Expression" "1" + 2 but might instead be "1" + 2+3+4
-void ExpressionParser::doExpression(const SimpleNode *n, const string &expression) {
+void ExpressionParser::do_expression(const SimpleNode *n, const string &expression) {
     TypeInfoPtr expression_info = get_type_info(n);
 
     string preample = needs_converting(expression_info) ? "to_string(" : "";
@@ -245,6 +245,9 @@ void ExpressionParser::doExpression(const SimpleNode *n, const string &expressio
     AppendToResult(")");
 }
 
+void ExpressionParser::do_expression(const SimpleNode *n) {
+
+}
 
 shared_ptr<TypeInformation> ExpressionParser::get_type_info(const SimpleNode *node) {
     ASTExpression* exp = new ASTExpression(0);
@@ -286,7 +289,7 @@ bool ExpressionParser::isMultiAssignment(const SimpleNode *exp) {
     return parent.parents.size() != 1 && (get_child_as<ASTFnInvoke>(exp, 0) || get_child_as<ASTDereference>(exp,0));
 }
 
-void ExpressionParser::visit_fnPass(const ASTArgList *node, void *data) {
+void ExpressionParser::visit_fn_pass(const ASTArgList *node, void *data) {
     int children_size = get_number_children(node);
     string fn_name = get_token_of_node(node->jjtGetParent()->jjtGetChild(0));
     TypeInfoPtr fn_type = m_context->get_function(fn_name);
@@ -335,7 +338,7 @@ void ExpressionParser::visit_fnPass(const ASTArgList *node, void *data) {
     }
 }
 
-void ExpressionParser::visit_expressionPass(const ASTArgList *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTArgList *node, void *data) {
     string function_c_name = m_fnCallName[node->jjtGetParent()];
     string function_rattle_name = get_token_of_node((node->jjtGetParent()->jjtGetChild(0)));
     int param_size = m_context->get_function(function_rattle_name)->num_return();
@@ -363,17 +366,17 @@ void ExpressionParser::DoEachExpression(const SimpleNode *node) {
 }
 
 // Pass down the expected index for the function return.
-void ExpressionParser::visit_expressionPass(const ASTIndexedExpression *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTIndexedExpression *node, void *data) {
     ASTNumber* index_node = get_child_as<ASTNumber>(node, 1);
     int value = atoi(get_token_of_node(index_node).c_str());
     ChildAccept(node, 0 ,&value);
 }
 
-void ExpressionParser::visit_fnPass(const ASTIndexedExpression *node, void *data) {
+void ExpressionParser::visit_fn_pass(const ASTIndexedExpression *node, void *data) {
     ChildAccept(node, 0 ,data);
 }
 
-void ExpressionParser::visit_expressionPass(const ASTTupleDefine *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTTupleDefine *node, void *data) {
     size_t node_children_size = get_number_children(node);
     vector<string> allNames;
     res.append(SCOPE_OPEN);
@@ -408,7 +411,7 @@ void ExpressionParser::visit_expressionPass(const ASTTupleDefine *node, void *da
 
 }
 
-void ExpressionParser::visit_expressionPass(const ASTLambdaDefine *node, void *data) {
+void ExpressionParser::visit_expression_pass(const ASTLambdaDefine *node, void *data) {
     FunctionBuilder builder(m_context);
     SimpleNode* parent = get_parent_as<SimpleNode>(node, 2);
     builder.StartParsing(node, get_token_of_child(parent, 0));

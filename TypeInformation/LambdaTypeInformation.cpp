@@ -7,7 +7,7 @@ using namespace RattleLang;
 LambdaTypeInformation::LambdaTypeInformation() : TypeInformation(){}
 
 // The Constructor, takes a variable amount of types.
-LambdaTypeInformation::LambdaTypeInformation(std::initializer_list<RattleLang::type> types, Context* context = nullptr)
+LambdaTypeInformation::LambdaTypeInformation(std::initializer_list<RattleLang::type> types, Context* context)
 : TypeInformation(types, context){}
 
 
