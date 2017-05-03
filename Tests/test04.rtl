@@ -21,6 +21,8 @@ def expectFiveParam : number, number, number, number, number, number ( a : numbe
 blah = 6
 param_tuple = [retOneNum(), retThreeNum(), retTwoNum()]
 g,h,i,j,k = expectFiveParam(param_tuple)
+blah = retTwoNum()[0] + 2
+print blah
 
 print g
 print h

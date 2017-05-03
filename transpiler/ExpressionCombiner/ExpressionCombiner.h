@@ -11,21 +11,27 @@ using namespace std;
 
 namespace RattleLang {
 
-    typedef shared_ptr<ExpressionCombiner> ExpressionCombinerPtr;
+    struct ExpressionCombinerResult {
+        // IE: Any need to get multiple results
+        string preample;
+        // IE: Actual Expression
+        string expression;
+    };
+
+
     // Interface for an expression combiner.
     class ExpressionCombiner {
     public:
 
-        ExpressionCombiner(TypeInfoPtr expected_output);
+        ExpressionCombiner(Context* m_context);
 
-        virtual string combine_statement(SimpleNode *node, SimpleNode *node2, operands operand) = 0;
-
-    private:
-        TypeInfoPtr m_expected_output;
+        virtual ExpressionCombinerResult combine_statement(const SimpleNode *node, operands operand) = 0;
 
 
 
     };
+
+    typedef shared_ptr<ExpressionCombiner> ExpressionCombinerPtr;
 }
 
 

@@ -50,7 +50,9 @@ void ScopeParser::declare(const ASTAssignment *node, void *data) {
             if (!TypeInformation::is_empty(variable_info)) {
                 if (!m_exclusive_scope) {
                     // Throw a parsing exception if the types do not match.
-                    if (variable_info->get_c_typename() != expression_type->get_c_typename()) {
+                    bool typematch = (variable_info->get_c_typename() == expression_type->get_c_typename())
+                                     || (variable_info->get_c_typename() == expression_type->typenames[k].get_corresponding_type_string());
+                    if (!typematch) {
                         throw ParsingException("Type Mismatch, cannot convert " + variable_info->get_rattle_typename()
                                                + " to " + expression_type->get_rattle_typename(), get_line_num(node));
                     }

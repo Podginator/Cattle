@@ -249,7 +249,7 @@ void ExpressionParser::do_expression(const SimpleNode *n) {
 
 }
 
-shared_ptr<TypeInformation> ExpressionParser::get_type_info(const SimpleNode *node) {
+TypeInfoPtr ExpressionParser::get_type_info(const SimpleNode *node) {
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild(const_cast<SimpleNode*>(node),0);
     return TypeInferer::get_instance()->StartParsing(exp, m_context);
@@ -272,7 +272,8 @@ void ExpressionParser::convert_if_needed(SimpleNode *node) {
     expectedOutput = old;
 }
 
-bool ExpressionParser::needs_converting(SimpleNode *node) {
+bool ExpressionParser::needs_converting
+        (SimpleNode *node) {
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild(node,0);
     TypeInfoPtr expression_info = TypeInferer::get_instance()->StartParsing(exp, m_context);

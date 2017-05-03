@@ -20,7 +20,7 @@ namespace RattleLang {
 
 
     enum operands {
-        NONE = 0,
+        NONE_OP = 0,
         ADD_OP = 1,
         SUB_OP = 1 << 1,
         MUL_OP = 1 << 2,
