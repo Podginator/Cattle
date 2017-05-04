@@ -11,19 +11,19 @@ using namespace std;
 
 namespace RattleLang {
 
-    struct ExpressionCombinerResult {
+    class ExpressionCombinerResult {
+    public:
         // IE: Any need to get multiple results
         string preample;
-        // IE: Actual Expression
-        string expression;
+        // The Actual Expressions.
+        vector<string> expressions;
+
     };
 
 
     // Interface for an expression combiner.
     class ExpressionCombiner {
     public:
-
-        ExpressionCombiner(Context* m_context);
 
         virtual ExpressionCombinerResult combine_statement(const SimpleNode *node, operands operand) = 0;
 

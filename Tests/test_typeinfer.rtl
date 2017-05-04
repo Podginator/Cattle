@@ -1,15 +1,7 @@
-a = 1
-a = 12
-a = 13/2
-b = "1" + 13/2
-b = "1" + (12+2+3)
-c = false
-c = true
 
-def retTwo : number, number(){
+def retTwo : number, number(x : number){
     return 1, 2
 }
 
-user_tuple = [1, 2, c, a, 12/13, retTwo()]
 
-print user_tuple[1]
+f,g = retTwo(2)

@@ -109,6 +109,13 @@ class RattleVisitor
       return node->jjtGetFirstToken()->beginLine;
     }
 
+
+    template <typename T>
+    static std::string GetParserResults(T t, const SimpleNode* node) {
+      t.StartParsing(node);
+      return t.get_c_output();
+    }
+
     virtual ~RattleVisitor() { }
 protected:
     std::string get_unique_name(const std::string& prefix = "default") {
@@ -137,6 +144,26 @@ protected:
       }
 
       return -1;
+    }
+
+
+    template <class T>
+    static bool find_instance_of(const Node* node) {
+
+      bool res = false;
+
+      if (get_node_as<T>(node)) {
+        return true;
+      }
+
+      size_t children = node->jjtGetNumChildren();
+      if (children > 0) {
+        for (int i = 0; i < children && !res; ++i) {
+          res = find_instance_of<T>(node->jjtGetChild(i));
+        }
+      }
+
+      return res;
     }
 
 };

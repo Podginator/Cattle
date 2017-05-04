@@ -6,34 +6,35 @@
 #include "../../gen/RattleVisitor.h"
 #include "../../exceptions/ParsingException.h"
 #include "DefaultExpressionCombiner.h"
+#include "BasicExpressionCombiner.h"
 
 namespace RattleLang {
     class ExpressionCombinerFactory {
     public:
 
 
-        static ExpressionCombinerPtr get_expression_combiner(const SimpleNode *node) {
+        static ExpressionCombinerPtr get_expression_combiner(const SimpleNode *node, Context* context) {
             if (RattleVisitor::get_number_children(node) == 2) {
 
             }
 
-            return ExpressionCombinerPtr(new DefaultExpressionCombiner());
+            return ExpressionCombinerPtr(new BasicExpressionCombiner(context));
         }
 
-        static string do_expression(const SimpleNode *node) {
-            ExpressionCombinerPtr expr_comb = get_expression_combiner(node);
+        static ExpressionCombinerResult do_expression(const SimpleNode *node, Context* context) {
+            ExpressionCombinerPtr expr_comb = get_expression_combiner(node, context);
 
             if (!expr_comb) {
-                throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
+                //throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
             }
 
             operands operand = get_operand_from_node(node);
             if (operand == NONE_OP) {
-                throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
+                //throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
             }
 
-
-            return expr_comb->combine_statement(node, get_operand_from_node(node));
+            ExpressionCombinerResult res = expr_comb->combine_statement(node, get_operand_from_node(node));
+            return res;
         }
 
     private:

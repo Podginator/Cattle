@@ -15,7 +15,6 @@ namespace RattleLang {
             ref = parser;
         }
 
-
         virtual void ChildAccept(const SimpleNode *n, size_t childNum, void *data = nullptr) {
             n->jjtGetChild(childNum)->jjtAccept(ref, data);
         }
@@ -28,7 +27,7 @@ namespace RattleLang {
             n->jjtAccept(ref, data);
         }
     protected:
-        StateMachineParserDecorator<T> *ref;
+        StateMachineParserDecorator<T> * ref;
     };
 
 }

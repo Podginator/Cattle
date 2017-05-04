@@ -23,6 +23,11 @@ namespace RattleLang {
             return t.get_c_output();
         }
 
+        static void DoParserResults(T t, const SimpleNode* node) {
+            StateMachineParserDecorator<T> parser(&t);
+            parser.StartParsing(node);
+        }
+
         static std::string GetParserSingleNodeResult(T t, const SimpleNode *node) {
             StateMachineParserDecorator<T> parser(&t);
             t.Accept(node);

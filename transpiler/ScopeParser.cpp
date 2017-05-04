@@ -94,7 +94,7 @@ void ScopeParser::declare(const ASTExpression *node, void *data) {
 void ScopeParser::implement(const ASTExpression *node, void *data) {
     if (!node->isDone) {
         ExpressionOp op = data ? *(static_cast<ExpressionOp *>(data)) : ExpressionOp(ExpressionOp::ANONYMOUS, {});
-        cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), node);
+        cOut += GetParserResults(ExpressionParser(op, m_context), node);
     }
 }
 
@@ -135,7 +135,7 @@ void ScopeParser::implement(const ASTWhileLoop *node, void *data) {
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
 
         cOut += "bool " + unique_name + ";\n";
-        cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
 
         // Then perform the inner statement.
@@ -170,7 +170,7 @@ void ScopeParser::implement(const ASTForLoop *node, void *data) {
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += "bool " + unique_name + ";\n";
 
-        cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
 
         // Then perform the inner statement
@@ -201,7 +201,7 @@ void ScopeParser::implement(const ASTIfStatement *node, void *data) {
         ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += SCOPE_OPEN;
         cOut += "bool " + unique_name + ";\n";
-        cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
         cOut += "\nif (" + unique_name + ")";
         cOut += SCOPE_OPEN;
 
@@ -231,7 +231,7 @@ void ScopeParser::implement(const ASTFnInvoke *node, void *data) {
     exp->jjtAddChild((Node *) node, 0);
 
     ExpressionOp op(ExpressionOp::ANONYMOUS, {});
-    cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
+    cOut += GetParserResults(ExpressionParser(op, m_context), exp);
     delete exp;
 }
 
@@ -250,7 +250,7 @@ void ScopeParser::implement(const ASTWrite *node, void *data) {
     ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
     cOut += SCOPE_OPEN;
     cOut += typeinfo->typenames[0].get_corresponding_type_string() + " " + unique_name + ";\n";
-    cOut += StateMachineParserDecorator<ExpressionParser>::GetParserResults(ExpressionParser(op, m_context), exp);
+    cOut += GetParserResults(ExpressionParser(op, m_context), exp);
     cOut += "cout << " + unique_name + "<< endl;";
     cOut += SCOPE_CLOSE;
 
