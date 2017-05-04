@@ -206,7 +206,7 @@ void ScopeParser::implement(const ASTIfStatement *node, void *data) {
         cOut += SCOPE_OPEN;
 
         // Then perform the inner statement.
-        shared_ptr<Context> ifParserContext = make_shared<Context>(m_context);
+        shared_ptr<Context> ifParserContext(new Context(m_context));
         cOut += StateMachineParserDecorator<ScopeParser>::GetParserResults(ScopeParser(ifParserContext.get()),
                                                                            static_cast<ASTStatement *>(node->jjtGetChild(1)));
         cOut += SCOPE_CLOSE;

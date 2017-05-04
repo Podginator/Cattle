@@ -13,13 +13,13 @@ using namespace std;
 
 namespace RattleLang{ 
 
-    // There is a lot of side effects in this code.
     class ExpressionParser : public RattleDefaultVisitor {
     public:
 
-
         ExpressionParser(ExpressionOp op, Context* context)
-                : parent(op), m_context(context){}
+                : parent(op){
+            m_context = context;
+        }
 
         void StartParsing(const SimpleNode* n);
 

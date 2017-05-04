@@ -210,6 +210,11 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node
     exp->jjtAddChild((Node*)node->jjtGetChild(0), 0);
 
     TypeInfoPtr IndexType = StartParsing(exp, m_context);
+
+    if (TypeInformation::is_empty(IndexType)) {
+        throw TypeException(get_line_num(node));
+    }
+
     size_t typeSize = IndexType->typenames.size();
     bool onlyDigits = (number->tokenValue.find_first_not_of( "0123456789" ) == std::string::npos);
     if (!onlyDigits) {

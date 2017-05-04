@@ -59,6 +59,7 @@ TypeInfoPtr FunctionBuilder::declare_function(const SimpleNode *node, const stri
             information->inner_vars.push_back(param);
         }
     }
+    information->set_scope(fnContext);
 
     m_context->add_function(fnName, information);
     return information;

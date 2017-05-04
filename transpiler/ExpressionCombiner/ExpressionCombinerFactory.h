@@ -14,10 +14,6 @@ namespace RattleLang {
 
 
         static ExpressionCombinerPtr get_expression_combiner(const SimpleNode *node, Context* context) {
-            if (RattleVisitor::get_number_children(node) == 2) {
-
-            }
-
             return ExpressionCombinerPtr(new BasicExpressionCombiner(context));
         }
 

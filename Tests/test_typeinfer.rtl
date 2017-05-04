@@ -5,3 +5,7 @@ def retTwo : number, number(x : number){
 
 
 f,g = retTwo(2)
+
+
+print f
+print g

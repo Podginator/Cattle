@@ -165,7 +165,6 @@ set(SOURCE_FILES
         TypeInformation/LambdaTypeInformation.cpp
         transpiler/ExpressionCombiner/DefaultExpressionCombiner.h
         transpiler/ExpressionCombiner/ExpressionCombiner.h
-        transpiler/ExpressionCombiner/ExpressionCombinerFactory.cpp
         transpiler/ExpressionCombiner/ExpressionCombinerFactory.h transpiler/ExpressionCombiner/BasicExpressionCombiner.cpp transpiler/ExpressionCombiner/BasicExpressionCombiner.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

@@ -19,9 +19,9 @@ namespace RattleLang {
         };
 
 
-        DefaultExpressionCombiner(Context *m_context) {
+        DefaultExpressionCombiner(Context *context) {
             //res = {0};
-            this->m_context = m_context;
+            this->m_context = context;
         }
 
         template <class T>
@@ -56,134 +56,134 @@ namespace RattleLang {
         }
 
         virtual void  visit_expression_pass(const ASTOr *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTAnd *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompEqual *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompNequal *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompGTE *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompLTE *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompGT *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCompLT *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTAdd *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTSubtract *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTTimes *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTDivide *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTUnaryNot *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTUnaryPlus *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTUnaryMinus *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_expression_pass(const ASTDereference* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTExpression* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
         virtual void  visit_fn_pass(const ASTExpression* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         // A function invoke should
         virtual void  visit_expression_pass(const ASTFnInvoke *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
         virtual void  visit_fn_pass(const ASTFnInvoke *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_fn_pass(const ASTArgList* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTArgList *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTCharacter *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTString *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTNumber *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTTrue *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void  visit_expression_pass(const ASTFalse *node,  void * data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_expression_pass(const ASTIdentifier* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_fn_pass(const ASTIndexedExpression* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_expression_pass(const ASTIndexedExpression* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_fn_pass(const ASTTupleDefine* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_expression_pass(const ASTTupleDefine* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
         virtual void visit_expression_pass(const ASTLambdaDefine* node,  void* data) {
-            //throw ParsingException("Invalid Command", get_line_num(node));
+            throw ParsingException("Invalid Command", get_line_num(node));
         }
 
 

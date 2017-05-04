@@ -3,17 +3,16 @@
 #include "../TypeInferer.h"
 #include "../ExpressionParser.h"
 #include "../../TypeInformation/LambdaTypeInformation.h"
-#include "../../exceptions/ParameterException.h"
 #include "../FunctionBuilder.h"
 
 
 using namespace RattleLang;
 
 
-BasicExpressionCombiner::BasicExpressionCombiner(RattleLang::Context *m_context)
-        : DefaultExpressionCombiner(m_context) {
+BasicExpressionCombiner::BasicExpressionCombiner(RattleLang::Context *context)
+        : DefaultExpressionCombiner(context) {
     ref = new StateMachineParserDecorator<DefaultExpressionCombiner>(this);
-
+    this->m_context = context;
 }
 
 ExpressionCombinerResult BasicExpressionCombiner::combine_statement(const SimpleNode *node, operands operand) {
@@ -185,14 +184,9 @@ void BasicExpressionCombiner::visit_expression_pass(const ASTFnInvoke *node, voi
 
     if (!fn_info->is_void()) {
         append_to_result("get<" + to_string(start_index) + ">(" + m_fn_call_name[node] + ")");
-        for (int i = 1; i < fn_info->num_return(); i++) {
+        for (int i = start_index + 1; i < fn_info->num_return(); i++) {
             string multi("get<" + to_string(i) + ">(" + m_fn_call_name[node] + ")");
-
-            if (!data) {
-                res.expressions.push_back(multi);
-            } else {
-                append_to_result(multi);
-            }
+            res.expressions.push_back(multi);
         }
     }
 }
@@ -319,7 +313,7 @@ void BasicExpressionCombiner::visit_fn_pass(const ASTArgList *node, void *data) 
         }
 
         if (total_params != expected_params) {
-            //throw ParameterException(get_line_num(node));
+            throw ParsingException("Invalid amount of parameters", get_line_num(node));
         }
         res.expressions.back().pop_back();
     }
