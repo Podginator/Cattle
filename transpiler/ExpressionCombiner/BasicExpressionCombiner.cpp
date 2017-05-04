@@ -17,7 +17,6 @@ BasicExpressionCombiner::BasicExpressionCombiner(RattleLang::Context *context)
 
 ExpressionCombinerResult BasicExpressionCombiner::combine_statement(const SimpleNode *node, operands operand) {
     expected_output = get_type_info(node);
-    res.expressions.push_back("");
     // Do an initial pass for this, ensuring that we first elaborate on any functions.
     ChildrenAccept(node);
 
@@ -253,7 +252,7 @@ void BasicExpressionCombiner::visit_expression_pass(const ASTTupleDefine *node, 
             allNames.push_back(unique_name);
         }
 
-        append_to_preamble(GetParserResults(ExpressionParser(ExpressionOp(ExpressionOp::ASSIGNMENT, names), m_context), exp));
+        append_to_preamble(GetParserResults(ExpressionParser(names, m_context), exp));
     }
 
     append_to_result("make_tuple(");
@@ -309,13 +308,13 @@ void BasicExpressionCombiner::visit_fn_pass(const ASTArgList *node, void *data) 
                 }
             }
 
-            append_to_preamble(GetParserResults(ExpressionParser(ExpressionOp(ExpressionOp::ASSIGNMENT, param_names), m_context), exp));
+            append_to_preamble(GetParserResults(ExpressionParser(param_names, m_context), exp));
         }
 
         if (total_params != expected_params) {
             throw ParsingException("Invalid amount of parameters", get_line_num(node));
         }
-        res.expressions.back().pop_back();
+        res.preample.pop_back();
     }
 }
 

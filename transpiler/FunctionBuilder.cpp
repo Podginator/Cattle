@@ -141,8 +141,7 @@ void FunctionBuilder::visit(const ASTReturnExpression *node, void *data) {
             names.push_back(varname);
             localNames.push_back(varname);
         }
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, localNames);
-        m_output += GetParserResults(ExpressionParser(op, fnContext), expNode);
+        m_output += GetParserResults(ExpressionParser(localNames, fnContext), expNode);
     }
 
     m_output += "\nreturn ";

@@ -5,7 +5,6 @@
 #include <iostream>
 #include "../TypeInformation/Context.h"
 #include "StateMachineParser.h"
-#include "../TypeInformation/ExpressionOp.h"
 #include "ExpressionParser.h"
 
 namespace RattleLang {

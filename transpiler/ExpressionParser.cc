@@ -11,9 +11,12 @@ void ExpressionParser::StartParsing(const SimpleNode* n) {
     ExpressionCombinerResult result = ExpressionCombinerFactory::do_expression(n, m_context);
 
     res += result.preample;
-    for (int i = 1; i < result.expressions.size(); i++) {
-        if (parent.parents.size() > i - 1) {
-            res.append(parent.parents[i - 1] + " = ");
+    for (int i = 0; i < result.expressions.size(); i++) {
+        if (assignments.size() > i) {
+            res.append(assignments[i] + " = ");
+            res.append(result.expressions[i] + ";\n");
+        }
+        if (assignments.size() == 0) {
             res.append(result.expressions[i] + ";\n");
         }
     }

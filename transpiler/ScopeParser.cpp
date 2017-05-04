@@ -30,7 +30,6 @@ void ScopeParser::declare(const ASTAssignment *node, void *data) {
     size_t j = 0;
     size_t node_children = get_number_children(node);
 
-    ExpressionOp op(ExpressionOp::ASSIGNMENT, {});
     while ((i < index_of_expressions) && ((index_of_expressions + j) < node_children)) {
         vector<string> operators;
         int current_expression = index_of_expressions + j;
@@ -93,7 +92,7 @@ void ScopeParser::declare(const ASTExpression *node, void *data) {
 
 void ScopeParser::implement(const ASTExpression *node, void *data) {
     if (!node->isDone) {
-        ExpressionOp op = data ? *(static_cast<ExpressionOp *>(data)) : ExpressionOp(ExpressionOp::ANONYMOUS, {});
+        vector<string> op = data ? *(static_cast<vector<string> *>(data)) : vector<string>();
         cOut += GetParserResults(ExpressionParser(op, m_context), node);
     }
 }
@@ -105,7 +104,7 @@ void ScopeParser::implement(const ASTAssignment *node, void *data) {
     int j = 0;
 
     while ((i < index_of_expressions) && ((index_of_expressions + j) < num_children)) {
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, {});
+        vector<string> assignments;
         vector<string> operators;
         int current_expression = index_of_expressions + j;
 
@@ -113,9 +112,9 @@ void ScopeParser::implement(const ASTAssignment *node, void *data) {
         ASTExpression *exp = get_child_as<ASTExpression>(node, current_expression);
         size_t count = m_expression_count[exp];
         for (int k = 0; (k < count) && (i < index_of_expressions); ++k, ++i) {
-            op.parents.push_back(get_token_of_child(node, i));
+            assignments.push_back(get_token_of_child(node, i));
         }
-        implement(exp, &op);
+        implement(exp, &assignments);
         ++j;
     }
 }
@@ -132,10 +131,9 @@ void ScopeParser::implement(const ASTWhileLoop *node, void *data) {
 
         // Perform Operation to ensure that we break out of a loop.
         string unique_name = get_unique_name("while");
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
 
         cOut += "bool " + unique_name + ";\n";
-        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser({unique_name}, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
 
         // Then perform the inner statement.
@@ -167,10 +165,9 @@ void ScopeParser::implement(const ASTForLoop *node, void *data) {
 
         // Perform some kind of break logic.
         string unique_name = get_unique_name("for");
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += "bool " + unique_name + ";\n";
 
-        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser({unique_name}, m_context), exp);
         cOut += "\nif (!" + unique_name + ") break;\n";
 
         // Then perform the inner statement
@@ -198,10 +195,9 @@ void ScopeParser::implement(const ASTIfStatement *node, void *data) {
     // Check we're a bool
     if (booltype->typenames[0].type_name == BOOLEAN) {
         string unique_name = get_unique_name("if");
-        ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
         cOut += SCOPE_OPEN;
         cOut += "bool " + unique_name + ";\n";
-        cOut += GetParserResults(ExpressionParser(op, m_context), exp);
+        cOut += GetParserResults(ExpressionParser({unique_name}, m_context), exp);
         cOut += "\nif (" + unique_name + ")";
         cOut += SCOPE_OPEN;
 
@@ -230,8 +226,7 @@ void ScopeParser::implement(const ASTFnInvoke *node, void *data) {
     ASTExpression *exp = new ASTExpression(0);
     exp->jjtAddChild((Node *) node, 0);
 
-    ExpressionOp op(ExpressionOp::ANONYMOUS, {});
-    cOut += GetParserResults(ExpressionParser(op, m_context), exp);
+    cOut += GetParserResults(ExpressionParser({}, m_context), exp);
     delete exp;
 }
 
@@ -247,10 +242,9 @@ void ScopeParser::implement(const ASTWrite *node, void *data) {
     };
 
     string unique_name = get_unique_name("print");
-    ExpressionOp op(ExpressionOp::ASSIGNMENT, {unique_name});
     cOut += SCOPE_OPEN;
     cOut += typeinfo->typenames[0].get_corresponding_type_string() + " " + unique_name + ";\n";
-    cOut += GetParserResults(ExpressionParser(op, m_context), exp);
+    cOut += GetParserResults(ExpressionParser({unique_name}, m_context), exp);
     cOut += "cout << " + unique_name + "<< endl;";
     cOut += SCOPE_CLOSE;
 

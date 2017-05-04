@@ -2,6 +2,29 @@ def doThing : number, number ( i : number, b : number) {
     return i, b
 }
 
+def testRecursion : number, number ( i : number, b : number ) {
+    if (i > 1) {
+        print i
+        print b
+        i, b = testRecursion(i - 1, b)
+    }
+
+    return i, b
+}
+
+def retThree : number, number, number ( i : number, b : number) {
+    return 1, 2, 3
+}
+
+x,y,z = retThree(1,2)
+a,b = testRecursion(testRecursion(testRecursion(90,9)))
+x = y
+y = z
 z = doThing(1,7)[1]
 
+string_name = "Hello"
+character = 'c'
+new_char = 'c' + 2
+
+print string_name
 print z

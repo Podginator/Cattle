@@ -3,7 +3,6 @@
 
 #include "../gen/RattleTree.h"
 #include "ExpressionParser.h"
-#include "../TypeInformation/ExpressionOp.h"
 #include "StateMachineParserDecorator.h"
 #include "StateMachineParser.h"
 #include "TypeInferer.h"

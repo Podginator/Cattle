@@ -6,7 +6,6 @@
 #include "../TypeInformation/TypeInformation.h"
 #include "../gen/RattleVisitor.h"
 #include "StateMachineParser.h"
-#include "../TypeInformation/ExpressionOp.h"
 #include <string>
 
 using namespace std;
@@ -16,8 +15,8 @@ namespace RattleLang{
     class ExpressionParser : public RattleDefaultVisitor {
     public:
 
-        ExpressionParser(ExpressionOp op, Context* context)
-                : parent(op){
+        ExpressionParser(vector<string> names, Context* context)
+                : assignments(names){
             m_context = context;
         }
 
@@ -31,7 +30,7 @@ namespace RattleLang{
     private:
         string res;
 
-        ExpressionOp parent;
+        vector<string> assignments;
 
         Context* m_context;
 

@@ -138,8 +138,6 @@ set(SOURCE_FILES
         TypeInformation/TypeInformation.h
         TypeInformation/TypeStorage.cc
         TypeInformation/TypeStorage.h
-        TypeInformation/ExpressionOp.h
-        TypeInformation/ExpressionOp.cpp
         misc/StringHelper.h
         main.cc
         transpiler/ExpressionParser.cc
