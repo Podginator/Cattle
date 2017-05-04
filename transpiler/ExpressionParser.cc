@@ -1,6 +1,6 @@
 #include <iostream>
 #include "ExpressionParser.h"
-#include "ExpressionCombiner/ExpressionCombinerFactory.h"
+#include "ExpressionGenerators/ExpressionGeneratorFactory.h"
 
 using namespace RattleLang;
 using namespace std;
@@ -8,7 +8,7 @@ using namespace std;
 void ExpressionParser::StartParsing(const SimpleNode* n) {
     has_fn_calls = find_instance_of<ASTFnInvoke>(n);
     res.append(has_fn_calls ? SCOPE_OPEN : "");
-    ExpressionCombinerResult result = ExpressionCombinerFactory::do_expression(n, m_context);
+    ExpressionGeneratorResult result = ExpressionGeneratorFactory::do_expression(n, m_context);
 
     res += result.preample;
     for (int i = 0; i < result.expressions.size(); i++) {
