@@ -10,7 +10,7 @@ namespace RattleLang {
     public:
         BasicExpressionGenerator(Context *m_context);
 
-        ExpressionGeneratorResult combine_statement(const SimpleNode *node, operands operand) override;
+        ExpressionGeneratorResult combine_statement(const SimpleNode *node, operands operand, bool is_multi_assign) override;
 
         void defaultVisit(const SimpleNode *node, void *data) override {}
 
@@ -83,6 +83,8 @@ namespace RattleLang {
         map<const Node*, string> m_fn_call_name;
 
         TypeInfoPtr expected_output;
+
+        bool multi_assign = false;
 
         void print_node(const SimpleNode* node);
 

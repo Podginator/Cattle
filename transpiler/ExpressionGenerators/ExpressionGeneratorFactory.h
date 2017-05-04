@@ -13,23 +13,23 @@ namespace RattleLang {
     public:
 
 
-        static ExpressionCombinerPtr get_expression_combiner(const SimpleNode *node, Context* context) {
+        static ExpressionCombinerPtr get_expression_combiner(const SimpleNode *node, Context* context, bool is_multi_assign) {
             return ExpressionCombinerPtr(new BasicExpressionGenerator(context));
         }
 
-        static ExpressionGeneratorResult do_expression(const SimpleNode *node, Context* context) {
-            ExpressionCombinerPtr expr_comb = get_expression_combiner(node, context);
+        static ExpressionGeneratorResult do_expression(const SimpleNode *node, Context* context, bool is_multi_assign) {
+            ExpressionCombinerPtr expr_comb = get_expression_combiner(node, context, is_multi_assign);
 
             if (!expr_comb) {
-                //throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
+                throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
             }
 
             operands operand = get_operand_from_node(node);
-            if (operand == NONE_OP) {
-                //throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
-            }
+//            if (operand == NONE_OP) {
+//                throw ParsingException("Cannot perform this expression", RattleVisitor::get_line_num(node));
+//            }
 
-            ExpressionGeneratorResult res = expr_comb->combine_statement(node, get_operand_from_node(node));
+            ExpressionGeneratorResult res = expr_comb->combine_statement(node, get_operand_from_node(node), is_multi_assign);
             return res;
         }
 

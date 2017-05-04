@@ -15,8 +15,9 @@ BasicExpressionGenerator::BasicExpressionGenerator(RattleLang::Context *context)
     this->m_context = context;
 }
 
-ExpressionGeneratorResult BasicExpressionGenerator::combine_statement(const SimpleNode *node, operands operand) {
+ExpressionGeneratorResult BasicExpressionGenerator::combine_statement(const SimpleNode *node, operands operand, bool is_multi_assign) {
     expected_output = get_type_info(node);
+    multi_assign = is_multi_assign;
     // Do an initial pass for this, ensuring that we first elaborate on any functions.
     ChildrenAccept(node);
 
@@ -72,6 +73,9 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTCompGT *node, void
 void BasicExpressionGenerator::do_expression(const SimpleNode *n, const string &expression) {
     TypeInfoPtr expression_info = get_type_info(n);
 
+    // We don't want to multiassign during a normal expression.
+    bool assign_state = multi_assign;
+    multi_assign = false;
     string preample = needs_converting(expression_info) ? "to_string(" : "";
     append_to_result(preample);
 
@@ -82,6 +86,7 @@ void BasicExpressionGenerator::do_expression(const SimpleNode *n, const string &
     append_to_result(expression);
     convert_if_needed(get_child_as<SimpleNode>(n, 1));
     append_to_result(")");
+    multi_assign = assign_state;
 }
 
 void BasicExpressionGenerator::visit_expression_pass(const ASTCompLT *node, void *data) {
@@ -122,13 +127,23 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTUnaryMinus *node, 
 void BasicExpressionGenerator::visit_expression_pass(const ASTIdentifier *node, void *data) {
     if (data) {
         int val = *(static_cast<int *>(data));
-        append_to_result("get<" + to_string(val) + ">" + "(");
+        append_to_result("std::get<" + to_string(val) + ">" + "(");
     }
     append_to_result(get_token_of_node(node) + (data ? ")" : ""));
 }
 
 void BasicExpressionGenerator::visit_expression_pass(const ASTDereference *node, void *data) {
-    ChildAccept(node, 0, data);
+    if (multi_assign) {
+        string name(get_token_of_child(node, 0));
+        TypeInfoPtr type_info = m_context->get_variable(get_token_of_node(get_child_as<SimpleNode>(node, 0)));
+        append_to_result("std::get<0>(" + name + ")");
+        for (int i = 1; i < type_info->num_return(); i++) {
+            string name(((SimpleNode *) node->jjtGetChild(0))->tokenValue);
+            res.expressions.push_back("std::get<" + to_string(i) + ">(" + name + ")");
+        }
+    } else {
+        ChildAccept(node, 0, data);
+    }
 }
 
 void BasicExpressionGenerator::visit_expression_pass(const ASTExpression *node, void *data) {
@@ -182,10 +197,14 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTFnInvoke *node, vo
     TypeInfoPtr fn_info = m_context->get_function(name);
 
     if (!fn_info->is_void()) {
-        append_to_result("get<" + to_string(start_index) + ">(" + m_fn_call_name[node] + ")");
-        for (int i = start_index + 1; i < fn_info->num_return(); i++) {
-            string multi("get<" + to_string(i) + ">(" + m_fn_call_name[node] + ")");
-            res.expressions.push_back(multi);
+        size_t returned_vals = fn_info->num_return();
+        string required_preamble = returned_vals > 1 ? "std::get<" + to_string(start_index) + ">" : "";
+        append_to_result(required_preamble+ "(" + m_fn_call_name[node] + ")");
+        if (multi_assign) {
+            for (int i = start_index + 1; i < fn_info->num_return(); i++) {
+                string multi("std::get<" + to_string(i) + ">(" + m_fn_call_name[node] + ")");
+                res.expressions.push_back(multi);
+            }
         }
     }
 }
@@ -293,7 +312,7 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data)
             }
 
             vector<string> param_names;
-            size_t resultSize = expression_type->num_return();
+            size_t resultSize = expression_type->typenames.size();
 
             if (dynamic_pointer_cast<LambdaTypeInformation>(expression_type)) {
                 param_names.push_back(function_c_name + "param" + to_string(total_params));
@@ -301,7 +320,7 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data)
                                  to_string(total_params) + ";\n");
                 total_params++;
             } else {
-                for (size_t j = 0; j < resultSize; ++j, ++total_params) {
+                for (size_t j = 0; j < expected_params; ++j, ++total_params) {
                     param_names.push_back(function_c_name + "param" + to_string(total_params));
                     append_to_preamble(expression_type->typenames[j].get_corresponding_type_string() + " "
                                      + function_c_name + "param" + to_string(total_params) + ";\n");

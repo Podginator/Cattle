@@ -25,7 +25,7 @@ namespace RattleLang {
     class ExpressionGenerator {
     public:
 
-        virtual ExpressionGeneratorResult combine_statement(const SimpleNode *node, operands operand) = 0;
+        virtual ExpressionGeneratorResult combine_statement(const SimpleNode *node, operands operand, bool is_multi_assign) = 0;
 
 
 
