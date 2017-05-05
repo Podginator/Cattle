@@ -2,11 +2,11 @@
 #define RATTLE_CPP_BASICEXPRESSIONCOMBINER_H
 
 
-#include "DefaultExpressionGenerator.h"
+#include "DefaultStateExpressionGenerator.h"
 
 namespace RattleLang {
     // The expression combiner for simple statements like a = 2 + 4
-    class BasicExpressionGenerator : public DefaultExpressionGenerator {
+    class BasicExpressionGenerator : public DefaultStateExpressionGenerator {
     public:
         BasicExpressionGenerator(Context *m_context);
 
@@ -97,6 +97,8 @@ namespace RattleLang {
         bool needs_converting(TypeInfoPtr expression_info);
 
         void convert_if_needed(SimpleNode *node);
+
+        bool is_lambda_parameter(TypeInfoPtr parameter_info, TypeInfoPtr function_info, size_t param_index);
 
     };
 }

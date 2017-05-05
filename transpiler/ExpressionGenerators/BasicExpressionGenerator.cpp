@@ -10,9 +10,8 @@ using namespace RattleLang;
 
 
 BasicExpressionGenerator::BasicExpressionGenerator(RattleLang::Context *context)
-        : DefaultExpressionGenerator(context) {
-    ref = new StateMachineParserDecorator<DefaultExpressionGenerator>(this);
-    this->m_context = context;
+        : DefaultStateExpressionGenerator(context) {
+    m_context = context;
 }
 
 ExpressionGeneratorResult BasicExpressionGenerator::combine_statement(const SimpleNode *node, operands operand, bool is_multi_assign) {
@@ -277,7 +276,7 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTTupleDefine *node,
 
     if (multi_assign) {
         for (const auto& str_res : allNames) {
-            res.expressions.push_back(str_res);
+            append_to_results_and_add_new(str_res);
         }
     } else {
         append_to_result("make_tuple(");
@@ -296,6 +295,12 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTLambdaDefine *node
     builder.StartParsing(node, get_token_of_child(parent, 0));
     append_to_result(builder.get_c_output());
 }
+
+bool BasicExpressionGenerator::is_lambda_parameter(TypeInfoPtr parameter_info, TypeInfoPtr function_info,  size_t param_index) {
+    return (dynamic_pointer_cast<LambdaTypeInformation>(parameter_info) &&
+           dynamic_pointer_cast<LambdaTypeInformation>(function_info->inner_vars[param_index].second));
+}
+
 
 void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data) {
     int children_size = get_number_children(node);
@@ -322,13 +327,15 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data)
             vector<string> param_names;
             size_t resultSize = expression_type->typenames.size();
 
-            if (dynamic_pointer_cast<LambdaTypeInformation>(expression_type)) {
+            // If we are expecting a Lambda Definition to be passed, and we are a lambda definition - just pass that.
+            // Otherwise we could be a function invoke, and in that case we want to pass both down.
+            if (is_lambda_parameter(expression_type, fn_type, total_params)) {
                 param_names.push_back(function_c_name + "param" + to_string(total_params));
                 append_to_preamble(expression_type->get_c_return_types() + " " + function_c_name + "param" +
                                  to_string(total_params) + ";\n");
                 total_params++;
             } else {
-                for (size_t j = 0; j < resultSize && total_params < expected_params; ++j, ++total_params) {
+                for (size_t j = 0; j < resultSize && total_params <= expected_params; ++j, ++total_params) {
                     param_names.push_back(function_c_name + "param" + to_string(total_params));
                     append_to_preamble(expression_type->typenames[j].get_corresponding_type_string() + " "
                                      + function_c_name + "param" + to_string(total_params) + ";\n");

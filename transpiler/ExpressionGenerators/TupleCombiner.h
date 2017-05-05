@@ -6,7 +6,7 @@
 #define RATTLE_CPP_TUPLECOMBINER_H
 
 
-#include "DefaultExpressionGenerator.h"
+#include "DefaultStateExpressionGenerator.h"
 
 namespace RattleLang {
     class TupleCombiner : public ExpressionGenerator, public RattleDefaultVisitor{
@@ -30,6 +30,7 @@ namespace RattleLang {
     private:
         void do_children(const SimpleNode* node, void *data);
 
+        void get_expression(const SimpleNode* node, bool need_multiple);
 
     };
 }

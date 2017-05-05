@@ -161,7 +161,7 @@ set(SOURCE_FILES
         transpiler/FunctionBuilder.h
         TypeInformation/LambdaTypeInformation.h
         TypeInformation/LambdaTypeInformation.cpp
-        transpiler/ExpressionGenerators/DefaultExpressionGenerator.h
+        transpiler/ExpressionGenerators/DefaultStateExpressionGenerator.h
         transpiler/ExpressionGenerators/ExpressionGenerator.h
         transpiler/ExpressionGenerators/ExpressionGeneratorFactory.h transpiler/ExpressionGenerators/BasicExpressionGenerator.cpp transpiler/ExpressionGenerators/BasicExpressionGenerator.h transpiler/ExpressionGenerators/TupleCombiner.cpp transpiler/ExpressionGenerators/TupleCombiner.h)
 

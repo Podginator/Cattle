@@ -40,6 +40,12 @@ namespace RattleLang {
         }
 
 
+        void append_to_results_and_add_new(const string &str) {
+            res.expressions.back().append(str);
+            res.expressions.push_back("");
+        }
+
+
 
 
     };

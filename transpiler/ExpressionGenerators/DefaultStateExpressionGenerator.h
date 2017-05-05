@@ -10,7 +10,7 @@ using namespace std;
 namespace RattleLang {
 
 
-    class DefaultExpressionGenerator : public ExpressionGenerator, public StateMachineParser<DefaultExpressionGenerator> {
+    class DefaultStateExpressionGenerator : public ExpressionGenerator, public StateMachineParser<DefaultStateExpressionGenerator> {
     public:
 
         enum ExpressionState {
@@ -19,8 +19,8 @@ namespace RattleLang {
         };
 
 
-        DefaultExpressionGenerator(Context *context) {
-            //res = {0};
+        DefaultStateExpressionGenerator(Context *context) {
+            ref = new StateMachineParserDecorator<DefaultStateExpressionGenerator>(this);
             m_context = context;
         }
 
@@ -185,7 +185,7 @@ namespace RattleLang {
 
 
 
-        ~DefaultExpressionGenerator(){
+        ~DefaultStateExpressionGenerator(){
             // Do nothing?
         }
 

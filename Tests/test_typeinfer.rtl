@@ -16,3 +16,10 @@ new_var = retOne()
 print f
 print g
 print a(12)[0] + a(12)[1]
+
+tup = [1,2,3]
+tup1, tup2, tup3 = tup
+print tup1
+print tup2
+print tup3
+

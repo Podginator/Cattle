@@ -29,10 +29,7 @@ ExpressionGeneratorResult TupleCombiner::combine_statement(const SimpleNode *nod
 }
 
 void TupleCombiner::defaultVisit(const SimpleNode *node, void *data) {
-    ExpressionGeneratorResult expression_result = ExpressionGeneratorFactory::do_expression(
-            ExpressionGeneratorFactory::get_expression(node), m_context, true);
-    append_to_preamble(expression_result.preample);
-    append_to_result(StringHelper::combine_str(expression_result.expressions, ',', false));
+    get_expression(node, true);
 }
 
 // The Add Expression is a little different.
@@ -52,12 +49,10 @@ void TupleCombiner::visit(const ASTAdd *node, void *data) {
 }
 
 
+// We don't want to take all the results from the Indexed Expression, we just want one - So we override the
+// default visit. - Basically the same behaviour but without the need for multiple.
 void TupleCombiner::visit(const ASTIndexedExpression *node, void *data) {
-    ExpressionGeneratorResult expression_result = ExpressionGeneratorFactory::do_expression(
-            ExpressionGeneratorFactory::get_expression(node), m_context, false);
-    append_to_preamble(expression_result.preample);
-    append_to_result(StringHelper::combine_str(expression_result.expressions, ',', false));
-
+    get_expression(node, false);
 }
 
 void TupleCombiner::do_children(const SimpleNode *node, void *data) {
@@ -65,3 +60,10 @@ void TupleCombiner::do_children(const SimpleNode *node, void *data) {
     res.expressions.back().pop_back();
 }
 
+
+void TupleCombiner::get_expression(const SimpleNode *node, bool need_multiple) {
+    ExpressionGeneratorResult expression_result = ExpressionGeneratorFactory::do_expression(
+            ExpressionGeneratorFactory::get_expression(node), m_context, need_multiple);
+    append_to_preamble(expression_result.preample);
+    append_to_result(StringHelper::combine_str(expression_result.expressions, ',', false));
+}

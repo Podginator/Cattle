@@ -5,7 +5,7 @@
 #include "../../gen/RattleTree.h"
 #include "../../gen/RattleVisitor.h"
 #include "../../exceptions/ParsingException.h"
-#include "DefaultExpressionGenerator.h"
+#include "DefaultStateExpressionGenerator.h"
 #include "BasicExpressionGenerator.h"
 #include "../TypeInferer.h"
 #include "../../TypeInformation/LambdaTypeInformation.h"
