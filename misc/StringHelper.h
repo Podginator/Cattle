@@ -8,13 +8,17 @@ using namespace std;
 class StringHelper {
 public:
     template <typename Iterator>
-    static string combine_str( Iterator iteratable, const char token) {
+    static string combine_str( Iterator iteratable, const char token, bool remove_last = true) {
         string retVal = "";
 
         for(auto it= iteratable.begin(); it < iteratable.end(); it++) {
-           retVal.append((*it) + token);
+            if ((*it).size() > 0) {
+                retVal.append((*it) + token);
+            }
         }
-        retVal.pop_back();
+        if (remove_last) {
+            retVal.pop_back();
+        }
 
         return retVal;
     }

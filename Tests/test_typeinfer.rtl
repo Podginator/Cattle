@@ -1,11 +1,18 @@
 
-def retTwo : number, number(x : number){
-    return 1, 2
+def retTwo (x : number ){
+    return 1, 2, "str"
 }
 
+def retOne () {
+    return 4
+}
+
+a = ( p : number ) -> { return p + 4, p + 16}
 
 f,g = retTwo(2)
 
 
+new_var = retOne()
 print f
 print g
+print a(12)[0] + a(12)[1]

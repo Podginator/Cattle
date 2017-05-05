@@ -17,6 +17,11 @@ TypeInformation::TypeInformation(initializer_list<type> names, Context* context)
     this->scope = context;
 
 }
+TypeInformation::TypeInformation(vector<type> names, Context* context)
+{
+    this->scope = context;
+    this->typenames = names;
+}
 
 // Return the number of returned items.
 size_t TypeInformation::num_return() {

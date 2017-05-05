@@ -27,6 +27,19 @@ namespace RattleLang {
 
         virtual ExpressionGeneratorResult combine_statement(const SimpleNode *node, operands operand, bool is_multi_assign) = 0;
 
+    protected:
+        Context* m_context;
+        ExpressionGeneratorResult res;
+
+        void append_to_preamble(const string &str) {
+            res.preample.append(str);
+        }
+
+        void append_to_result(const string &str) {
+            res.expressions.back().append(str);
+        }
+
+
 
 
     };

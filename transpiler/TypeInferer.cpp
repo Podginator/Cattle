@@ -3,15 +3,15 @@
 #include "../exceptions/TypeException.h"
 #include "../exceptions/ParsingException.h"
 #include "FunctionBuilder.h"
+#include "../TypeInformation/LambdaTypeInformation.h"
 
 using namespace RattleLang;
 
-RattleLang::TypeInferer* RattleLang::TypeInferer::instance;
+TypeInferer* TypeInferer::instance;
 
-RattleLang::TypeInferer::TypeInferer()
-        : retType(NONE, 0){}
+TypeInferer::TypeInferer(){}
 
-TypeInfoPtr RattleLang::TypeInferer::StartParsing(const RattleLang::ASTExpression *node, Context* context) {
+TypeInfoPtr TypeInferer::StartParsing(const ASTExpression *node, Context* context) {
     // Then do all the leaf nodes.
     m_context = context;
     size_t numChildren = node->jjtGetNumChildren();
@@ -36,56 +36,56 @@ TypeInfoPtr RattleLang::TypeInferer::StartParsing(const RattleLang::ASTExpressio
 
 
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTOr *node, void *data) {
-    doOperand(node, OR_OP, data);
+void TypeInferer::visit(const ASTOr *node, void *data) {
+    do_operand(node, OR_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTAnd *node, void *data) {
-    doOperand(node, AND_OP, data);
+void TypeInferer::visit(const ASTAnd *node, void *data) {
+    do_operand(node, AND_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompEqual *node, void *data) {
-    doOperand(node, EQ_OP, data);
+void TypeInferer::visit(const ASTCompEqual *node, void *data) {
+    do_operand(node, EQ_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompNequal *node, void *data) {
-    doOperand(node, EQ_OP, data);
+void TypeInferer::visit(const ASTCompNequal *node, void *data) {
+    do_operand(node, EQ_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompGTE *node, void *data) {
-    doOperand(node, GTE_OP, data);
+void TypeInferer::visit(const ASTCompGTE *node, void *data) {
+    do_operand(node, GTE_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompLTE *node, void *data) {
-    doOperand(node, LTE_OP, data);
+void TypeInferer::visit(const ASTCompLTE *node, void *data) {
+    do_operand(node, LTE_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompGT *node, void *data) {
-    doOperand(node, GTE_OP, data);
+void TypeInferer::visit(const ASTCompGT *node, void *data) {
+    do_operand(node, GTE_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCompLT *node, void *data) {
-    doOperand(node, LTE_OP, data);
+void TypeInferer::visit(const ASTCompLT *node, void *data) {
+    do_operand(node, LTE_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTAdd *node, void *data) {
-    doOperand(node, ADD_OP, data);
+void TypeInferer::visit(const ASTAdd *node, void *data) {
+    do_operand(node, ADD_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTSubtract *node, void *data) {
-    doOperand(node, SUB_OP, data);
+void TypeInferer::visit(const ASTSubtract *node, void *data) {
+    do_operand(node, SUB_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTTimes *node, void *data) {
-    doOperand(node, MUL_OP, data);
+void TypeInferer::visit(const ASTTimes *node, void *data) {
+    do_operand(node, MUL_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTDivide *node, void *data) {
-    doOperand(node, DIV_OP, data);
+void TypeInferer::visit(const ASTDivide *node, void *data) {
+    do_operand(node, DIV_OP, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryNot *node, void *data) {
-    RattleLang::type *nodeType = ((RattleLang::type *) data);
+void TypeInferer::visit(const ASTUnaryNot *node, void *data) {
+    type *nodeType = ((type *) data);
 
     TypeInfoPtr type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
 
@@ -98,8 +98,8 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryNot *node, void *d
 
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryPlus *node, void *data) {
-    RattleLang::type *nodeType = ((RattleLang::type *) data);
+void TypeInferer::visit(const ASTUnaryPlus *node, void *data) {
+    type *nodeType = ((type *) data);
 
     TypeInfoPtr type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
 
@@ -112,8 +112,8 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryPlus *node, void *
 
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryMinus *node, void *data) {
-    RattleLang::type *nodeType = ((RattleLang::type *) data);
+void TypeInferer::visit(const ASTUnaryMinus *node, void *data) {
+    type *nodeType = ((type *) data);
 
     TypeInfoPtr type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
 
@@ -126,67 +126,67 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTUnaryMinus *node, void 
 
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTExpression *node, void *data) {
+void TypeInferer::visit(const ASTExpression *node, void *data) {
     TypeInfoPtr* nodeType = (TypeInfoPtr*) data;
 
     *nodeType = TypeInfoPtr(StartParsing(node, m_context));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTFnInvoke *node, void *data) {
+void TypeInferer::visit(const ASTFnInvoke *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     *typeInformation = TypeInfoPtr(m_context->get_function(get_token_of_child(node, 0)));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTMethodInvoke *node, void *data) {
+void TypeInferer::visit(const ASTMethodInvoke *node, void *data) {
     RattleDefaultVisitor::visit(node, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTIdentifier *node, void *data) {
+void TypeInferer::visit(const ASTIdentifier *node, void *data) {
    TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     *typeInformation = m_context->get_variable(node->tokenValue);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTMemIdentifier *node, void *data) {
+void TypeInferer::visit(const ASTMemIdentifier *node, void *data) {
     //TODO
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTCharacter *node, void *data) {
+void TypeInferer::visit(const ASTCharacter *node, void *data) {
    TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     (*typeInformation)->typenames.push_back(type(CHARACTER, CHAR));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTString *node, void *data) {
+void TypeInferer::visit(const ASTString *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     (*typeInformation)->typenames.push_back(type(STRING, STR));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTNumber *node, void *data) {
+void TypeInferer::visit(const ASTNumber *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     (*typeInformation)->typenames.push_back(type(NUMBER, NUM));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTTrue *node, void *data) {
+void TypeInferer::visit(const ASTTrue *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     (*typeInformation)->typenames.push_back(type(BOOLEAN, BOOL));
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTFalse *node, void *data) {
+void TypeInferer::visit(const ASTFalse *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     (*typeInformation)->typenames.push_back(type(BOOLEAN, BOOL));
 }
 
-void RattleLang::TypeInferer::defaultVisit(const RattleLang::SimpleNode *node, void *data) {
+void TypeInferer::defaultVisit(const SimpleNode *node, void *data) {
     // Do nothing.
 }
 
-TypeInfoPtr RattleLang::TypeInferer::getTypeFromNode(const RattleLang::SimpleNode *node) {
+TypeInfoPtr TypeInferer::getTypeFromNode(const SimpleNode *node) {
     TypeInfoPtr nodeType(new TypeInformation());
     node->jjtAccept(this, &nodeType);
     return nodeType;
 }
 
-RattleLang::type RattleLang::TypeInferer::getTypeFromOperation(const RattleLang::SimpleNode *node,
-                                                                                  RattleLang::operands operand) {
+TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
+                                                                                  operands operand) {
     TypeInfoPtr type1 = getTypeFromNode((SimpleNode*) node->jjtGetChild(0));
     TypeInfoPtr type2 = getTypeFromNode((SimpleNode*) node->jjtGetChild(1));
 
@@ -195,16 +195,36 @@ RattleLang::type RattleLang::TypeInferer::getTypeFromOperation(const RattleLang:
     }
 
     if (type1->typenames.size() > 1 || type2->typenames.size() > 1) {
+
+        // If we are multiple we want to return a big ole tuple.
+        if (operand == ADD_OP  &&
+                (!dynamic_pointer_cast<LambdaTypeInformation>(type1) || !dynamic_pointer_cast<LambdaTypeInformation>(type2))) {
+
+
+            vector<type> type_combo = type1->typenames;
+            for(const auto& typers : type2->typenames) {
+                type_combo.push_back(typers);
+            }
+
+            TypeInfoPtr tuple_info =  TypeInfoPtr(new TypeInformation(type_combo, m_context));
+            tuple_info->source = TUPLE;
+
+            return tuple_info;
+        }
+
         throw ParsingException("Operation cannot be performed on multiple types", get_line_num(node));
     }
 
-    return TypeStorage::get_instance()->get_return_type_from_operation(type1->typenames[0], type2->typenames[0], operand);
+    type ret_type = TypeStorage::get_instance()->get_return_type_from_operation(
+                                                         type1->typenames[0], type2->typenames[0], operand);
+
+    return TypeInfoPtr(new TypeInformation({ret_type}, m_context));
 }
-void RattleLang::TypeInferer::visit(const RattleLang::ASTDereference *node, void *data) {
+void TypeInferer::visit(const ASTDereference *node, void *data) {
     node->jjtGetChild(0)->jjtAccept(this, data);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node, void *data) {
+void TypeInferer::visit(const ASTIndexedExpression *node, void *data) {
     ASTNumber* number = static_cast<ASTNumber*>(node->jjtGetChild(1));
     ASTExpression* exp = new ASTExpression(0);
     exp->jjtAddChild((Node*)node->jjtGetChild(0), 0);
@@ -227,11 +247,11 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTIndexedExpression *node
         throw ParsingException("Index Out Of Range", get_line_num(node));
     }
 
-    std::shared_ptr<RattleLang::TypeInformation>* nodeType  = (std::shared_ptr<RattleLang::TypeInformation>* ) (data);
+    TypeInfoPtr* nodeType  = (TypeInfoPtr*) (data);
     (*nodeType)->typenames.push_back(IndexType->typenames[value]);
 }
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTTupleDefine *node, void *data) {
+void TypeInferer::visit(const ASTTupleDefine *node, void *data) {
     size_t numChildren = node->jjtGetNumChildren();
     TypeInfoPtr* data_info = static_cast<TypeInfoPtr*>(data);
 
@@ -246,16 +266,17 @@ void RattleLang::TypeInferer::visit(const RattleLang::ASTTupleDefine *node, void
             }
 
             size_t returnedTypes = info->typenames.size();
-
             for (int j = 0; j < returnedTypes; ++j) {
                 (*data_info)->typenames.push_back(info->typenames[j]);
             }
+
+            info->source = TUPLE;
 
         }
     }
 }
 
-RattleLang::TypeInferer *RattleLang::TypeInferer::get_instance() {
+TypeInferer *TypeInferer::get_instance() {
     if (!instance) {
         instance = new TypeInferer();
     };
@@ -264,14 +285,13 @@ RattleLang::TypeInferer *RattleLang::TypeInferer::get_instance() {
 }
 
 void
-TypeInferer::doOperand(const SimpleNode *node, RattleLang::operands operand, void* info) {
+TypeInferer::do_operand(const SimpleNode *node, operands operand, void *info) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(info);
-    RattleLang::type nodeType = getTypeFromOperation(node, operand);
-    (*typeInformation)->typenames.push_back(nodeType);
+    (*typeInformation) = getTypeFromOperation(node, operand);
 }
 
 
-void RattleLang::TypeInferer::visit(const RattleLang::ASTLambdaDefine *node, void *data) {
+void TypeInferer::visit(const ASTLambdaDefine *node, void *data) {
     TypeInfoPtr* typeInformation = static_cast<TypeInfoPtr*>(data);
     ASTAssignment* ass = (ASTAssignment*)node->jjtGetParent()->jjtGetParent();
     FunctionBuilder builder(m_context);

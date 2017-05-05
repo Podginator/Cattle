@@ -28,8 +28,9 @@ void FunctionBuilder::StartParsing(const SimpleNode *node, const string& fnName)
 
 // We need to declare the function first.
 TypeInfoPtr FunctionBuilder::declare_function(const SimpleNode *node, const string &fnName, bool is_lambda) {
-    size_t paramIndex = is_lambda ? 0 : 2;
+    size_t param_index = is_lambda ? 0 : 2;
     TypeInfoPtr information(is_lambda ? new LambdaTypeInformation({}, m_context) : new TypeInformation({}, m_context));
+    bool get_info_from_return = false;
 
     // Do type list.
     ASTFnTypeList* retTypeList = get_child_as<ASTFnTypeList>(node, 1);
@@ -39,12 +40,13 @@ TypeInfoPtr FunctionBuilder::declare_function(const SimpleNode *node, const stri
             throw TypeException(get_line_num(node));
         }
     } else {
-        paramIndex = is_lambda ? paramIndex : 1;
-        information->typenames.push_back(type(VOID, 0));
+        param_index = is_lambda ? param_index : 1;
+
+        get_info_from_return = true;
     }
 
     // Handle Param List
-    ASTParmlist* parmlist = get_child_as<ASTParmlist>(node, paramIndex);
+    ASTParmlist* parmlist = get_child_as<ASTParmlist>(node, param_index);
     if (!parmlist) {
         throw ParsingException("Cannot Find Parameter List, Fatal Error. ", get_line_num(node));
     }
@@ -60,6 +62,19 @@ TypeInfoPtr FunctionBuilder::declare_function(const SimpleNode *node, const stri
         }
     }
     information->set_scope(fnContext);
+    information->source = FUNCTION;
+
+
+    if (get_info_from_return) {
+        if (node->fnHasReturn) {
+            size_t returnIndex =  param_index + 2;
+            ASTReturnExpression* fnReturn = get_child_as<ASTReturnExpression>(node, returnIndex);
+            build_type_from_return(fnReturn, fnContext, information);
+        } else {
+            // Otherwise it's a void statement.
+            information->typenames.push_back(type(VOID, 0));
+        }
+    }
 
     m_context->add_function(fnName, information);
     return information;
@@ -74,9 +89,8 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     }
 
     // Do type list.
-    ASTFnTypeList* retTypeList = get_child_as<ASTFnTypeList>(node, 1);
+    paramIndex = (get_child_as<ASTFnTypeList>(node, 1)) ? paramIndex : (is_lambda ? 0 : 1);
     string retType = information->get_c_typename();
-    paramIndex = retTypeList ? paramIndex : paramIndex - 1;
 
     // Handle Param List
     ASTParmlist* parmlist = get_child_as<ASTParmlist>(node, paramIndex);
@@ -103,7 +117,7 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     visit(fnBody, fnContext);
     pair<TypeInfoPtr, Context*> typeContext = make_pair(information, fnContext);
     if (node->fnHasReturn) {
-        size_t returnIndex = is_lambda ? 3 : paramIndex + 2;
+        size_t returnIndex = is_lambda ? 2 : paramIndex + 2;
         ASTReturnExpression* fnReturn = get_child_as<ASTReturnExpression>(node, returnIndex);
         visit(fnReturn, &typeContext);
     }
@@ -233,4 +247,20 @@ void RattleLang::FunctionBuilder::visit(const RattleLang::ASTFnTypeList *node, v
 
 void FunctionBuilder::defaultVisit(const SimpleNode *node, void *data) {
 
+}
+
+void FunctionBuilder::build_type_from_return(const ASTReturnExpression *node, Context *fnContext, TypeInfoPtr& type) {
+    size_t numChildren = get_number_children(node);
+    int i = 0;
+    bool done = false;
+    for (int j = 0; j < numChildren && !done; ++j) {
+        ASTExpression* expNode = get_child_as<ASTExpression>(node, j);
+        TypeInfoPtr exp = TypeInferer::get_instance()->StartParsing(expNode, fnContext);
+        vector<string> localNames;
+
+        // We've got our types
+        for (int k = 0; k < exp->num_return();  ++k, ++i) {
+            type->typenames.push_back(exp->typenames[k]);
+        }
+    }
 }

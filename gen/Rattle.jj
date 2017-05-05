@@ -861,17 +861,17 @@ void method_instantiate()                    :
 
 
 void lambda_define()               :
-{/*@bgen(jjtree) LabmdaDefine */
-  ASTLambdaDefine *jjtn000 = new ASTLambdaDefine(JJTLABMDADEFINE);
+{/*@bgen(jjtree) LambdaDefine */
+  ASTLambdaDefine *jjtn000 = new ASTLambdaDefine(JJTLAMBDADEFINE);
   bool jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
   jjtn000->jjtSetFirstToken(getToken(1));
 /*@egen*/}
-{/*@bgen(jjtree) LabmdaDefine */
+{/*@bgen(jjtree) LambdaDefine */
     try {
 /*@egen*/
     // Ie : (x, y)->{ return x+y }
-    parmlist() fnTypeList()  "->" "{"
+    parmlist() [fnTypeList()]  "->" "{"
     fnbody()
     [
       < RETURN > returnexpr()

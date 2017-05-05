@@ -21,7 +21,7 @@ namespace RattleLang {
 
         DefaultExpressionGenerator(Context *context) {
             //res = {0};
-            this->m_context = context;
+            m_context = context;
         }
 
         template <class T>
@@ -40,11 +40,8 @@ namespace RattleLang {
         }
 
     protected:
-        Context* m_context;
 
         ExpressionState state = FN_PASS;
-
-        ExpressionGeneratorResult res;
 
         // Defaults.
         virtual void visit_fn_pass(const SimpleNode* node,  void* data){
@@ -187,13 +184,6 @@ namespace RattleLang {
         }
 
 
-        void append_to_preamble(const string &str) {
-            res.preample.append(str);
-        }
-
-        void append_to_result(const string &str) {
-            res.expressions.back().append(str);
-        }
 
         ~DefaultExpressionGenerator(){
             // Do nothing?

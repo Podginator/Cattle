@@ -84,11 +84,12 @@ namespace RattleLang {
 
         TypeInferer();
 
+
+        TypeInfoPtr create_combined_tuple(TypeInfoPtr type_one, TypeInfoPtr type_two);
+
         static TypeInferer* instance;
 
         std::map<const ASTExpression*, TypeInfoPtr> m_typemap;
-
-        RattleLang::type retType;
 
         Context* m_context;
 
@@ -99,11 +100,11 @@ namespace RattleLang {
         // 000000001111
         // now if we encounter a bool we can do (000000001111 & 001111000000) which would be 0 so we'd fire an error as
 
-        std::shared_ptr<RattleLang::TypeInformation> getTypeFromNode(const SimpleNode* node);
+        TypeInfoPtr getTypeFromNode(const SimpleNode* node);
 
-        RattleLang::type getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
+        TypeInfoPtr getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
 
-        void doOperand(const SimpleNode *node, RattleLang::operands operand, void* info);
+        void do_operand(const SimpleNode *node, RattleLang::operands operand, void *info);
 
     };
 

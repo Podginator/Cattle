@@ -28,6 +28,12 @@ namespace RattleLang {
     typedef std::pair<std::string, TypeInfoPtr> NamedVariableInfo;
 
 
+    enum TypeSource {
+        FUNCTION,
+        VARIABLE,
+        TUPLE
+    };
+
     class TypeInformation {
     public:
 
@@ -37,7 +43,9 @@ namespace RattleLang {
         // The Constructor, takes a variable amount of types.
         TypeInformation(std::initializer_list<RattleLang::type> types, Context* context = nullptr);
 
-        // The vector of typenames. 
+        TypeInformation(vector<type> names, Context *context);
+
+        // The vector of typenames.
         std::vector<RattleLang::type> typenames;
 
         // This is for a class instance - a class can have many inner vars, and even some inner classes. 
@@ -56,6 +64,8 @@ namespace RattleLang {
         std::string get_c_typename();
 
         Context* scope;
+
+        TypeSource source = VARIABLE;
 
         // Functions return a type name.
         virtual std::string get_c_return_types();

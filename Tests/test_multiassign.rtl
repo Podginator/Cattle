@@ -18,7 +18,19 @@ def expectFiveParam : number, number, number, number, number, number ( a : numbe
     return a, b, c, d, e, f
 }
 
-blah = 6
+def three : number ( x : number ) {
+    return x + 2
+}
+
+def two : number ( x : number ) {
+    return x + 1
+}
+
+def one : number ( x : number) {
+    return a(two(three(x)), 4) + 4
+}
+
+blah = one(1)
 param_tuple = [retOneNum(), retThreeNum(), retTwoNum(), 1]
 g,h,i,j,k = expectFiveParam(param_tuple)
 test_indexed = retTwoNum()[0] + 2

@@ -28,6 +28,7 @@ namespace RattleLang {
     private:
 
         void build_function(const SimpleNode* node, const std::string& name,  bool is_named);
+        void build_type_from_return(const ASTReturnExpression *node, Context* fnContext, TypeInfoPtr& type);
 
         std::string m_output;
         Context* m_context;

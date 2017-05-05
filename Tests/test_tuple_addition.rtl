@@ -1,0 +1,14 @@
+
+def retThreeNum : number, number, number () {
+    return 2, 3, 4
+}
+
+a = [1, 2, 3]
+b = [4, 5, 6]
+
+c = a + b + [7,8,9] + retThreeNum()[1] // [1,2,3,4,5,6,7,8,9,3]
+d = retThreeNum() + retThreeNum() // [2,3,4, 2,3,4]
+// Actual Value
+e = 12+42/4/2
+
+print c[1]

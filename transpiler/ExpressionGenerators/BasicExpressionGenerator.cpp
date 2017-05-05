@@ -251,7 +251,7 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTIndexedExpression *node, v
 void BasicExpressionGenerator::visit_expression_pass(const ASTTupleDefine *node, void *data) {
     size_t node_children_size = get_number_children(node);
     vector<string> allNames;
-    append_to_preamble(SCOPE_OPEN);
+    append_to_preamble(!multi_assign ? SCOPE_OPEN : "");
 
     for (int i = 0; i < node_children_size; ++i) {
         ASTExpression* exp = get_child_as<ASTExpression>(node, i);
@@ -274,11 +274,19 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTTupleDefine *node,
         append_to_preamble(GetParserResults(ExpressionParser(names, m_context), exp));
     }
 
-    append_to_result("make_tuple(");
-    append_to_result(StringHelper::combine_str(allNames, ','));
-    append_to_result(");");
 
-    append_to_result(SCOPE_CLOSE);
+    if (multi_assign) {
+        for (const auto& str_res : allNames) {
+            res.expressions.push_back(str_res);
+        }
+    } else {
+        append_to_result("make_tuple(");
+        append_to_result(StringHelper::combine_str(allNames, ','));
+        append_to_result(");");
+        append_to_result(SCOPE_CLOSE);
+
+    }
+
 
 }
 
@@ -320,7 +328,7 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data)
                                  to_string(total_params) + ";\n");
                 total_params++;
             } else {
-                for (size_t j = 0; j < expected_params; ++j, ++total_params) {
+                for (size_t j = 0; j < resultSize && total_params < expected_params; ++j, ++total_params) {
                     param_names.push_back(function_c_name + "param" + to_string(total_params));
                     append_to_preamble(expression_type->typenames[j].get_corresponding_type_string() + " "
                                      + function_c_name + "param" + to_string(total_params) + ";\n");
