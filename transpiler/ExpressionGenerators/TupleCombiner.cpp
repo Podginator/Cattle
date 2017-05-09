@@ -19,12 +19,6 @@ ExpressionGeneratorResult TupleCombiner::combine_statement(const SimpleNode *nod
     do_children(node, nullptr);
     append_to_result(")");
 
-    // Think of the tree
-    // A + B + C
-    // If we are in this node we already know that it's either a TUPLE or alternatively
-    // an actual addition.
-    // So, that makes things a lottle easier.
-
     return res;
 }
 

@@ -163,6 +163,6 @@ set(SOURCE_FILES
         TypeInformation/LambdaTypeInformation.cpp
         transpiler/ExpressionGenerators/DefaultStateExpressionGenerator.h
         transpiler/ExpressionGenerators/ExpressionGenerator.h
-        transpiler/ExpressionGenerators/ExpressionGeneratorFactory.h transpiler/ExpressionGenerators/BasicExpressionGenerator.cpp transpiler/ExpressionGenerators/BasicExpressionGenerator.h transpiler/ExpressionGenerators/TupleCombiner.cpp transpiler/ExpressionGenerators/TupleCombiner.h)
+        transpiler/ExpressionGenerators/ExpressionGeneratorFactory.h transpiler/ExpressionGenerators/BasicExpressionGenerator.cpp transpiler/ExpressionGenerators/BasicExpressionGenerator.h transpiler/ExpressionGenerators/TupleCombiner.cpp transpiler/ExpressionGenerators/TupleCombiner.h transpiler/ExpressionGenerators/LambdaCombiner.cpp transpiler/ExpressionGenerators/LambdaCombiner.h)
 
 add_executable(Rattle_CPP ${SOURCE_FILES})

@@ -210,6 +210,17 @@ TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
             tuple_info->source = TUPLE;
 
             return tuple_info;
+        } else if (operand == ADD_OP  &&
+                   (dynamic_pointer_cast<LambdaTypeInformation>(type1) || dynamic_pointer_cast<LambdaTypeInformation>(type2))){
+
+            // Get Left Hands Side Parameters and Right hand sides return
+
+
+            TypeInfoPtr lambda_info = TypeInfoPtr(new LambdaTypeInformation({}, m_context));
+            lambda_info->typenames = type2->typenames;
+            lambda_info->inner_vars = type1->inner_vars;
+
+            return lambda_info;
         }
 
         throw ParsingException("Operation cannot be performed on multiple types", get_line_num(node));

@@ -21,7 +21,6 @@ namespace RattleLang {
 
         void defaultVisit(const SimpleNode *node, void *data) override;
 
-
         void visit(const ASTAdd *node, void *data) override;
 
         void visit(const ASTIndexedExpression *node, void *data) override;

@@ -10,6 +10,7 @@
 #include "../TypeInferer.h"
 #include "../../TypeInformation/LambdaTypeInformation.h"
 #include "TupleCombiner.h"
+#include "LambdaCombiner.h"
 
 namespace RattleLang {
     class ExpressionGeneratorFactory {
@@ -23,9 +24,8 @@ namespace RattleLang {
                 throw ParsingException("Cannot perform this expression ", RattleVisitor::get_line_num(node));
             }
 
-            if (dynamic_pointer_cast<LambdaTypeInformation>(expression)) {
-                // Return Lambda Combiner.
-                //return nullptr;
+            if (dynamic_pointer_cast<LambdaTypeInformation>(expression) && get_operand_from_node(node) == ADD_OP ) {
+                return ExpressionCombinerPtr(new LambdaCombiner(context));
             } else if (get_operand_from_node(node) == ADD_OP && expression->source == TUPLE) {
                 return ExpressionCombinerPtr(new TupleCombiner(context));
             }

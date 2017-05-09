@@ -2,12 +2,6 @@
 a = ( x : number, y : number ) -> { return x, y }
 b = ( x : number, y : number ) -> { return x+1, y+1 }
 c = ( x : number, y : number ) -> { return y+x }
-d = ( x : number, y : number ) -> { return c(b(a(1,2))) }
 
-print d(1,2)
-
-// So in this case d is equal to
-// d = a + b + c
-
-// The other
-
+e = a + b + c
+print e(1,2)
