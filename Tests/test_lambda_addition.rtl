@@ -4,7 +4,7 @@ c = ( x : number, y : number ) -> { return y+x }
 d = ( x : number ) -> { return x * 2 }
 f = ( y : number ) -> { return y * 12 }
 g = ( f : number ) -> { return f / 12 }
-h = ( d : number ) -> { return "str"+(d/3) }
+h = ( d : number ) -> { return "remainingValue"+(d/2) }
 
 e = a + b + c + d + f + g + h
 print e(1,2)
