@@ -2,7 +2,9 @@ a = ( x : number, y : number ) -> { return x, y }
 b = ( x : number, y : number ) -> { return x+1, y+1 }
 c = ( x : number, y : number ) -> { return y+x }
 d = ( x : number ) -> { return x * 2 }
+f = ( y : number ) -> { return y * 12 }
+g = ( f : number ) -> { return f / 12 }
+h = ( d : number ) -> { return "str"+(d/3) }
 
-e = a + b + c + d
-
+e = a + b + c + d + f + g + h
 print e(1,2)

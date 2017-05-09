@@ -384,7 +384,7 @@ void BasicExpressionGenerator::convert_if_needed(SimpleNode *node) {
     expected_output = expression_info;
 
     if (convert) {
-        append_to_result("to_string(");
+        append_to_result("convert_string(");
         Accept(node, nullptr);
         append_to_result(")");
     } else {

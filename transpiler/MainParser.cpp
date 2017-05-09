@@ -74,7 +74,15 @@ std::string MainParser::create_preample() {
             "#include <functional>\n"
             "#include <tuple>\n"
             "#include <string>\n"
-            "using namespace std;\n";
+            "#include <sstream>\n"
+            "#include <iomanip>\n"
+            "using namespace std;\n"
+            "template <typename T>\n"
+            "std::string convert_string(T param) {\n"
+            "    std::ostringstream out;\n"
+            "    out << std::left << param;\n"
+            "    return out.str();\n"
+            "}";
 }
 
 void MainParser::visit(const ASTAssignment *node, void *data) {
