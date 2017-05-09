@@ -50,6 +50,19 @@ public:
         return retVal;
     }
 
+    template <typename Iterator, typename Member>
+    static string combine_str_ptr( Iterator iteratable, const char token,  Member m) {
+        string retVal = "";
+
+        for(auto it = iteratable.begin(); it < iteratable.end(); it++) {
+            auto iterated = *it;
+            auto iterated_member = iterated.*m;
+            retVal.append(iterated_member +  token);
+        }
+        retVal.pop_back();
+
+        return retVal;
+    }
 
 };
 

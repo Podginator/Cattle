@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 08/05/2017.
-//
-
 #include "LambdaCombiner.h"
 #include "../../exceptions/ParsingException.h"
 #include "../../TypeInformation/LambdaTypeInformation.h"
@@ -22,6 +18,7 @@ RattleLang::LambdaCombiner::combine_statement(const RattleLang::SimpleNode *node
     ret_statement.append("}");
     string combined = "temp = " + parameters+ret_statement + "\n";
 
+    // Rely on the parser to generate a new lambda
     CharStream *stream = new CharStream(combined.c_str(), combined.size() - 1, 1, 1);
     Rattle parser(new RattleTokenManager(stream));
     ASTExpression* exp = get_expression(parser.code());
@@ -77,11 +74,7 @@ void RattleLang::LambdaCombiner::visit(const RattleLang::ASTIdentifier *node, vo
         }
         parameters.pop_back();
         parameters.append(")->{");
-        for (const auto& info : type_info->inner_vars) {
-            statement.append(info.first);
-            statement.append(",");
-        }
-        statement.pop_back();
+        statement.append(StringHelper::combine_str_ptr(type_info->inner_vars, ',', &NamedVariableInfo::first));
         seen_first = true;
 
     }

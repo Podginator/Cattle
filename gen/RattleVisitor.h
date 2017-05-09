@@ -76,14 +76,14 @@ class RattleVisitor
 
     template<typename T>
     static T* get_parent_as(const Node* node, int parent_level = 1) {
-      const Node* return_node = node;
+      Node* return_node = const_cast<Node*>(node);
       int index = 0;
       while (index++ != parent_level) {
-        return_node = node->jjtGetParent();
+        return_node = return_node->jjtGetParent();
       }
 
 
-      return dynamic_cast<T*>(const_cast<Node*>(return_node));
+      return dynamic_cast<T*>(return_node);
     }
 
     template<typename T>

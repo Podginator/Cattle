@@ -1,7 +1,8 @@
-// This is structurally what we want to create.
 a = ( x : number, y : number ) -> { return x, y }
 b = ( x : number, y : number ) -> { return x+1, y+1 }
 c = ( x : number, y : number ) -> { return y+x }
+d = ( x : number ) -> { return x * 2 }
 
-e = a + b + c
+e = a + b + c + d
+
 print e(1,2)

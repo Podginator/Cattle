@@ -194,11 +194,10 @@ TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
         throw ParsingException("Variable does not exist", get_line_num(node));
     }
 
-    if (type1->typenames.size() > 1 || type2->typenames.size() > 1) {
-
+    bool multi_types = type1->typenames.size() > 1 || type2->typenames.size() > 1;
+    if (multi_types) {
         // If we are multiple we want to return a big ole tuple.
-        if (operand == ADD_OP  &&
-                (!dynamic_pointer_cast<LambdaTypeInformation>(type1) || !dynamic_pointer_cast<LambdaTypeInformation>(type2))) {
+        if (operand == ADD_OP  && !is_lambda_operation(type1, type2)) {
 
 
             vector<type> type_combo = type1->typenames;
@@ -210,20 +209,19 @@ TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
             tuple_info->source = TUPLE;
 
             return tuple_info;
-        } else if (operand == ADD_OP  &&
-                   (dynamic_pointer_cast<LambdaTypeInformation>(type1) || dynamic_pointer_cast<LambdaTypeInformation>(type2))){
-
-            // Get Left Hands Side Parameters and Right hand sides return
-
-
-            TypeInfoPtr lambda_info = TypeInfoPtr(new LambdaTypeInformation({}, m_context));
-            lambda_info->typenames = type2->typenames;
-            lambda_info->inner_vars = type1->inner_vars;
-
-            return lambda_info;
         }
+    }
 
-        throw ParsingException("Operation cannot be performed on multiple types", get_line_num(node));
+    if (operand == ADD_OP  && is_lambda_operation(type1, type2)) {
+        TypeInfoPtr lambda_info = TypeInfoPtr(new LambdaTypeInformation({}, m_context));
+        lambda_info->typenames = type2->typenames;
+        lambda_info->inner_vars = type1->inner_vars;
+
+        return lambda_info;
+    }
+
+    if (multi_types) {
+        throw ParsingException("Cannot perform operations on multiple types", get_line_num(node));
     }
 
     type ret_type = TypeStorage::get_instance()->get_return_type_from_operation(
@@ -231,6 +229,12 @@ TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
 
     return TypeInfoPtr(new TypeInformation({ret_type}, m_context));
 }
+
+bool TypeInferer::is_lambda_operation(TypeInfoPtr type1, TypeInfoPtr type2) {
+    return (dynamic_pointer_cast<LambdaTypeInformation>(type1) || dynamic_pointer_cast<LambdaTypeInformation>(type2));
+}
+
+
 void TypeInferer::visit(const ASTDereference *node, void *data) {
     node->jjtGetChild(0)->jjtAccept(this, data);
 }

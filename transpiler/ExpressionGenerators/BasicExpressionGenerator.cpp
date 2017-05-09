@@ -292,7 +292,8 @@ void BasicExpressionGenerator::visit_expression_pass(const ASTTupleDefine *node,
 void BasicExpressionGenerator::visit_expression_pass(const ASTLambdaDefine *node, void *data) {
     FunctionBuilder builder(m_context);
     SimpleNode* parent = get_parent_as<SimpleNode>(node, 2);
-    builder.StartParsing(node, get_token_of_child(parent, 0));
+    string fnName = get_token_of_child(parent, 0);
+    builder.StartParsing(node, fnName);
     append_to_result(builder.get_c_output());
 }
 

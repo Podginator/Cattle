@@ -84,7 +84,6 @@ namespace RattleLang {
 
         TypeInferer();
 
-
         TypeInfoPtr create_combined_tuple(TypeInfoPtr type_one, TypeInfoPtr type_two);
 
         static TypeInferer* instance;
@@ -103,6 +102,8 @@ namespace RattleLang {
         TypeInfoPtr getTypeFromNode(const SimpleNode* node);
 
         TypeInfoPtr getTypeFromOperation(const SimpleNode* node, RattleLang::operands operand);
+
+        bool is_lambda_operation(TypeInfoPtr type1, TypeInfoPtr type2);
 
         void do_operand(const SimpleNode *node, RattleLang::operands operand, void *info);
 

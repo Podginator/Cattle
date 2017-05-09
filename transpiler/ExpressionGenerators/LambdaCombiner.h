@@ -1,7 +1,3 @@
-//
-// Created by Thomas Rogers on 08/05/2017.
-//
-
 #ifndef RATTLE_CPP_LAMBDACOMBINER_H
 #define RATTLE_CPP_LAMBDACOMBINER_H
 
