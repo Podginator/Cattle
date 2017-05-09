@@ -82,7 +82,7 @@ std::string MainParser::create_preample() {
             "    std::ostringstream out;\n"
             "    out << std::left << param;\n"
             "    return out.str();\n"
-            "}";
+            "}\n";
 }
 
 void MainParser::visit(const ASTAssignment *node, void *data) {
