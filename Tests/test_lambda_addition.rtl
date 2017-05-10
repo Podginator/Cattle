@@ -5,6 +5,8 @@ d = ( x : number ) -> { return x * 2 }
 f = ( y : number ) -> { return y * 12 }
 g = ( f : number ) -> { return f / 12 }
 h = ( d : number ) -> { return "remainingValue"+(d/2) }
+i = ( x : string ) -> { return x + "append" }
 
-e = a + b + b + b + b + c + d + d + d + f + g + g + g + h
+e = a + b + c + d + d + d + f + g + d + g + g + g + f + f + h + i
+
 print e(1,2)

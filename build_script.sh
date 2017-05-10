@@ -8,6 +8,8 @@ cmake ..
 make
 rm -rf ./output
 rm -rf ./output.cpp
+echo "== Transpiled Output ! =="
 ./Rattle_CPP $1 
 gcc -std=c++14 ./output.cpp -o ./output -lstdc++
+echo "== Output! == "
 time ./output

@@ -7,6 +7,9 @@ using namespace std;
 namespace RattleLang {
 
     // For this one I literally just want to allow the PARSER to generate a Tree from the parameters passed.
+    // so this class will take the derefences ( a + b + c ) and use those
+    // it currently does not work for in place lambda definitions, this is perhaps a todo, but since we are running
+    // out of time on this it might be better to ignore it for now.
     class LambdaCombiner : public ExpressionGenerator, public RattleDefaultVisitor {
     public:
         ExpressionGeneratorResult
@@ -31,8 +34,9 @@ namespace RattleLang {
 
         bool seen_first = false;
 
-        ASTExpression* get_expression(const SimpleNode* node);
+        TypeInfoPtr last_ret_type;
 
+        ASTExpression* get_expression(const SimpleNode* node);
 
     };
 }

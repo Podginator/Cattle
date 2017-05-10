@@ -18,7 +18,8 @@ RattleLang::LambdaCombiner::combine_statement(const RattleLang::SimpleNode *node
     ret_statement.append("}");
     string combined = "temp = " + parameters+ret_statement + "\n";
 
-    // Rely on the parser to generate a new lambda
+    // Rely on the parser to generate a new AST that calls a(b(c(d(x,y))))
+    // This then lets our already existing expression generator handle the complexities.
     CharStream *stream = new CharStream(combined.c_str(), combined.size() - 1, 1, 1);
     Rattle parser(new RattleTokenManager(stream));
     ASTExpression* exp = get_expression(parser.code());
@@ -62,8 +63,8 @@ void RattleLang::LambdaCombiner::visit(const RattleLang::ASTIdentifier *node, vo
         throw ParsingException("Cannot perform a lambda combination on disparate types", get_line_num(node));
     }
 
-    string statement(node_token + "(");
 
+    string statement(node_token + "(");
     // If this is the first one we've seen it is the one we'll extract parameters on.
     if (!seen_first) {
         parameters.append("(");
@@ -76,8 +77,30 @@ void RattleLang::LambdaCombiner::visit(const RattleLang::ASTIdentifier *node, vo
         parameters.append(")->{");
         statement.append(StringHelper::combine_str_ptr(type_info->inner_vars, ',', &NamedVariableInfo::first));
         seen_first = true;
+    } else {
+        // Ensure that the next types are correct, if not throw an exception.
+        size_t ret_num = last_ret_type->num_return();
+
+        if (ret_num != type_info->inner_vars.size()) {
+            throw ParsingException("Invalid number of parameters passed in lambda composition", get_line_num(node));
+        }
+
+        for (int i = 0; i < ret_num ; ++i) {
+            // Get the return type values.
+            if (type_info->inner_vars[0].second->get_rattle_typename()
+                                != last_ret_type->typenames[0].get_type_name()) {
+
+                throw ParsingException("Invalid type passed to lambda", get_line_num(node));
+            }
+        }
+
 
     }
     ret_statement.insert(0, statement);
     ret_statement.append(")");
+
+    last_ret_type = type_info;
+
+    // We wanna make sure that it is compatible.
+
 }
