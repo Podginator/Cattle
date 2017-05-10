@@ -7,6 +7,6 @@ g = ( f : number ) -> { return f / 12 }
 h = ( d : number ) -> { return "remainingValue"+(d/2) }
 i = ( x : string ) -> { return x + "append" }
 
-e = a + b + c + d + d + d + f + g + d + g + g + g + f + f + h + i
+e = a + b + b + b + c + d + d + d + d + g + g+ g + g + h + i + i
 
 print e(1,2)

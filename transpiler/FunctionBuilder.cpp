@@ -89,7 +89,8 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     }
 
     // Do type list.
-    paramIndex = (get_child_as<ASTFnTypeList>(node, 1)) ? paramIndex : (is_lambda ? 0 : 1);
+    bool has_return_values = (get_child_as<ASTFnTypeList>(node, 1));
+    paramIndex = has_return_values ? paramIndex : (is_lambda ? 0 : 1);
     string retType = information->get_c_typename();
 
     // Handle Param List
@@ -117,7 +118,7 @@ void FunctionBuilder::build_function(const SimpleNode* node, const string& fnNam
     visit(fnBody, fnContext);
     pair<TypeInfoPtr, Context*> typeContext = make_pair(information, fnContext);
     if (node->fnHasReturn) {
-        size_t returnIndex = is_lambda ? 2 : paramIndex + 2;
+        size_t returnIndex = is_lambda ? (has_return_values ? 3 : 2) : (has_return_values ? 4 : 3);
         ASTReturnExpression* fnReturn = get_child_as<ASTReturnExpression>(node, returnIndex);
         visit(fnReturn, &typeContext);
     }
