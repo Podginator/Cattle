@@ -13,7 +13,7 @@ def retTwoNum : number, number () {
     return 5, 6
 }
 
-def expectFiveParam : number, number, number, number, number, number ( a : number, b : number, c : number, d : number, e : number, f : number )
+def expectFiveParam ( a : number, b : number, c : number, d : number, e : number, f : number )
 {
     return a, b, c, d, e, f
 }

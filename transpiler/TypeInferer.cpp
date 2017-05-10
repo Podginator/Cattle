@@ -231,7 +231,7 @@ TypeInfoPtr TypeInferer::getTypeFromOperation(const SimpleNode *node,
 }
 
 bool TypeInferer::is_lambda_operation(TypeInfoPtr type1, TypeInfoPtr type2) {
-    return (dynamic_pointer_cast<LambdaTypeInformation>(type1) || dynamic_pointer_cast<LambdaTypeInformation>(type2));
+    return (dynamic_pointer_cast<LambdaTypeInformation>(type1) && dynamic_pointer_cast<LambdaTypeInformation>(type2));
 }
 
 

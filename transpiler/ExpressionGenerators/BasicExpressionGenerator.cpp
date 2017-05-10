@@ -346,7 +346,7 @@ void BasicExpressionGenerator::visit_fn_pass(const ASTArgList *node, void *data)
             append_to_preamble(GetParserResults(ExpressionParser(param_names, m_context), exp));
         }
 
-        if (total_params != expected_params) {
+        if (total_params < expected_params) {
             throw ParsingException("Invalid amount of parameters", get_line_num(node));
         }
         res.preample.pop_back();
